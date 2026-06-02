@@ -1,0 +1,28 @@
+<!-- ui/index.html -->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script type="module" src="./runtime.js"></script>
+    <style>
+        * {
+            font-family: Consolas, monospace;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Temps passé: <span id="time_counter">0</span> secondes</h1>
+    <div id="controls">
+        <button data-action="skip_seconds" data-amount=1000>1 seconde</button>
+        <button data-action="skip_seconds" data-amount=60000>1 minute</button>
+        <button data-action="skip_seconds" data-amount=3600000>1 heure</button>
+        <button data-action="skip_seconds" data-amount=86400000>1 jour</button>
+        <button data-action="skip_seconds" data-amount=604800000>1 semaine</button>
+        <button data-action="start_stop_tick_interval" id="start_stop_tick_interval">Start</button>
+    </div>
+    <h1>Logs</h1>
+    <ul id="log-list"></ul>
+</body>
+
+</html>

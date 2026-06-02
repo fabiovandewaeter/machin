@@ -1,9 +1,9 @@
 // @ts-check
-// runtime.js
+// ui/runtime.js
 
+import { new_world } from "../engine/core/world_service.js";
 import { update } from "./update.js";
-import { view } from "./view.js";
-
+import { view } from "./view/view.js";
 
 /**
  * @param {Msg} msg
@@ -28,9 +28,12 @@ body.addEventListener('click', (event) => {
 
     const action = target.dataset.action;
     switch (action) {
-        case 'increment':
-        case 'decrement': {
-            dispatch({ type: action, amount: get_amount() });
+        case 'start_stop_tick_interval': {
+            dispatch({ type: action });
+            break;
+        }
+        case 'skip_seconds': {
+            dispatch({ type: action, amount: parseInt(target.dataset.amount ?? '', 10) });
             break;
         }
         default:
@@ -43,6 +46,8 @@ body.addEventListener('click', (event) => {
 let initial_model = {
     count: 1000,
     logs: ['un truc'],
+    tick_interval_id: null,
+    world: new_world(),
 };
 let model = initial_model;
 
