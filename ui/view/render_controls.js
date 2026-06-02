@@ -3,16 +3,6 @@
 
 import '../types.js';
 
-// // TODO: supprimer ça même si le innerHTML pose plus problème maintenant qu'on met listeners sur parent
-// function render_controls(prev, next) {
-//     const controls = document.getElementById('controls');
-//     controls.innerHTML = `
-//         <label>Montant: <input id="amount" type=number" value="${get_amount()}" data-field="amount" /></label>
-//         <button data-action="decrement">-1</button>
-//         <button data-action="increment">+1</button>
-//     `;
-// }
-
 /**
  * @param {Model|null} prev
  * @param {Model} next
