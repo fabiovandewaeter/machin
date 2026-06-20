@@ -1,0 +1,30 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="fr">
+
+<svg id="s" width="100vw" height="100vh"></svg>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+    <script type="module" src="./ui/core/runtime.js"></script>
+    <style>
+        * {
+            font-family: Consolas, monospace;
+        }
+    </style>
+    <script>
+        const N = 5400, s = document.getElementById('s');
+        for (let i = 0; i < N; i++) {
+            s.insertAdjacentHTML("beforeend",
+                `<polygon points="${[...Array(4)].map(() => `${Math.random() * 2000},${Math.random() * 2000}`).join(" ")}"fill="none" stroke="#000"/>`
+            );
+        }
+    </script>
+</head>
+
+<body>
+    <div id="app"></div>
+</body>
+
+</html>

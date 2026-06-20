@@ -1,13 +1,19 @@
+// engine/core/clock.js
 // @ts-check
-// engine/core/clock_service.js
 
-/** @typedef {import('./clock').Clock} Clock */
+import '../../utils/types.js'
+
+/**
+ * @typedef {Object} Clock
+ * @property {number} last_tick_timestamp
+ * @property {number} accumulated_time
+ */
 
 /**
  * @param {number|null} saved_timestamp
  * @returns {Clock}
  */
-export function new_clock(saved_timestamp) {
+export function create(saved_timestamp) {
     return { last_tick_timestamp: saved_timestamp ?? Date.now(), accumulated_time: 0 };
 }
 
@@ -28,4 +34,10 @@ export function tick(clock) {
  * @param {number} ms
  * @returns {Clock}
  */
-export function advance_clock_by(clock, ms) { return { ...clock, accumulated_time: clock.accumulated_time + ms }; }
+export function advance_clock_by(clock, ms) {
+    return {
+        ...clock,
+        last_tick_timestamp: Date.now(),
+        accumulated_time: clock.accumulated_time + ms
+    };
+}
