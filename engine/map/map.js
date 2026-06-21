@@ -3,7 +3,7 @@
 
 import '../../utils/types.js'
 
-// map > continent > region > area > chunk > cubes
+// map > continent > region > area > room > cubes
 
 /**
  * @typedef {Object} Map3D

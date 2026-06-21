@@ -13,14 +13,6 @@
             font-family: Consolas, monospace;
         }
     </style>
-    <script>
-        const N = 5400, s = document.getElementById('s');
-        for (let i = 0; i < N; i++) {
-            s.insertAdjacentHTML("beforeend",
-                `<polygon points="${[...Array(4)].map(() => `${Math.random() * 2000},${Math.random() * 2000}`).join(" ")}"fill="none" stroke="#000"/>`
-            );
-        }
-    </script>
 </head>
 
 <body>

@@ -1,4 +1,4 @@
-// engine/continent/continent.js
+// engine/map/continent.js
 // @ts-check
 
 import '../../utils/types.js'

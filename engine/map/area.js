@@ -5,14 +5,12 @@ import '../../utils/types.js'
 import * as Coord from './coord.js'
 import * as Repo from '../../utils/repository.js'
 
-const SIZE = 5; // en chunk
-
 /** @typedef {number & {__brand:"AareaID"}} AreaID*/
 /**
  * @typedef {Object} Area
  * @property {AreaID} id
  * @property {string} name
- * @property {Object.<string, Chunk>} chunks
+ * @property {Object.<string, Room>} rooms
  */
 
 /**
@@ -24,7 +22,7 @@ export function spawn(repo, name) {
     /** @type {Omit<Area, "id">} */
     const tempo_area = {
         name,
-        chunks: {}
+        rooms: {}
     };
     const [new_repo, id] = Repo.spawn_element(repo, tempo_area);
     return [new_repo, id];
@@ -32,25 +30,25 @@ export function spawn(repo, name) {
 
 /**
  * @param {Readonly<Area>} area
- * @param {ChunkCoord} coord
- * @param {Chunk} chunk
+ * @param {RoomCoord} coord
+ * @param {Room} room
  * @returns {Area}
  */
-export function add_chunk(area, coord, chunk) {
+export function add_room(area, coord, room) {
     return {
-        ...area, chunks: {
-            ...area.chunks,
-            [Coord.key_from_2D(coord)]: chunk
+        ...area, rooms: {
+            ...area.rooms,
+            [Coord.key_from_2D(coord)]: room
         }
     };
 }
 
 /**
  * @param {Readonly<Area>} area
- * @param {ChunkCoord} coord
+ * @param {RoomCoord} coord
  * @returns {Area}
  */
-export function remove_chunk(area, coord) {
-    const { [Coord.key_from_2D(coord)]: _, ...xs } = area.chunks;
-    return { ...area, chunks: xs };
+export function remove_room(area, coord) {
+    const { [Coord.key_from_2D(coord)]: _, ...xs } = area.rooms;
+    return { ...area, rooms: xs };
 }

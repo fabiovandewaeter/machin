@@ -46,10 +46,8 @@
 /** @typedef {import('../engine/map/area.js').AreaID} AreaID*/
 /** @typedef {import('./repository.js').Repository<Area, AreaID>} AreaRepository*/
 
-/** @typedef {import('../engine/map/chunk.js').Chunk} Chunk*/
-/** @typedef {import('../engine/map/chunk.js').ChunkCoord} ChunkCoord*/
-
-/** @typedef {import('../engine/map/cube.js').Cube} Cube*/
+/** @typedef {import('../engine/map/room.js').Room} Room*/
+/** @typedef {import('../engine/map/room.js').RoomCoord} RoomCoord*/
 // ----------
 
 /** @typedef {import('../engine/entities/entity.js').EntityID} EntityID*/

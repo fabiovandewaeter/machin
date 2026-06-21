@@ -3,7 +3,7 @@
 
 import '../../utils/types.js'
 
-/** @typedef {'NORTH'|'EAST'|'SOUTH'|'WEST'} Direction */
+/** @typedef {'NORTH'|'EAST'|'SOUTH'|'WEST'|'UP'|'DOWN'} Direction */
 
 /**
  * @param {Direction} direction
@@ -15,6 +15,7 @@ export function to_delta2D(direction) {
         case 'EAST': return { x: 1, y: 0 };
         case 'SOUTH': return { x: 0, y: -1 };
         case 'WEST': return { x: -1, y: 0 };
+        default: throw new Error();
     };
 }
 
@@ -22,7 +23,17 @@ export function to_delta2D(direction) {
  * @param {Direction} direction
  * @returns {Coord3D}
  */
-export function to_delta3D(direction) { return { ...to_delta2D(direction), z: 0 }; }
+export function to_delta3D(direction) {
+    switch (direction) {
+        case 'NORTH':
+        case 'EAST':
+        case 'SOUTH':
+        case 'WEST':
+            return { ...to_delta2D(direction), z: 0 };
+        case 'UP': return { x: 0, y: 0, z: 1 };
+        case 'DOWN': return { x: 0, y: 0, z: -1 };
+    }
+}
 
 /**
  * @param {string|undefined} s
@@ -34,6 +45,8 @@ export function from_string(s) {
         case 'EAST':
         case 'SOUTH':
         case 'WEST':
+        case 'UP':
+        case 'DOWN':
             return s;
         default: throw new Error();
     };
