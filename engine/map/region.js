@@ -2,40 +2,43 @@
 // @ts-check
 
 import '../../utils/types.js'
+import * as Area from './area.js'
 import * as Repo from '../../utils/repository.js'
 
 /** @typedef {number & {__brand:"RegionID"}} RegionID*/
 /**
  * @typedef {Object} Region
- * @property {AreaID} id
+ * @property {RegionID} id
  * @property {string} name
  * @property {AreaID[]} areas
  */
 
 /**
- * @param {Readonly<RegionRepository>} repo
+ * @param {DeepReadonly<Map3D>} map
  * @param {string} name
- * @returns {[RegionRepository, RegionID]}
+ * @returns {[Map3D, RegionID]}
  */
-export function spawn(repo, name) {
+export function spawn(map, name) {
+    let [area_repo, area] = Area.spawn(map.area_repo, "area_A");
     /** @type {Omit<Region, "id">} */
     const tempo_region = {
         name,
-        areas: []
+        areas: [area],
     };
-    const [new_repo, id] = Repo.spawn_element(repo, tempo_region);
-    return [new_repo, id];
+    let [region_repo, id] = Repo.spawn_element(map.region_repo, tempo_region);
+    let new_map = { ...map, region_repo, area_repo };
+    return [new_map, id];
 }
 
 /**
- * @param {Readonly<Region>} continent
+ * @param {DeepReadonly<Region>} continent
  * @param {AreaID} id
  * @returns {Region}
  */
 export function add_area(continent, id) { return { ...continent, areas: [...continent.areas, id] }; }
 
 /**
- * @param {Readonly<Region>} continent
+ * @param {DeepReadonly<Region>} continent
  * @param {AreaID} id
  * @returns {Region}
  */

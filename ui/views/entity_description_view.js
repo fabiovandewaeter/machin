@@ -4,45 +4,48 @@
 import '../../utils/types.js'
 import * as Opt from '../../utils/option.js'
 import * as Repo from '../../utils/repository.js'
-import * as Coord from '../../engine/map/coord.js'
+import * as Address from '../../engine/map/address.js'
 
-// ========== rendering ========== 
+// ========== rendering ==========
 /**
- * @param {Readonly<EntityRepository>} repo
+ * @param {DeepReadonly<EntityRepository>} repo
  * @param {EntityID} id
  * @returns {string}
  */
 export function render(repo, id) {
-    const entity = Opt.expect(Repo.get(repo, id), `ERROR: expected entity of id: ${id}`);
+    const entity = Opt.expect(Repo.get(repo, id), `expected entity of id: ${id}`);
     return `
     <div class="entity-view" data-id="${entity.id}">
         id: <span class="entity-id">${entity.id}</span>
-        <span class="entity-coord">${Coord.to_string3D(entity.coord)}</span>
+        direction: <span class="entity-direction">${entity.direction}</span>
+        address: <span class="entity-address">${Address.to_string(entity.address)}</span>
     </div>
     `;
 }
 
 /**
- * @param {Readonly<Model>|null} prev
- * @param {Readonly<Model>} next
+ * @param {DeepReadonly<Model>|null} prev
+ * @param {DeepReadonly<Model>} next
  * @param {EntityID} id
  * @param {HTMLElement} container
  */
 export function update(prev, next, id, container) {
-    const next_entity = Opt.expect(Repo.get(next.world.entity_repo, id), `ERROR: expected entity of id: ${id}`);
+    const next_entity = Opt.expect(Repo.get(next.world.entity_repo, id), `expected entity of id: ${id}`);
 
     if (prev) {
         const prev_entity = Repo.get(prev.world.entity_repo, id);
         if (Opt.is_some(prev_entity) && Opt.unwrap(prev_entity) === next_entity) return;
     }
 
-    const coord = container.querySelector(`.entity-view[data-id="${id}"] .entity-coord`);
-    if (!coord) throw new Error();
-    coord.textContent = Coord.to_string3D(next_entity.coord);
+    const direction = container.querySelector(`.entity-view[data-id="${id}"] .entity-direction`);
+    const address = container.querySelector(`.entity-view[data-id="${id}"] .entity-address`);
+    if (!direction || !address) throw new Error();
+    direction.textContent = next_entity.direction;
+    address.textContent = Address.to_string(next_entity.address);
 }
 
 /**
- * @param {Readonly<EntityRepository>} repo
+ * @param {DeepReadonly<EntityRepository>} repo
  * @returns {string}
  */
 export function render_all(repo) {
@@ -56,8 +59,8 @@ export function render_all(repo) {
 }
 
 /**
- * @param {Readonly<Model>|null} prev
- * @param {Readonly<Model>} next
+ * @param {DeepReadonly<Model>|null} prev
+ * @param {DeepReadonly<Model>} next
  */
 export function update_all(prev, next) {
     if (prev?.world.entity_repo === next.world.entity_repo) return;
@@ -84,7 +87,7 @@ export function update_all(prev, next) {
 
 /**
  * @param {HTMLElement} container
- * @param {Readonly<EntityRepository>} repo
+ * @param {DeepReadonly<EntityRepository>} repo
  * @param {EntityID} id
  */
 export function add(container, repo, id) { container.insertAdjacentHTML('beforeend', render(repo, id)) }

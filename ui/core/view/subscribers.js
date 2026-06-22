@@ -1,12 +1,12 @@
 // ui/core/view/subscribers.js
 // @ts-check
 
-/** @type {Map<string, (prev: Readonly<Model>|null, next: Readonly<Model>) => void>} */
+/** @type {Map<string, (prev: {DeepReadonly<Model>|null, next: {DeepReadonly<Model>) => void>} */
 let subscribers = new Map();
 
 /**
  * @param {string} key
- * @param {(prev: Readonly<Model>|null, next: Readonly<Model>) => void} fn
+ * @param {(prev: {DeepReadonly<Model>|null, next: {DeepReadonly<Model>) => void} fn
  */
 export function subscribe(key, fn) {
     if (subscribers.has(key)) throw new Error();
@@ -21,7 +21,7 @@ export function unsubscribe(key) { subscribers.delete(key); }
 export function clear() { subscribers = new Map(); }
 
 /**
- * @param {Readonly<Model>|null} prev
- * @param {Readonly<Model>} next 
+ * @param {DeepReadonly<Model>|null} prev
+ * @param {DeepReadonly<Model>} next 
  */
 export function notify(prev, next) { subscribers.forEach(fn => fn(prev, next)); }

@@ -6,12 +6,12 @@
 // import * as Repo from '../../../utils/repository.js';
 
 // /**
-//  * @param {Readonly<CubeRepository>} repo
+//  * @param {DeepReadonly<CubeRepository>} repo
 //  * @param {CubeID} id
 //  * @returns {string}
 //  */
 // export function render(repo, id) {
-//     const cube = Opt.expect(Repo.get(repo, id), `ERROR: expected cube of id: ${id}`);
+//     const cube = Opt.expect(Repo.get(repo, id), `expected cube of id: ${id}`);
 //     return `
 //     <div class="cube-view" data-id="${cube.id}">
 //         id: <span class="cube-id">${cube.id}</span>
@@ -23,13 +23,13 @@
 // }
 
 // /**
-//  * @param {Readonly<Model>|null} prev
-//  * @param {Readonly<Model>} next
+//  * @param {DeepReadonly<Model>|null} prev
+//  * @param {DeepReadonly<Model>} next
 //  * @param {CubeID} id
 //  * @param {HTMLElement} container
 //  */
 // export function update(prev, next, id, container) {
-//     const next_cube = Opt.expect(Repo.get(next.world.entity_repo, id), `ERROR: expected cube of id: ${id}`);
+//     const next_cube = Opt.expect(Repo.get(next.world.entity_repo, id), `expected cube of id: ${id}`);
 
 //     if (prev) {
 //         const prev_entity = Repo.get(prev.world.entity_repo, id);
@@ -46,7 +46,7 @@
 // }
 
 // /**
-//  * @param {Readonly<EntityRepository>} repo
+//  * @param {DeepReadonly<EntityRepository>} repo
 //  * @returns {string}
 //  */
 // export function render_all(repo) {
@@ -60,8 +60,8 @@
 // }
 
 // /**
-//  * @param {Readonly<Model>|null} prev
-//  * @param {Readonly<Model>} next
+//  * @param {DeepReadonly<Model>|null} prev
+//  * @param {DeepReadonly<Model>} next
 //  */
 // export function update_all(prev, next) {
 //     if (prev?.world.entity_repo === next.world.entity_repo) return;
@@ -88,7 +88,7 @@
 
 // /**
 //  * @param {HTMLElement} container
-//  * @param {Readonly<EntityRepository>} repo
+//  * @param {DeepReadonly<EntityRepository>} repo
 //  * @param {EntityID} id
 //  */
 // export function add(container, repo, id) { container.insertAdjacentHTML('beforeend', render(repo, id)) }

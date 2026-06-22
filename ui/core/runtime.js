@@ -24,7 +24,6 @@ function init() {
             case 'start_stop_tick_interval':
             case 'start_main':
             case 'stop_main':
-            case 'add_block':
                 dispatch({ type: msg_type }); break;
             case 'skip_seconds': dispatch({ type: msg_type, amount: parseInt(target.dataset.amount ?? '', 10) }); break;
             case 'direction': dispatch({ type: msg_type, direction: Direction.from_string(target.dataset.direction) }); break;
@@ -34,7 +33,7 @@ function init() {
                 break;
             }
 
-            default: throw new Error(`ERROR: unknown msg_type: ${msg_type}`);
+            default: throw new Error(`unknown msg_type: ${msg_type}`);
         }
     });
 

@@ -12,16 +12,11 @@
 /** @typedef {import('../ui/core/message.js').SkipSecondsMsg} SkipSecondsMsg*/
 /** @typedef {import('../ui/core/message.js').StartMainMsg} StartMainMsg*/
 /** @typedef {import('../ui/core/message.js').StopMainMsg} StopMainMsg*/
-/** @typedef {import('../ui/core/message.js').AddBlockMsg} AddBlockMsg*/
 /** @typedef {import('../ui/core/message.js').DirectionMsg} DirectionMsg*/
 /** @typedef {import('../ui/core/message.js').MovementMsg} MovementMsg*/
 /** @typedef {import('../ui/core/message.js').Msg} Msg*/
 // --------------
 
-/** @typedef {import('../ui/block/block_model.js').Block} Block*/
-/** @typedef {import('../ui/block/block_model.js').BlockID} BlockID*/
-
-/** @typedef {import('./repository.js').Repository<Block, BlockID>} BlockRepository */
 /** @typedef {import('./repository.js').Repository<Player, EntityID>} EntityRepository*/
 
 // ========== engine ==========
@@ -32,6 +27,7 @@
 /** @typedef {import('../engine/map/direction.js').Direction} Direction*/
 /** @typedef {import('../engine/map/coord.js').Coord3D} Coord3D*/
 /** @typedef {import('../engine/map/coord.js').Coord2D} Coord2D*/
+/** @typedef {import('../engine/map/address.js').Address} Address*/
 /** @typedef {import('../engine/map/map.js').Map3D} Map3D*/
 
 /** @typedef {import('../engine/map/continent.js').Continent} Continent*/
@@ -55,3 +51,20 @@
 /** @typedef {import('../engine/entities/player.js').Player} Player*/
 
 // ========== utils ==========
+/**
+ * @template T
+ * @typedef {T extends (...args: any[]) => any
+ *   ? T
+ *   : T extends Date | RegExp | Error | bigint | string | number | boolean | symbol | null | undefined
+ *     ? T
+ *     : T extends Map<infer K, infer V>
+ *       ? ReadonlyMap<DeepReadonly<K>, DeepReadonly<V>>
+ *       : T extends Set<infer U>
+ *         ? ReadonlySet<DeepReadonly<U>>
+ *         : T extends readonly any[]
+ *           ? { readonly [K in keyof T]: DeepReadonly<T[K]> }
+ *           : T extends object
+ *             ? { readonly [K in keyof T]: DeepReadonly<T[K]> }
+ *             : T
+ * } DeepReadonly
+ */

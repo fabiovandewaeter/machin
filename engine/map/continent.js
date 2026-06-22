@@ -2,6 +2,7 @@
 // @ts-check
 
 import '../../utils/types.js'
+import * as Region from './region.js'
 import * as Repo from '../../utils/repository.js'
 
 /** @typedef {number & {__brand:"ContinentID"}} ContinentID*/
@@ -13,29 +14,31 @@ import * as Repo from '../../utils/repository.js'
  */
 
 /**
- * @param {Readonly<ContinentRepository>} repo
+ * @param {DeepReadonly<Map3D>} map
  * @param {string} name
- * @returns {[ContinentRepository, ContinentID]}
+ * @returns {[Map3D, ContinentID]}
  */
-export function spawn(repo, name) {
+export function spawn(map, name) {
+    let [new_map, region] = Region.spawn(map, "region_A");
     /** @type {Omit<Continent, "id">} */
     const tempo_continent = {
         name,
-        regions: []
+        regions: [region],
     };
-    const [new_repo, id] = Repo.spawn_element(repo, tempo_continent);
-    return [new_repo, id];
+    let [continent_repo, id] = Repo.spawn_element(map.continent_repo, tempo_continent);
+    new_map = { ...map, continent_repo };
+    return [new_map, id];
 }
 
 /**
- * @param {Readonly<Continent>} continent
+ * @param {DeepReadonly<Continent>} continent
  * @param {RegionID} id
  * @returns {Continent}
  */
 export function add_region(continent, id) { return { ...continent, regions: [...continent.regions, id] }; }
 
 /**
- * @param {Readonly<Continent>} continent
+ * @param {DeepReadonly<Continent>} continent
  * @param {RegionID} id
  * @returns {Continent}
  */

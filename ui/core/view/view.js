@@ -6,8 +6,8 @@ import * as MainScene from "../../scenes/main_scene.js"
 import * as MenuScene from "../../scenes/menu_scene.js"
 
 /**
- * @param {Readonly<Model>|null} prev
- * @param {Readonly<Model>} next 
+ * @param {DeepReadonly<Model>|null} prev
+ * @param {DeepReadonly<Model>} next 
  */
 export function view(prev, next) {
     const app = document.getElementById('app');

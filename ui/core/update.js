@@ -4,16 +4,16 @@
 import '../../utils/types.js'
 import { advance_clock_by, tick } from '../../engine/core/clock.js'
 import { dispatch } from './runtime.js'
-import * as Block from '../block/block_model.js'
 import * as World from '../../engine/core/world.js'
 import * as Coord from '../../engine/map/coord.js'
+import * as Address from '../../engine/map/address.js'
 import * as Player from '../../engine/entities/player.js'
 
 const TICK_DELAY_MS = 1000;
 
 /**
- * @param {Readonly<Model>} model
- * @param {Readonly<Msg>} msg
+ * @param {DeepReadonly<Model>} model
+ * @param {DeepReadonly<Msg>} msg
  * @returns {Model} 
  */
 export function update(model, msg) {
@@ -24,15 +24,14 @@ export function update(model, msg) {
         case 'skip_seconds': return skip_seconds_update(model, msg);
         case 'start_main': return start_main_update(model, msg);
         case 'stop_main': return stop_main_update(model, msg);
-        case 'add_block': return add_block_update(model, msg);
         case 'direction': return direction_update(model, msg);
         case 'movement': return movement_update(model, msg);
     }
 }
 
 /**
- * @param {Readonly<Model>} model 
- * @param {Readonly<TickMsg>} msg
+ * @param {DeepReadonly<Model>} model 
+ * @param {DeepReadonly<TickMsg>} msg
  * @returns {Model}
  */
 function tick_update(model, msg) {
@@ -47,8 +46,8 @@ function tick_update(model, msg) {
 }
 
 /**
- * @param {Readonly<Model>} model 
- * @param {Readonly<StartStopTickIntervalMsg>} msg
+ * @param {DeepReadonly<Model>} model 
+ * @param {DeepReadonly<StartStopTickIntervalMsg>} msg
  * @returns {Model}
  */
 function start_stop_tick_interval_update(model, msg) {
@@ -72,8 +71,8 @@ function start_stop_tick_interval_update(model, msg) {
 }
 
 /**
- * @param {Readonly<Model>} model 
- * @param {Readonly<SkipSecondsMsg>} msg
+ * @param {DeepReadonly<Model>} model 
+ * @param {DeepReadonly<SkipSecondsMsg>} msg
  * @returns {Model}
  */
 function skip_seconds_update(model, msg) {
@@ -91,8 +90,8 @@ function skip_seconds_update(model, msg) {
 }
 
 /**
- * @param {Readonly<Model>} model 
- * @param {Readonly<StartMainMsg>} msg
+ * @param {DeepReadonly<Model>} model 
+ * @param {DeepReadonly<StartMainMsg>} msg
  * @returns {Model}
  */
 function start_main_update(model, msg) {
@@ -104,8 +103,8 @@ function start_main_update(model, msg) {
 }
 
 /**
- * @param {Readonly<Model>} model 
- * @param {Readonly<StopMainMsg>} msg
+ * @param {DeepReadonly<Model>} model 
+ * @param {DeepReadonly<StopMainMsg>} msg
  * @returns {Model}
  */
 function stop_main_update(model, msg) {
@@ -117,22 +116,8 @@ function stop_main_update(model, msg) {
 }
 
 /**
- * @param {Readonly<Model>} model 
- * @param {Readonly<AddBlockMsg>} msg
- * @returns {Model}
- */
-function add_block_update(model, msg) {
-    let [block_repo, _] = Block.spawn(model.block_repo, { x: 0, y: 0 });
-    return {
-        ...model,
-        block_repo,
-        logs: [...model.logs, `${msg.type}`]
-    }
-}
-
-/**
- * @param {Readonly<Model>} model 
- * @param {Readonly<DirectionMsg>} msg
+ * @param {DeepReadonly<Model>} model 
+ * @param {DeepReadonly<DirectionMsg>} msg
  * @returns {Model}
  */
 function direction_update(model, msg) {
@@ -144,16 +129,16 @@ function direction_update(model, msg) {
 }
 
 /**
- * @param {Readonly<Model>} model 
- * @param {Readonly<MovementMsg>} msg
+ * @param {DeepReadonly<Model>} model 
+ * @param {DeepReadonly<MovementMsg>} msg
  * @returns {Model}
  */
 function movement_update(model, msg) {
     const player = Player.get(model.world.entity_repo);
-    const target = Coord.add3D(player.coord, msg.delta);
+    const target = { ...player.address, coord: /**@type {RoomCoord} */(Coord.add3D(player.address.coord, msg.delta)) };
     return {
         ...model,
         world: World.move_player(model.world, target),
-        logs: [...model.logs, `${msg.type} ${Coord.to_string3D(player.coord)}->${Coord.to_string3D(target)}`]
+        logs: [...model.logs, `${msg.type} ${Address.to_string(player.address)}->${Address.to_string(target)}`]
     }
 }

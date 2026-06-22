@@ -2,7 +2,7 @@
 // @ts-check
 
 import '../../utils/types.js'
-import { SECONDS_PER_DAY, SECONDS_PER_HOUR, SECONDS_PER_MINUTE, SECONDS_PER_WEEK, SECONDS_PER_YEAR } from '../../utils/time.js'
+import { SECONDS_PER_DAY, SECONDS_PER_HOUR, SECONDS_PER_MINUTE, SECONDS_PER_WEEK, SECONDS_PER_YEAR } from '../../utils/const.js'
 
 /**
  * @returns {string}
@@ -22,8 +22,6 @@ export function render() {
         <button data-msg-type="start_stop_tick_interval">Start</button>
 
         <button data-msg-type="stop_main">Stop main</button>
-
-        <button data-msg-type="add_block">Ajouter bloc</button>
 
         <div class="controls-direction">
             <button data-msg-type="direction" data-direction="NORTH">Nord</button>
@@ -45,8 +43,8 @@ export function render() {
 }
 
 /**
- * @param {Readonly<Model>|null} prev
- * @param {Readonly<Model>} next
+ * @param {DeepReadonly<Model>|null} prev
+ * @param {DeepReadonly<Model>} next
  */
 export function update_all(prev, next) {
     if (prev?.tick_interval_id === next.tick_interval_id) return;

@@ -14,7 +14,7 @@ export const ID = /**@type {EntityID}*/(0);
  */
 
 /**
- * @param {Readonly<EntityRepository>} repo
+ * @param {DeepReadonly<EntityRepository>} repo
  * @returns {Player}
  */
-export function get(repo) { return /**@type {Player} */(Opt.expect(Repo.get(repo, ID), "ERROR: couldn't find player in entity repo")); }
+export function get(repo) { return /**@type {Player} */(Opt.expect(Repo.get(repo, ID), "couldn't find player in entity repo")); }

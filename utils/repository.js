@@ -23,7 +23,7 @@ export function create() { return { current_id: /**@type {TID}*/(0), elements: /
  * @template T
  * @template {number} TID
  * @template {Omit<T, "id">} TSpawnArgs
- * @param {Readonly<Repository<T, TID>>} repo
+ * @param {DeepReadonly<Repository<T, TID>>} repo
  * @param {TSpawnArgs} args
  * @returns {[Repository<T, TID>, TID]}
  */
@@ -43,7 +43,7 @@ export function spawn_element(repo, args) {
 /**
  * @template T
  * @template {number} TID
- * @param {Readonly<Repository<T, TID>>} repo
+ * @param {DeepReadonly<Repository<T, TID>>} repo
  * @param {TID} id
  * @param {T} element
  * @returns {Repository<T, TID>}
@@ -62,7 +62,7 @@ export function replace(repo, id, element) {
 /**
  * @template T
  * @template {number} TID
- * @param {Readonly<Repository<T, TID>>} repo
+ * @param {DeepReadonly<Repository<T, TID>>} repo
  * @param {TID} id
  * @returns {import("./option").Opt<T>}
  */
@@ -74,7 +74,7 @@ export function get(repo, id) {
 /**
  * @template T
  * @template {number} TID
- * @param {Readonly<Repository<T, TID>>} repo
+ * @param {DeepReadonly<Repository<T, TID>>} repo
  * @returns {TID}
  */
 export function next_id(repo) { return /**@type {TID}*/(repo.current_id + 1); }
@@ -82,7 +82,7 @@ export function next_id(repo) { return /**@type {TID}*/(repo.current_id + 1); }
 /**
  * @template T
  * @template {number} TID
- * @param {Readonly<Repository<T, TID>>} repo
+ * @param {DeepReadonly<Repository<T, TID>>} repo
  * @param {TID} id
  * @returns {import("./result").Result<Repository<T, TID>, string>}
  */
@@ -98,7 +98,7 @@ export function remove(repo, id) {
 /**
  * @template T
  * @template {number} TID
- * @param {Readonly<Repository<T, TID>>} repo
+ * @param {DeepReadonly<Repository<T, TID>>} repo
  * @return {TID[]}
  */
 export function all_ids(repo) { return /**@type {TID[]}*/(Object.keys(repo.elements).map(Number)); }
@@ -106,7 +106,7 @@ export function all_ids(repo) { return /**@type {TID[]}*/(Object.keys(repo.eleme
 /**
  * @template T
  * @template {number} TID
- * @param {Readonly<Repository<T, TID>>} repo
+ * @param {DeepReadonly<Repository<T, TID>>} repo
  * @return {T[]}
  */
 export function all(repo) { return Object.values(repo.elements); }

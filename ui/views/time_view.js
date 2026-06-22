@@ -2,7 +2,7 @@
 // @ts-check
 
 import '../../utils/types.js'
-import { SECONDS_PER_DAY, SECONDS_PER_HOUR, SECONDS_PER_MINUTE, SECONDS_PER_WEEK, SECONDS_PER_YEAR } from '../../utils/time.js'
+import { SECONDS_PER_DAY, SECONDS_PER_HOUR, SECONDS_PER_MINUTE, SECONDS_PER_WEEK, SECONDS_PER_YEAR } from '../../utils/const.js'
 
 /**
  * @returns {string}
@@ -22,8 +22,8 @@ export function render() {
 }
 
 /**
- * @param {Readonly<Model>|null} prev
- * @param {Readonly<Model>} next
+ * @param {DeepReadonly<Model>|null} prev
+ * @param {DeepReadonly<Model>} next
  */
 export function update_all(prev, next) {
     if (prev?.world.clock.accumulated_time === next.world.clock.accumulated_time) return;

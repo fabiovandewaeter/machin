@@ -10,12 +10,12 @@
 // const RENDER_DISTANCE = 3;
 
 // /**
-//  * @param {Readonly<RoomRepository>} repo
+//  * @param {DeepReadonly<RoomRepository>} repo
 //  * @param {RoomID} id
 //  * @returns {string}
 //  */
 // export function render(repo, id) {
-//     const room = Opt.expect(Repo.get(repo, id), `ERROR: expected room of id: ${id}`);
+//     const room = Opt.expect(Repo.get(repo, id), `expected room of id: ${id}`);
 //     return `
 //     <div class="room-view" data-id="${room.id}">
 //         id: <span class="room-id">${room.id}</span>
@@ -26,13 +26,13 @@
 // }
 
 // /**
-//  * @param {Readonly<Model>|null} prev
-//  * @param {Readonly<Model>} next
+//  * @param {DeepReadonly<Model>|null} prev
+//  * @param {DeepReadonly<Model>} next
 //  * @param {RoomID} id
 //  * @param {HTMLElement} container
 //  */
 // export function update(prev, next, id, container) {
-//     const next_room = Opt.expect(Repo.get(next.world.entity_repo, id), `ERROR: expected room of id: ${id}`);
+//     const next_room = Opt.expect(Repo.get(next.world.entity_repo, id), `expected room of id: ${id}`);
 
 //     if (prev) {
 //         const prev_entity = Repo.get(prev.world.entity_repo, id);
@@ -49,7 +49,7 @@
 // }
 
 // /**
-//  * @param {Readonly<EntityRepository>} repo
+//  * @param {DeepReadonly<EntityRepository>} repo
 //  * @returns {string}
 //  */
 // export function render_all(repo) {
@@ -63,8 +63,8 @@
 // }
 
 // /**
-//  * @param {Readonly<Model>|null} prev
-//  * @param {Readonly<Model>} next
+//  * @param {DeepReadonly<Model>|null} prev
+//  * @param {DeepReadonly<Model>} next
 //  */
 // export function update_all(prev, next) {
 //     if (prev?.world.entity_repo === next.world.entity_repo) return;
@@ -92,7 +92,7 @@
 
 // /**
 //  * @param {HTMLElement} container
-//  * @param {Readonly<RoomRepository>} repo
+//  * @param {DeepReadonly<RoomRepository>} repo
 //  * @param {RoomID} id
 //  */
 // export function add(container, repo, id) { container.insertAdjacentHTML('beforeend', render(repo, id)) }
@@ -103,7 +103,7 @@
 // export function remove(container, id) { container.querySelector(`.room-view[data-id=${id}]`)?.remove() }
 
 // /**
-//  * @param {Readonly<Model>} model
+//  * @param {DeepReadonly<Model>} model
 //  * @returns {RoomID[]}
 //  */
 // export function get_visible_room_ids(model) {

@@ -18,8 +18,8 @@ export function render() {
 }
 
 /**
- * @param {Readonly<Model>|null} prev
- * @param {Readonly<Model>} next
+ * @param {DeepReadonly<Model>|null} prev
+ * @param {DeepReadonly<Model>} next
  */
 export function update_all(prev, next) {
     if (prev?.logs === next.logs) return;

@@ -2,7 +2,7 @@
 // @ts-check
 
 import '../../utils/types.js'
-
+import * as Opt from '../../utils/option.js'
 
 /**
  * Un seul sens
@@ -11,7 +11,7 @@ import '../../utils/types.js'
  * @property {RoomCoord} target_room_coord
  */
 
-/** @typedef {Coord2D & {__brand:"RoomCoord"}} RoomCoord */
+/** @typedef {Coord3D & {__brand:"RoomCoord"}} RoomCoord */
 /**
  * @typedef {Object} Room
  * @property {RoomCoord} coord // local à l'Area
@@ -30,10 +30,11 @@ export function create(coord) {
 }
 
 /**
- * exit from direction
- * @param {Readonly<Room>} room 
+ * @param {DeepReadonly<Room>} room 
  * @param {Direction} direction 
+ * @returns {import('../../utils/option.js').Opt<RoomExit>}
  */
-export function get_exit(room, direction) {
-
+export function get_exit_from_direction(room, direction) {
+    if (direction in room.exits.keys) return Opt.some(room.exits[direction]);
+    return Opt.none;
 }

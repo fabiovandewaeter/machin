@@ -8,11 +8,9 @@
 /** @typedef {{type: 'start_main'}} StartMainMsg*/
 /** @typedef {{type: 'stop_main'}} StopMainMsg*/
 
-/** @typedef {{type: 'add_block'}} AddBlockMsg*/
-
 /** @typedef {{type: 'direction', direction: Direction }} DirectionMsg*/
 /** @typedef {{type: 'movement', delta: Coord3D}} MovementMsg*/
 
-/** @typedef {TickMsg|StartStopTickIntervalMsg|SkipSecondsMsg|StartMainMsg|StopMainMsg|AddBlockMsg|DirectionMsg|MovementMsg} Msg*/
+/** @typedef {TickMsg|StartStopTickIntervalMsg|SkipSecondsMsg|StartMainMsg|StopMainMsg|DirectionMsg|MovementMsg} Msg*/
 
 export { };
