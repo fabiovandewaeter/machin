@@ -11,38 +11,52 @@ import * as Coord from '../map/coord.js'
 import * as Movement from '../map/movement.js'
 import * as Repo from '../../utils/repository.js'
 import * as Opt from '../../utils/option.js'
+import * as Res from '../../utils/result.js'
 
 /**
  * @typedef {Object} World
  * @property {Clock} clock
  * @property {Map3D} map
- * @property {EntityRepository} entity_repo
+ * @property {EntityRepo} entity_repo
  */
 
 /**
- * @returns {World}
+ * @returns {D<World>}
  */
 export function create() {
-    let entity_repo = /**@type {EntityRepository}*/(Repo.create());
+    return {
+        clock: Clock.create(null),
+        map: Map.create(),
+        entity_repo: Repo.create(),
+    };
+}
+
+/**
+ * @param {D<World>} world 
+ * @returns {D<World>}
+ */
+export function init(world) {
     // Player
-    [entity_repo] = Entity.spawn(entity_repo, {
+    let [entity_repo] = Entity.spawn(world.entity_repo, {
         continent: /**@type {ContinentID}*/(0),
         region: /**@type {RegionID}*/(0),
         area:/**@type {AreaID}*/(0),
         coord: /**@type {RoomCoord}*/({ x: 0, y: 0, z: 0 })
     },
         'NORTH');
+    // Map
+    let map = Map.init(world.map);
     return {
-        clock: Clock.create(null),
-        map: Map.create(),
+        ...world,
         entity_repo,
+        map
     };
 }
 
 /**
- * @param {DeepReadonly<World>} world
+ * @param {D<World>} world
  * @param {number} delta_ms
- * @returns {World}
+ * @returns {D<World>}
  */
 export function update(world, delta_ms) {
     // TODO: update la clock aussi ? ou faire dehors je sais pas
@@ -50,52 +64,39 @@ export function update(world, delta_ms) {
 }
 
 /**
- * @param {DeepReadonly<World>} world
- * @param {Direction} direction
- * @returns {World}
+ * @param {D<World>} world
+ * @param {D<Direction>} direction
+ * @returns {D<World>}
  */
 export function change_direction_player(world, direction) {
     const player = Player.get(world.entity_repo);
     return {
         ...world,
-        entity_repo: {
-            ...world.entity_repo,
-            elements: {
-                ...world.entity_repo.elements,
-                [Player.ID]: Entity.change_direction(player, direction)
-            }
-        }
+        // entity_repo: {
+        //     ...world.entity_repo,
+        //     elements: {
+        //         ...world.entity_repo.elements,
+        //         [Player.ID]: Entity.change_direction(player, direction)
+        //     }
+        // }
+        entity_repo: Repo.replace(world.entity_repo, Entity.change_direction(player, direction))
     };
 }
 
 /**
  * change seulement coord et pas continent/region/area ids
- * @param {DeepReadonly<World>} world
- * @param {Address} target
- * @returns {World}
+ * @param {D<World>} world
+ * @param {D<Address>} target
+ * @returns {Res<D<World>, string>}
  */
 export function move_player(world, target) {
     const player = Player.get(world.entity_repo);
 
-    let map = world.map;
-    let continent = Opt.unwrap(Repo.get(world.map.continent_repo, target.continent));
-    let region = Opt.unwrap(Repo.get(map.region_repo, target.region));
-    let area = Opt.unwrap(Repo.get(map.area_repo, target.area));
-    const room_opt = Area.get_room(area, target.coord);
-    let new_world = world;
-    if (Opt.is_none(room_opt)) {
-        area = Area.load_room(area, target.coord);
-        let area_repo = Repo.replace(map.area_repo, area.id, area);
-        let region_repo = Repo.replace(map.region_repo, region.id, region);
-        let continent_repo = Repo.replace(map.continent_repo, continent.id, continent);
-        new_world = { ...new_world, map: { ...map, area_repo, region_repo, continent_repo } };
-    }
+    const can_move_res = Movement.can_move(world, player, player.address, target);
+    if (Res.is_err(can_move_res)) return can_move_res;
 
-    if (Movement.can_move(new_world, player, player.address, target)) {
-        return {
-            ...new_world,
-            entity_repo: Repo.replace(new_world.entity_repo, Player.ID, Entity.move(player, target))
-        };
-    }
-    return new_world;
+    return Res.ok({
+        ...world,
+        entity_repo: Repo.replace(world.entity_repo, Entity.move(player, target))
+    });
 }

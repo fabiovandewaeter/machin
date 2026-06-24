@@ -15,7 +15,7 @@ import * as World from '../../engine/core/world.js'
  */
 
 /**
- * @returns {Model}
+ * @returns {D<Model>}
  */
 export function create() {
     return {
@@ -26,4 +26,13 @@ export function create() {
     };
 }
 
-export { };
+/**
+ * @param {D<Model>} model 
+ * @returns {D<Model>}
+ */
+export function init(model) {
+    return {
+        ...model,
+        world: World.init(model.world)
+    }
+}

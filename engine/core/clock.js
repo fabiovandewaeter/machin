@@ -18,7 +18,7 @@ export function create(saved_timestamp) {
 }
 
 /**
- * @param {DeepReadonly<Clock>} clock
+ * @param {D<Clock>} clock
  * @returns {[Clock,number]}
  */
 export function tick(clock) {
@@ -30,7 +30,7 @@ export function tick(clock) {
 }
 
 /**
- * @param {DeepReadonly<Clock>} clock
+ * @param {D<Clock>} clock
  * @param {number} ms
  * @returns {Clock}
  */

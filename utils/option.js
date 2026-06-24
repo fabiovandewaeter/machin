@@ -3,20 +3,6 @@
 
 /**
  * @template T
- * @typedef {{ readonly _tag: "Some", readonly value: T}} Some
- */
-
-/**
- * @typedef {{ readonly _tag: "None"}} None
- */
-
-/**
- * @template T
- * @typedef { Some<T> | None} Opt
- */
-
-/**
- * @template T
  * @param {T} value
  * @returns {Some<T>}
  */

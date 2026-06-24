@@ -5,7 +5,7 @@ import '../../utils/types.js';
 
 /**
  * @param {HTMLElement} container
- * @param {DeepReadonly<Model>} model
+ * @param {D<Model>} model
  */
 export function render(container, model) {
     container.innerHTML += `

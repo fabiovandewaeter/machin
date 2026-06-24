@@ -6,8 +6,8 @@ import '../../utils/types.js'
 /** @typedef {'NORTH'|'EAST'|'SOUTH'|'WEST'|'UP'|'DOWN'} Direction */
 
 /**
- * @param {Direction} direction
- * @returns {Coord2D}
+ * @param {D<Direction>} direction
+ * @returns {D<Coord2D>}
  */
 export function to_delta2D(direction) {
     switch (direction) {
@@ -20,8 +20,8 @@ export function to_delta2D(direction) {
 }
 
 /**
- * @param {Direction} direction
- * @returns {Coord3D}
+ * @param {D<Direction>} direction
+ * @returns {D<Coord3D>}
  */
 export function to_delta3D(direction) {
     switch (direction) {
@@ -37,7 +37,7 @@ export function to_delta3D(direction) {
 
 /**
  * @param {string|undefined} s
- * @return {Direction}
+ * @return {D<Direction>}
  */
 export function from_string(s) {
     switch (s) {

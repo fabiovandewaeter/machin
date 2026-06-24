@@ -37,45 +37,45 @@
 /** @typedef {{x: number, y: number, z: number}} Coord3D */
 
 /**
- * @param {Coord2D} a 
- * @param {Coord2D} b 
+ * @param {D<Coord2D>} a 
+ * @param {D<Coord2D>} b 
  * @returns {Coord2D}
  */
 export function add2D(a, b) { return { x: a.x + b.x, y: a.y + b.y }; }
 
 /**
- * @param {Coord3D} a 
- * @param {Coord3D} b 
+ * @param {D<Coord3D>} a 
+ * @param {D<Coord3D>} b 
  * @returns {Coord3D}
  */
 export function add3D(a, b) { return { ...add2D(a, b), z: a.z + b.z }; }
 
 /**
- * @param {Coord3D} c
+ * @param {D<Coord3D>} c
  * @returns {Coord2D}
  */
 export function to_2D(c) { return { x: c.x, y: c.x }; }
 
 /**
- * @param {Coord3D} coord
+ * @param {D<Coord3D>} coord
  * @returns {string}
  */
 export function key_from_3D(coord) { return `${coord.x},${coord.y},${coord.z}`; }
 
 /**
- * @param {Coord2D} coord
+ * @param {D<Coord2D>} coord
  * @returns {string}
  */
 export function key_from_2D(coord) { return `${coord.x},${coord.y}`; }
 
 /**
- * @param {Coord3D} coord
+ * @param {D<Coord3D>} coord
  * @returns {string}
  */
 export function to_string3D(coord) { return `{x: ${coord.x}, y: ${coord.y}, z: ${coord.z}}`; }
 
 /**
- * @param {Coord2D} coord
+ * @param {D<Coord2D>} coord
  * @returns {string}
  */
 export function to_string2D(coord) { return `{x: ${coord.x}, y: ${coord.y}}`; }

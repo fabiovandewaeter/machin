@@ -7,7 +7,7 @@ import { ok, err } from "./result.js"
 /**
  * @template T
  * @template {number} TID
- * @typedef {Object} Repository
+ * @typedef {Object} Repo
  * @property {TID} current_id
  * @property {Record<TID, T>} elements
  */
@@ -15,7 +15,7 @@ import { ok, err } from "./result.js"
 /**
  * @template T
  * @template {number} TID
- * @returns {Repository<T, TID>}
+ * @returns {Repo<T, TID>}
  */
 export function create() { return { current_id: /**@type {TID}*/(0), elements: /** @type {Record<TID, T>}*/({}) }; }
 
@@ -23,58 +23,63 @@ export function create() { return { current_id: /**@type {TID}*/(0), elements: /
  * @template T
  * @template {number} TID
  * @template {Omit<T, "id">} TSpawnArgs
- * @param {DeepReadonly<Repository<T, TID>>} repo
+ * @param {D<Repo<T, TID>>} repo
  * @param {TSpawnArgs} args
- * @returns {[Repository<T, TID>, TID]}
+ * @returns {[D<Repo<T, TID>>, T]}
  */
 export function spawn_element(repo, args) {
-    const id = repo.current_id;
+    let repo_thaw = /**@type {Repo<T, TID>} */(repo);
+    const id = repo_thaw.current_id;
+    const new_element = /**@type {T} */({ id, ...args });
+    /**@type {Repo<T,TID>} */
     const new_repo = {
-        ...repo,
+        ...repo_thaw,
         current_id: next_id(repo),
         elements: {
-            ...repo.elements,
-            [id]: /**@type {T} */({ id, ...args })
+            ...repo_thaw.elements,
+            [id]: new_element
         }
     };
-    return [new_repo, id];
+    return [/**@type {D<Repo<T, TID>>}*/(new_repo), new_element];
 }
 
 /**
- * @template T
+ * @template {{id: TID}} T
  * @template {number} TID
- * @param {DeepReadonly<Repository<T, TID>>} repo
- * @param {TID} id
+ * @param {D<Repo<T, TID>>} repo
  * @param {T} element
- * @returns {Repository<T, TID>}
+ * @returns {D<Repo<T, TID>>}
  */
-export function replace(repo, id, element) {
-    return {
+export function replace(repo, element) {
+    let repo_thaw = /**@type {Repo<T, TID>} */(repo);
+    const res = {
         ...repo,
         current_id: next_id(repo),
         elements: {
-            ...repo.elements,
-            [id]: element
+            ...repo_thaw.elements,
+            [element.id]: element
         }
     };
+    return /**@type {D<Repo<T, TID>>} */(res);
 }
 
 /**
  * @template T
  * @template {number} TID
- * @param {DeepReadonly<Repository<T, TID>>} repo
+ * @param {D<Repo<T, TID>>} repo
  * @param {TID} id
- * @returns {import("./option").Opt<T>}
+ * @returns {Opt<D<T>>}
  */
 export function get(repo, id) {
-    const res = repo.elements[id];
-    return res != null && res !== undefined ? some(res) : none;
+    let repo_thaw = /**@type {Repo<T, TID>} */(repo);
+    const res = repo_thaw.elements[id];
+    return res != null && res !== undefined ? some(/**@type {D<T>}*/(res)) : none;
 }
 
 /**
  * @template T
  * @template {number} TID
- * @param {DeepReadonly<Repository<T, TID>>} repo
+ * @param {D<Repo<T, TID>>} repo
  * @returns {TID}
  */
 export function next_id(repo) { return /**@type {TID}*/(repo.current_id + 1); }
@@ -82,23 +87,24 @@ export function next_id(repo) { return /**@type {TID}*/(repo.current_id + 1); }
 /**
  * @template T
  * @template {number} TID
- * @param {DeepReadonly<Repository<T, TID>>} repo
+ * @param {D<Repo<T, TID>>} repo
  * @param {TID} id
- * @returns {import("./result").Result<Repository<T, TID>, string>}
+ * @returns {Res<D<Repo<T, TID>>, string>}
  */
 export function remove(repo, id) {
-    if (!(id in repo.elements)) return err(`Couldn't delete element: ${id}`);
-    const { [id]: _, ...rest } = repo.elements;
-    return ok({
-        ...repo,
+    let repo_thaw = /**@type {Repo<T, TID>} */(repo);
+    if (!(id in repo_thaw.elements)) return err(`Couldn't delete element: ${id}`);
+    const { [id]: _, ...rest } = repo_thaw.elements;
+    return ok(/**@type {D<Repo<T, TID>>}*/({
+        ...repo_thaw,
         elements: /**@type {Record<TID, T>}*/(rest)
-    });
+    }));
 }
 
 /**
  * @template T
  * @template {number} TID
- * @param {DeepReadonly<Repository<T, TID>>} repo
+ * @param {D<Repo<T, TID>>} repo
  * @return {TID[]}
  */
 export function all_ids(repo) { return /**@type {TID[]}*/(Object.keys(repo.elements).map(Number)); }
@@ -106,7 +112,7 @@ export function all_ids(repo) { return /**@type {TID[]}*/(Object.keys(repo.eleme
 /**
  * @template T
  * @template {number} TID
- * @param {DeepReadonly<Repository<T, TID>>} repo
+ * @param {D<Repo<T, TID>>} repo
  * @return {T[]}
  */
 export function all(repo) { return Object.values(repo.elements); }

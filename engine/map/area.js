@@ -7,61 +7,30 @@ import * as Room from './room.js'
 import * as Repo from '../../utils/repository.js'
 import * as Opt from '../../utils/option.js'
 
-/** @typedef {number & {__brand:"AareaID"}} AreaID*/
+/** @typedef {number & {__brand:"AreaID"}} AreaID*/
 /**
  * @typedef {Object} Area
  * @property {AreaID} id
  * @property {string} name
- * @property {Object.<string, Room>} rooms
+ * @property {Object.<string, RoomID>} rooms
  */
 
 /**
- * @param {DeepReadonly<AreaRepository>} repo
+ * @param {D<AreaRepo>} repo
  * @param {string} name
- * @returns {[AreaRepository, AreaID]}
+ * @returns {[D<AreaRepo>, D<Area>]}
  */
 export function spawn(repo, name) {
-    /** @type {Omit<Area, "id">} */
-    const tempo_area = {
+    return Repo.spawn_element(repo, {
         name,
         rooms: {}
-    };
-    const room = Room.create(/**@type {RoomCoord}*/({ x: 0, y: 0, z: 0 }));
-    let [new_repo, id] = Repo.spawn_element(repo, tempo_area);
-    let area = Opt.unwrap(Repo.get(new_repo, id));
-    new_repo = Repo.replace(new_repo, area.id, add_room(area, room.coord, room));
-    return [new_repo, id];
+    });
 }
 
 /**
- * @param {DeepReadonly<Area>} area
- * @param {RoomCoord} coord
- * @param {Room} room
- * @returns {Area}
- */
-export function add_room(area, coord, room) {
-    return {
-        ...area, rooms: {
-            ...area.rooms,
-            [Coord.key_from_2D(coord)]: room
-        }
-    };
-}
-
-/**
- * @param {DeepReadonly<Area>} area
- * @param {RoomCoord} coord
- * @returns {Area}
- */
-export function remove_room(area, coord) {
-    const { [Coord.key_from_2D(coord)]: _, ...xs } = area.rooms;
-    return { ...area, rooms: xs };
-}
-
-/**
- * @param {DeepReadonly<Area>} area 
- * @param {RoomCoord} coord 
- * @returns {import("../../utils/option.js").Opt<Room>}
+ * @param {D<Area>} area 
+ * @param {D<RoomCoord>} coord 
+ * @returns {Opt<D<RoomID>>}
  */
 export function get_room(area, coord) {
     const room = area.rooms[Coord.key_from_3D(coord)];
@@ -69,10 +38,10 @@ export function get_room(area, coord) {
 }
 
 /**
- * @param {DeepReadonly<Area>} area 
- * @param {RoomCoord} coord 
- * @param {Room} room 
- * @returns {Area}
+ * @param {D<Area>} area 
+ * @param {D<RoomCoord>} coord 
+ * @param {D<RoomID>} room 
+ * @returns {D<Area>}
  */
 export function replace_room(area, coord, room) {
     return {
@@ -85,13 +54,51 @@ export function replace_room(area, coord, room) {
 }
 
 /**
- * @param {DeepReadonly<Area>} area 
- * @param {RoomCoord} coord 
- * @returns {Area}
+ * @param {D<Area>} area
+ * @param {D<RoomCoord>} coord
+ * @param {D<RoomID>} room
+ * @returns {D<Area>}
  */
-export function load_room(area, coord) {
+export function add_room(area, coord, room) {
+    return {
+        ...area, rooms: {
+            ...area.rooms,
+            [Coord.key_from_3D(coord)]: room
+        }
+    };
+}
+
+/**
+ * @param {D<Area>} area
+ * @param {D<RoomCoord>} coord
+ * @returns {D<Area>}
+ */
+export function remove_room(area, coord) {
+    const { [Coord.key_from_3D(coord)]: _, ...xs } = area.rooms;
+    return { ...area, rooms: xs };
+}
+/**
+ * @param {D<Area>} area
+ * @param {D<RoomID>} id
+ * @returns {D<Area>}
+ */
+export function remove_room_from_id(area, id) {
+    const { [id]: _, ...xs } = area.rooms;
+    return { ...area, rooms: xs };
+}
+
+
+/**
+ * TODO: crée pour l'instant mais doit pouvoir lire depuis save plus tard
+ * @param {D<Area>} area 
+ * @param {D<RoomCoord>} coord 
+ * @param {D<RoomRepo>} repo
+ * @param {RoomType} type
+ * @returns {[D<RoomRepo>, D<Area>]}
+ */
+export function load_room(area, coord, repo, type) {
     const room_opt = get_room(area, coord);
-    if (Opt.is_some(room_opt)) return area;
-    const new_room = Room.create(coord);
-    return add_room(area, coord, new_room);
+    if (Opt.is_some(room_opt)) return [repo, area];
+    const [new_repo, new_room] = Room.spawn(repo, coord, type);
+    return [new_repo, add_room(area, coord, new_room.id)];
 }

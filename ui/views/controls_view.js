@@ -43,8 +43,8 @@ export function render() {
 }
 
 /**
- * @param {DeepReadonly<Model>|null} prev
- * @param {DeepReadonly<Model>} next
+ * @param {D<Model>|null} prev
+ * @param {D<Model>} next
  */
 export function update_all(prev, next) {
     if (prev?.tick_interval_id === next.tick_interval_id) return;

@@ -9,7 +9,7 @@ import * as Direction from '../../engine/map/direction.js'
 let model = init();
 
 /**
- * @returns {Model}
+ * @returns {D<Model>}
  */
 function init() {
     const app = document.getElementById('app');
@@ -38,6 +38,7 @@ function init() {
     });
 
     let model = Model.create();
+    model = Model.init(model);
     view(null, model);
 
     return model;

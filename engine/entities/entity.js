@@ -12,10 +12,10 @@ import * as Repo from '../../utils/repository.js'
  */
 
 /**
- * @param {DeepReadonly<EntityRepository>} repo
- * @param {Address} address
- * @param {Direction} direction
- * @returns {[EntityRepository, EntityID]}
+ * @param {D<EntityRepo>} repo
+ * @param {D<Address>} address
+ * @param {D<Direction>} direction
+ * @returns {[D<EntityRepo>, D<Entity>]}
  */
 export function spawn(repo, address, direction) {
     return Repo.spawn_element(repo, {
@@ -25,17 +25,15 @@ export function spawn(repo, address, direction) {
 }
 
 /**
- * @param {DeepReadonly<Entity>} entity
- * @param {Direction} direction
- * @returns {Entity}
+ * @param {D<Entity>} entity
+ * @param {D<Direction>} direction
+ * @returns {D<Entity>}
  */
 export function change_direction(entity, direction) { return { ...entity, direction }; }
 
-//  * @param {EntityID} id
-//  * @param {DeepReadonly<EntityRepository>} repo
 /**
- * @param {DeepReadonly<Entity>} entity
- * @param {Address} address
- * @returns {Entity}
+ * @param {D<Entity>} entity
+ * @param {D<Address>} address
+ * @returns {D<Entity>}
  */
 export function move(entity, address) { return { ...entity, address }; }

@@ -1,24 +1,32 @@
-// ui/views/entity_description_view.js
+// ui/views/minimap/minimap_room_view.js
 // @ts-check
 
-import '../../utils/types.js'
-import * as Opt from '../../utils/option.js'
-import * as Repo from '../../utils/repository.js'
-import * as Address from '../../engine/map/address.js'
+import '../../../utils/types.js';
+import * as Opt from '../../../utils/option.js';
+import * as Repo from '../../../utils/repository.js';
+import * as Player from '../../../engine/entities/player.js';
+import * as Room from '../../../engine/map/room.js';
 
-// ========== rendering ==========
+/**@type {Record<RoomType, string>} */
+const ROOM_EMOJIS = {
+    city: '🏢',
+    river: '🌊',
+    forest: '🌳',
+    mountain: '⛰️'
+}
+
 /**
- * @param {D<EntityRepo>} repo
- * @param {EntityID} id
+ * @param {D<RoomRepo>} repo
+ * @param {RoomID} id
  * @returns {string}
  */
 export function render(repo, id) {
-    const entity = Opt.expect(Repo.get(repo, id), `expected entity of id: ${id}`);
+    const room = Opt.expect(Repo.get(repo, id), `expected room of id: ${id}`);
     return `
-    <div class="entity-view" data-id="${entity.id}">
-        id: <span class="entity-id">${entity.id}</span>
-        direction: <span class="entity-direction">${entity.direction}</span>
-        address: <span class="entity-address">${Address.to_string(entity.address)}</span>
+    <div class="room-view" data-id="${room.id}">
+        id: <span class="room-id">${room.id}</span>
+        x: <span class="room-x">${room.coord.x}</span>
+        y: <span class="room-y">${room.coord.y}</span>
     </div>
     `;
 }
@@ -26,22 +34,24 @@ export function render(repo, id) {
 /**
  * @param {D<Model>|null} prev
  * @param {D<Model>} next
- * @param {EntityID} id
+ * @param {RoomID} id
  * @param {HTMLElement} container
  */
 export function update(prev, next, id, container) {
-    const next_entity = Opt.expect(Repo.get(next.world.entity_repo, id), `expected entity of id: ${id}`);
+    const next_room = Opt.expect(Repo.get(next.world.entity_repo, id), `expected room of id: ${id}`);
 
     if (prev) {
         const prev_entity = Repo.get(prev.world.entity_repo, id);
         if (Opt.is_some(prev_entity) && Opt.unwrap(prev_entity) === next_entity) return;
     }
 
-    const direction = container.querySelector(`.entity-view[data-id="${id}"] .entity-direction`);
-    const address = container.querySelector(`.entity-view[data-id="${id}"] .entity-address`);
-    if (!direction || !address) throw new Error();
-    direction.textContent = next_entity.direction;
-    address.textContent = Address.to_string(next_entity.address);
+    const x = container.querySelector(`.entity-view[data-id="${id}"] .entity-x`);
+    const y = container.querySelector(`.entity-view[data-id="${id}"] .entity-y`);
+    const z = container.querySelector(`.entity-view[data-id="${id}"] .entity-z`);
+    if (!x || !y || !z) throw new Error();
+    x.textContent = next_entity.coord.x.toString();
+    y.textContent = next_entity.coord.y.toString();
+    z.textContent = next_entity.coord.z.toString();
 }
 
 /**
@@ -65,6 +75,7 @@ export function render_all(repo) {
 export function update_all(prev, next) {
     if (prev?.world.entity_repo === next.world.entity_repo) return;
 
+    // TODO: update juste les cubes du room
     document.querySelectorAll('.entities-view').forEach(
         (bl) => {
             const entity_description_view_list = /**@type {HTMLElement}*/(bl);
@@ -87,12 +98,31 @@ export function update_all(prev, next) {
 
 /**
  * @param {HTMLElement} container
- * @param {D<EntityRepo>} repo
- * @param {EntityID} id
+ * @param {D<RoomRepo>} repo
+ * @param {RoomID} id
  */
 export function add(container, repo, id) { container.insertAdjacentHTML('beforeend', render(repo, id)) }
 /**
  * @param {HTMLElement} container
- * @param {EntityID} id
+ * @param {RoomID} id
  */
-export function remove(container, id) { container.querySelector(`.entity-view[data-id=${id}]`)?.remove() }
+export function remove(container, id) { container.querySelector(`.room-view[data-id=${id}]`)?.remove() }
+
+/**
+ * @param {D<Model>} model
+ * @returns {RoomID[]}
+ */
+export function get_visible_room_ids(model) {
+    const player = Player.get(model.world.entity_repo);
+    const player_room_coord = Room.coord_from_coord3D(player.coord);
+
+    /**@type {Set<RoomID>} */
+    const ids = new Set();
+    for (let dx = -RENDER_DISTANCE; dx <= RENDER_DISTANCE; dx++) {
+        for (let dy = -RENDER_DISTANCE; dy <= RENDER_DISTANCE; dy++) {
+            const room_id = Opt.unwrap(Room.id_from_coord2D(model.world.map, { x: player_room_coord.x + dx, y: player_room_coord.y + dy }));
+            ids.add(room_id);
+        }
+    }
+    return Array.from(ids);
+}

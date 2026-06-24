@@ -11,7 +11,7 @@ import * as EntityDescriptionView from '../views/entity_description_view.js';
 
 /**
  * @param {HTMLElement} container
- * @param {DeepReadonly<Model>} model
+ * @param {D<Model>} model
  */
 export function render(container, model) {
     container.innerHTML += `

@@ -14,32 +14,27 @@ import * as Repo from '../../utils/repository.js'
  */
 
 /**
- * @param {DeepReadonly<Map3D>} map
+ * @param {D<RegionRepo>} repo
  * @param {string} name
- * @returns {[Map3D, RegionID]}
+ * @returns {[D<RegionRepo>, D<Region>]}
  */
-export function spawn(map, name) {
-    let [area_repo, area] = Area.spawn(map.area_repo, "area_A");
-    /** @type {Omit<Region, "id">} */
-    const tempo_region = {
+export function spawn(repo, name) {
+    return Repo.spawn_element(/**@type {RegionRepo}*/(repo), {
         name,
-        areas: [area],
-    };
-    let [region_repo, id] = Repo.spawn_element(map.region_repo, tempo_region);
-    let new_map = { ...map, region_repo, area_repo };
-    return [new_map, id];
+        areas: []
+    });
 }
 
 /**
- * @param {DeepReadonly<Region>} continent
+ * @param {D<Region>} continent
  * @param {AreaID} id
- * @returns {Region}
+ * @returns {D<Region>}
  */
 export function add_area(continent, id) { return { ...continent, areas: [...continent.areas, id] }; }
 
 /**
- * @param {DeepReadonly<Region>} continent
+ * @param {D<Region>} continent
  * @param {AreaID} id
- * @returns {Region}
+ * @returns {D<Region>}
  */
 export function remove_area(continent, id) { return { ...continent, areas: continent.areas.filter(old_id => old_id === id ? id : old_id) }; }

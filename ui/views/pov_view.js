@@ -6,7 +6,7 @@ import * as Player from '../../engine/entities/player.js'
 import * as Address from '../../engine/map/address.js'
 
 /**
- * @param {DeepReadonly<EntityRepository>} repo
+ * @param {D<EntityRepo>} repo
  * @returns {string}
  */
 export function render(repo) {
@@ -21,8 +21,8 @@ export function render(repo) {
 }
 
 /**
- * @param {DeepReadonly<Model>|null} prev
- * @param {DeepReadonly<Model>} next
+ * @param {D<Model>|null} prev
+ * @param {D<Model>} next
  */
 export function update(prev, next) {
     const next_player = Player.get(next.world.entity_repo);
