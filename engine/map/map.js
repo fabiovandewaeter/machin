@@ -90,10 +90,9 @@ export function spawn_rooms(map, area, coords) {
         current_room_repo = new_room_repo;
     }
 
-    let new_area_repo = Repo.replace(map.area_repo, current_area);
     return {
         ...map,
-        area_repo: new_area_repo,
+        area_repo: Repo.replace(map.area_repo, current_area),
         room_repo: current_room_repo
     }
 }
