@@ -102,17 +102,11 @@ export function spawn_rooms(map, area, coords) {
  * @param {ContinentID} id
  * @returns {D<Map3D>}
  */
-export function add_continent(map, id) {
-    const map_thaw = /**@type {Map3D} */(map);
-    return { ...map_thaw, continents: [...map_thaw.continents, id] };
-}
+export function add_continent(map, id) { return { ...map, continents: [...map.continents, id] }; }
 
 /**
  * @param {D<Map3D>} map
  * @param {ContinentID} id
  * @returns {D<Map3D>}
  */
-export function remove_continent(map, id) {
-    const map_thaw = /**@type {Map3D} */(map);
-    return { ...map_thaw, continents: map_thaw.continents.filter(old_id => old_id === id ? id : old_id) };
-}
+export function remove_continent(map, id) { return { ...map, continents: map.continents.filter(old_id => old_id === id ? id : old_id) }; }
