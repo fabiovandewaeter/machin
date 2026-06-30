@@ -9,6 +9,7 @@ import * as Coord from '../../engine/map/coord.js'
 import * as Address from '../../engine/map/address.js'
 import * as Player from '../../engine/entities/player.js'
 import * as Res from '../../utils/result.js'
+import * as Save from '../../utils/save.js'
 
 const TICK_DELAY_MS = 1000;
 
@@ -27,6 +28,9 @@ export function update(model, msg) {
         case 'stop_main': return stop_main_update(model, msg);
         case 'direction': return direction_update(model, msg);
         case 'movement': return movement_update(model, msg);
+        case 'download_save': return download_save_update(model, msg);
+        case 'upload_save': return upload_save_update(model, msg);
+        case 'clear_save': return clear_save_update(model, msg);
     }
 }
 
@@ -158,7 +162,7 @@ function direction_update(model, msg) {
  */
 function movement_update(model, msg) {
     const player = Player.get(model.world.entity_repo);
-    const target = { ...player.address, coord: /**@type {RoomCoord} */(Coord.add3D(player.address.coord, msg.delta)) };
+    const target = { ...player.address, coord: Coord.add3D(player.address.coord, msg.delta) };
     const world_res = World.move_player(model.world, target);
     if (Res.is_err(world_res)) {
         return {
@@ -172,4 +176,40 @@ function movement_update(model, msg) {
         world: world_res.value,
         logs: [...model.logs, `${msg.type} ${Address.to_string(player.address)}->${Address.to_string(target)}`]
     }
+}
+
+/**
+ * @param {D<Model>} model 
+ * @param {D<DownloadSaveMsg>} msg
+ * @returns {D<Model>}
+ */
+function download_save_update(model, msg) {
+    Save.download(model);
+    return model;
+}
+
+/**
+ * @param {D<Model>} model 
+ * @param {D<UploadSaveMsg>} msg
+ * @returns {D<Model>}
+ */
+function upload_save_update(model, msg) {
+    let new_model = /**@type {Model}*/(model);
+    Save.upload().then((loaded => {
+        if (loaded) {
+            new_model = loaded;
+            new_model.world.clock.last_tick_timestamp = Date.now();
+        }
+    }));
+    return new_model;
+}
+
+/**
+ * @param {D<Model>} model 
+ * @param {D<ClearSaveMsg>} msg
+ * @returns {D<Model>}
+ */
+function clear_save_update(model, msg) {
+    Save.clear();
+    return model;
 }

@@ -12,7 +12,7 @@ import * as Res from '../../utils/result.js'
  * @return {Res<void, string>}
  */
 export function can_move(world, entity, from, to) {
-    if (!Address.is_valid_address(world.map, to)) return Res.err('Address not valid');
+    if (!Address.is_valid(world.map, to)) return Res.err('Address not valid');
 
     return Res.ok(undefined);
 }

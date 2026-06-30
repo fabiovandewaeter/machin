@@ -50,7 +50,7 @@ export function init(map) {
         { x: 0, y: -1, z: 0 },
         { x: 0, y: 0, z: -1 },
     ];
-    let new_map = spawn_rooms(map, area, /**@type {RoomCoord[]}*/(coords));
+    let new_map = spawn_rooms(map, area, coords);
 
     let [region_repo, region] = Region.spawn(new_map.region_repo, "region_A");
     let [continent_repo, continent] = Continent.spawn(new_map.continent_repo, "continent_A");
@@ -65,22 +65,10 @@ export function init(map) {
 /**
  * @param {D<Map3D>} map 
  * @param {D<Area>} area 
- * @param {RoomCoord[]} coords 
+ * @param {Coord3D[]} coords 
  * @returns {D<Map3D>}
  */
 export function spawn_rooms(map, area, coords) {
-    // const res =
-    //     coords.reduce((acc, curr) => {
-    //         let [room_repo, room] = Room.spawn(acc.room_repo, curr, "forest");
-    //         let area = Area.add_room(acc.area, room.coord, room.id);
-    //         let area_repo = Repo.replace(acc.area_repo, area);
-    //         return { room_repo, room, area_repo, area };
-    //     }, { room_repo: map.room_repo, area_repo: map.area_repo, area });
-    // return {
-    //     ...map,
-    //     area_repo: res.area_repo,
-    //     room_repo: res.room_repo
-    // }
     let current_room_repo = map.room_repo;
     let current_area = area;
 

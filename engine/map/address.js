@@ -10,7 +10,7 @@ import * as Opt from '../../utils/option.js'
  * @property {ContinentID} continent
  * @property {RegionID} region
  * @property {AreaID} area
- * @property {RoomCoord} coord
+ * @property {Coord3D} coord
  */
 
 /**
@@ -26,7 +26,7 @@ export function to_string(address) { return `{continent: ${address.continent}, r
  * @param {D<Address>} address 
  * @returns {boolean}
  */
-export function is_valid_address(map, address) {
+export function is_valid(map, address) {
     if (!(map.continents.includes(address.continent))) return false;
     const continent = Opt.unwrap(Repo.get(map.continent_repo, address.continent));
     if (!(continent.regions.includes(address.region))) return false;
@@ -45,7 +45,7 @@ export function is_valid_address(map, address) {
  * @param {Omit<D<Address>, "coord">} address 
  * @returns {boolean}
  */
-export function is_valid_address_before_room(map, address) {
+export function is_valid_before_room(map, address) {
     if (!(map.continents.includes(address.continent))) return false;
     const continent = Opt.unwrap(Repo.get(map.continent_repo, address.continent));
     if (!(continent.regions.includes(address.region))) return false;

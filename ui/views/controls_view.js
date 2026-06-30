@@ -38,6 +38,11 @@ export function render() {
             <button data-msg-type="movement" data-delta="0,0,1">haut</button>
             <button data-msg-type="movement" data-delta="0,0,-1">bas</button>
         </div>
+        <div class="controls-save">
+            <button data-msg-type="download_save">download save</button>
+            <button data-msg-type="upload_save">upload save</button>
+            <button data-msg-type="clear_save">clear save</button>
+        </div>
     </div>
     `;
 }

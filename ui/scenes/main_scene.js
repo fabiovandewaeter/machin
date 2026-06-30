@@ -8,6 +8,7 @@ import * as Control from '../views/controls_view.js';
 import * as POV from '../views/pov_view.js';
 import * as Log from '../views/logs_view.js';
 import * as EntityDescriptionView from '../views/entity_description_view.js';
+import * as Minimap from '../views/minimap/minimap_view.js'
 
 /**
  * @param {HTMLElement} container
@@ -19,6 +20,7 @@ export function render(container, model) {
     ${Time.render()}
     ${Control.render()}
     ${POV.render(model.world.entity_repo)}
+    ${Minimap.render(model.world.entity_repo, model.world.map)}
     ${EntityDescriptionView.render_all(model.world.entity_repo)}
     ${Log.render()}
     `;
@@ -26,6 +28,7 @@ export function render(container, model) {
     Subscribers.subscribe('times', Time.update_all);
     Subscribers.subscribe('controls', Control.update_all);
     Subscribers.subscribe('pov_main_scene', POV.update);
+    Subscribers.subscribe('minimap', Minimap.update_all);
     Subscribers.subscribe('entityviews', EntityDescriptionView.update_all);
     Subscribers.subscribe('logs', Log.update_all);
 }

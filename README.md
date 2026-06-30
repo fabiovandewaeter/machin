@@ -3,9 +3,9 @@
 
 ## Powershell
 ```ps1
- Get-ChildItem -Path ".\js\" -Recurse -File -Include "*.js", "*.d.ts", "*.json", "*.html", "*.md" | Sort-Object FullName | ForEach-Object{"d"
+ Get-ChildItem -Path ".\js\" -Recurse -File -Include "*.js", "*.d.ts", "*.json", "*.html", "*.md", "*.css" | Sort-Object FullName | ForEach-Object{"DEBUT"
 >> Get-Content $_.FullName -Encoding UTF8
->> "f"
+>> "FIN"
 >> ""} | Set-Content -Encoding UTF8 ".\js.txt"
 ```
 

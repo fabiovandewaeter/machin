@@ -29,17 +29,17 @@ export function spawn(repo, name) {
 
 /**
  * @param {D<Area>} area 
- * @param {D<RoomCoord>} coord 
+ * @param {D<Coord3D>} coord 
  * @returns {Opt<D<RoomID>>}
  */
 export function get_room(area, coord) {
     const room = area.rooms[Coord.key_from_3D(coord)];
-    return room ? Opt.some(room) : Opt.none;
+    return room !== undefined ? Opt.some(room) : Opt.none;
 }
 
 /**
  * @param {D<Area>} area 
- * @param {D<RoomCoord>} coord 
+ * @param {D<Coord3D>} coord 
  * @param {D<RoomID>} room 
  * @returns {D<Area>}
  */
@@ -55,7 +55,7 @@ export function replace_room(area, coord, room) {
 
 /**
  * @param {D<Area>} area
- * @param {D<RoomCoord>} coord
+ * @param {D<Coord3D>} coord
  * @param {D<RoomID>} room
  * @returns {D<Area>}
  */
@@ -70,7 +70,7 @@ export function add_room(area, coord, room) {
 
 /**
  * @param {D<Area>} area
- * @param {D<RoomCoord>} coord
+ * @param {D<Coord3D>} coord
  * @returns {D<Area>}
  */
 export function remove_room(area, coord) {
@@ -91,7 +91,7 @@ export function remove_room_from_id(area, id) {
 /**
  * TODO: crée pour l'instant mais doit pouvoir lire depuis save plus tard
  * @param {D<Area>} area 
- * @param {D<RoomCoord>} coord 
+ * @param {D<Coord3D>} coord 
  * @param {D<RoomRepo>} repo
  * @param {RoomType} type
  * @returns {[D<RoomRepo>, D<Area>]}

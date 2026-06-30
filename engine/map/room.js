@@ -9,23 +9,22 @@ import * as Repo from '../../utils/repository.js'
  * Un seul sens
  * @typedef {Object} RoomExit
  * @property {AreaID} target_area_id
- * @property {RoomCoord} target_room_coord
+ * @property {Coord3D} target_room_coord
  */
 
 /**@typedef {'city'|'river'|'forest'|'mountain'} RoomType */
 /** @typedef {number & {__brand:"RoomID"}} RoomID*/
-/** @typedef {Coord3D & {__brand:"RoomCoord"}} RoomCoord */
 /**
  * @typedef {Object} Room
  * @property {RoomID} id
- * @property {RoomCoord} coord // local à l'Area
+ * @property {Coord3D} coord // local à l'Area
  * @property {RoomType} type
  * @property {Object.<string, RoomExit>} exits // "north", "portal"
  */
 
 /**
  * @param {D<RoomRepo>} repo
- * @param {D<RoomCoord>} coord
+ * @param {D<Coord3D>} coord
  * @param {RoomType} type
  * @returns {[D<RoomRepo>, D<Room>]}
  */
@@ -43,6 +42,6 @@ export function spawn(repo, coord, type) {
  * @returns {Opt<D<RoomExit>>}
  */
 export function get_exit_from_direction(room, direction) {
-    if (direction in room.exits.keys) return Opt.some(room.exits[direction]);
+    if (Object.keys(room.exits).includes(direction)) return Opt.some(room.exits[direction]);
     return Opt.none;
 }

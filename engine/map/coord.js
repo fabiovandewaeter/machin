@@ -14,7 +14,7 @@
  * DOWN (-z) V
  *         SOUTH (-y)
  * 
- * Coord2D/RoomCoord = coin en bas à gauche
+ * Coord2D/Coord3D = coin en bas à gauche
  * 
  * 
  * 

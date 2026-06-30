@@ -41,7 +41,7 @@ export function init(world) {
         continent: /**@type {ContinentID}*/(0),
         region: /**@type {RegionID}*/(0),
         area:/**@type {AreaID}*/(0),
-        coord: /**@type {RoomCoord}*/({ x: 0, y: 0, z: 0 })
+        coord: { x: 0, y: 0, z: 0 }
     },
         'NORTH');
     // Map

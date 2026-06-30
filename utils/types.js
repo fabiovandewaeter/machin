@@ -14,6 +14,9 @@
 /** @typedef {import('../ui/core/message.js').StopMainMsg} StopMainMsg*/
 /** @typedef {import('../ui/core/message.js').DirectionMsg} DirectionMsg*/
 /** @typedef {import('../ui/core/message.js').MovementMsg} MovementMsg*/
+/** @typedef {import('../ui/core/message.js').DownloadSaveMsg} DownloadSaveMsg*/
+/** @typedef {import('../ui/core/message.js').UploadSaveMsg} UploadSaveMsg*/
+/** @typedef {import('../ui/core/message.js').ClearSaveMsg} ClearSaveMsg*/
 /** @typedef {import('../ui/core/message.js').Msg} Msg*/
 // --------------
 
@@ -44,7 +47,6 @@
 
 /** @typedef {import('../engine/map/room.js').Room} Room*/
 /** @typedef {import('../engine/map/room.js').RoomID} RoomID*/
-/** @typedef {import('../engine/map/room.js').RoomCoord} RoomCoord*/
 /** @typedef {import('../engine/map/room.js').RoomType} RoomType*/
 /** @typedef {import('./repository.js').Repo<Room, RoomID>} RoomRepo*/
 // ----------

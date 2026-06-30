@@ -11,6 +11,10 @@
 /** @typedef {{type: 'direction', direction: Direction }} DirectionMsg*/
 /** @typedef {{type: 'movement', delta: Coord3D}} MovementMsg*/
 
-/** @typedef {TickMsg|StartStopTickIntervalMsg|SkipSecondsMsg|StartMainMsg|StopMainMsg|DirectionMsg|MovementMsg} Msg*/
+/** @typedef {{type: 'download_save'}} DownloadSaveMsg*/
+/** @typedef {{type: 'upload_save'}} UploadSaveMsg*/
+/** @typedef {{type: 'clear_save'}} ClearSaveMsg*/
+
+/** @typedef {TickMsg|StartStopTickIntervalMsg|SkipSecondsMsg|StartMainMsg|StopMainMsg|DirectionMsg|MovementMsg|DownloadSaveMsg|UploadSaveMsg|ClearSaveMsg} Msg*/
 
 export { };
