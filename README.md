@@ -1,14 +1,6 @@
 <!-- README.md -->
 # machin
 
-## Powershell
-```ps1
- Get-ChildItem -Path ".\js\" -Recurse -File -Include "*.js", "*.d.ts", "*.json", "*.html", "*.md", "*.css" | Sort-Object FullName | ForEach-Object{"DEBUT"
->> Get-Content $_.FullName -Encoding UTF8
->> "FIN"
->> ""} | Set-Content -Encoding UTF8 ".\js.txt"
-```
-
 ## js
 - pas `in` sur une array ça ca regarde les keys donc les indices
 
