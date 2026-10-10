@@ -7,8 +7,10 @@
  * @typedef {import("../world.js").World} World
  */
 import "../../../utils/types.js"
-import * as TimelineScheduler from "./scheduler.js";
-import * as TimelineDispatcher from "./dispatcher.js";
+import { timelinedispatcher_dispatch } from "./dispatcher.js";
+import { timelinescheduler_pop_due } from "./scheduler.js";
+
+
 
 /**
  * Fait avancer la simulation jusqu'à `target_time` en traitant, dans l'ordre,
@@ -17,19 +19,19 @@ import * as TimelineDispatcher from "./dispatcher.js";
  * @param {World} world
  * @param {number} target_time
  */
-export function advance_to(world, target_time) {
+export function timeline_advance_to(world, target_time) {
     while (true) {
-        const event = TimelineScheduler.pop_due(world.timeline_scheduler, target_time);
+        const event = timelinescheduler_pop_due(world.timeline_scheduler, target_time);
         if (!event) break;
-        TimelineDispatcher.dispatch(world, event);
+        timelinedispatcher_dispatch(world, event);
     }
 }
 
 // TODO
-export function init() {
-    clear_handlers();
+export function timeline_init() {
+    timeline_clear_handlers();
     // Crafting.init_timeline();
     // Building.init_timeline();
 }
 
-export function clear_handlers() { }
+export function timeline_clear_handlers() { }

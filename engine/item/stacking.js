@@ -1,7 +1,9 @@
 // engine/item/stacking.js
 // @ts-check
 
-import * as Utils from "../../utils/utils.js";
+import { utils_data_key } from "../../utils/utils";
+
+
 
 // TODO: voir si on fusionne avec MaterialItemStack de material_item.js
 
@@ -16,8 +18,8 @@ import * as Utils from "../../utils/utils.js";
  * @param {Item} b
  * @returns {boolean}
  */
-export function is_same_item(a, b) {
-    return Utils.data_key(a) === Utils.data_key(b.data);  // même qualité/matériaux/durabilité = fusion
+export function stacking_is_same_item(a, b) {
+    return utils_data_key(a) === utils_data_key(b.data);  // même qualité/matériaux/durabilité = fusion
 }
 
 /** 
@@ -25,9 +27,9 @@ export function is_same_item(a, b) {
  * @param {ItemStack} b
  * @returns {boolean}
  */
-export function can_merge(a, b) {
+export function stacking_can_merge(a, b) {
     if (a.itemId !== b.itemId) return false;
     const def = ITEM_DEFINITIONS[a.itemId];
     if (def.maxStack <= 1) return false;        // épées etc: jamais fusionnables
-    return Utils.data_key(a.data) === Utils.data_key(b.data);  // même qualité/matériaux/durabilité = fusion
+    return utils_data_key(a.data) === utils_data_key(b.data);  // même qualité/matériaux/durabilité = fusion
 }

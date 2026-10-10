@@ -4,8 +4,9 @@
 /**
  * @typedef {import("./room.js").RoomID} RoomID
  */
+import { repository_spawn_element } from "../../utils/repository.js";
 import "../../utils/types.js"
-import * as Repo from "../../utils/repository.js";
+
 
 /**
  * @typedef {Object} Area
@@ -23,8 +24,8 @@ import * as Repo from "../../utils/repository.js";
  * @param {string} options.name
  * @returns {Area}
  */
-export function spawn(repo, { name }) {
-    return Repo.spawn_element(repo, {
+export function area_spawn(repo, { name }) {
+    return repository_spawn_element(repo, {
         name,
         rooms: []
     });

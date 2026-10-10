@@ -21,7 +21,7 @@ import "../../../utils/types.js"
 /**
  * @returns {SubCompManager}
  */
-export function create() { return { sub_comps: new Map() } };
+export function subcompmanager_create() { return { sub_comps: new Map() } };
 
 /**
  * @param {SubCompManager} manager
@@ -37,7 +37,7 @@ export function has(manager, key) {
  * @param {SubCompKey} key
  * @param {SubComp} sub
  */
-export function add(manager, key, sub) {
+export function subcompmanager_add(manager, key, sub) {
     // if (manager.sub_comps.has(key)) {
     if (has(manager, key)) {
         throw new Error(`sub_comp_manager: la clé "${String(key)}" existe déjà`);
@@ -50,7 +50,7 @@ export function add(manager, key, sub) {
  * @param {SubCompKey} key
  * @returns {boolean} true si un enfant a bien été supprimé
  */
-export function remove(manager, key) {
+export function subcompmanager_remove(manager, key) {
     const sub = manager.sub_comps.get(key);
     if (!sub) return false;
     sub.destroy();
@@ -61,7 +61,7 @@ export function remove(manager, key) {
 /**
  * @param {SubCompManager} manager
  */
-export function destroy_all(manager) {
+export function subcompmanager_destroy_all(manager) {
     const reversed = [...manager.sub_comps.values()].reverse();
     for (const sub of reversed) sub.destroy();
     manager.sub_comps.clear();
@@ -75,8 +75,8 @@ export function destroy_all(manager) {
  * @param {() => SubComp} create_sub - appelé seulement si besoin de créer
  * @returns {boolean} true si l'enfant vient d'être ajouté, false s'il vient d'être supprimé
  */
-export function mount_or_toggle(manager, key, create_sub) {
-    if (remove(manager, key)) return false;
-    add(manager, key, create_sub());
+export function subcompmanager_mount_or_toggle(manager, key, create_sub) {
+    if (subcompmanager_remove(manager, key)) return false;
+    subcompmanager_add(manager, key, create_sub());
     return true;
 }

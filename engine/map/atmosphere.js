@@ -20,6 +20,6 @@ TODO: faire un template au moment de la génération et le stocker comme ça qua
  * @param {Atmosphere} atmosphere 
  * @returns {number}
  */
-export function get_pressure(atmosphere) {
+export function atmosphere_get_pressure(atmosphere) {
 
 }

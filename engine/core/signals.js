@@ -1,8 +1,8 @@
 // engine/core/signals.js
 // @ts-check
 
-import * as SB from "../../utils/signal_bus.js";
-import * as Enum from "../../utils/enum.js";
+import { enum_create } from "../../utils/enum.js";
+import { signalbus_clear, signalbus_create } from "../../utils/signal_bus.js";
 
 /**
  * @typedef {import("../entity/entity.js").EntityID} EntityID
@@ -11,7 +11,7 @@ import * as Enum from "../../utils/enum.js";
  * @typedef {import("../map/room.js").Room} Room
  */
 
-const TIME_SIGNAL = Enum.create(/**@type {const}*/([
+const TIME_SIGNAL = enum_create(/**@type {const}*/([
     "TICK",
 ]));
 /**
@@ -21,7 +21,7 @@ const TIME_SIGNAL = Enum.create(/**@type {const}*/([
  * }} TimeSignalPayload
  */
 
-const ENTITY_SIGNAL = Enum.create(/**@type {const}*/([
+const ENTITY_SIGNAL = enum_create(/**@type {const}*/([
     "ENTITY_BROKE",
 ]));
 /**
@@ -31,12 +31,12 @@ const ENTITY_SIGNAL = Enum.create(/**@type {const}*/([
  * }} EntitySignalPayload
  */
 
-export const SIGNAL = Object.freeze(/**@type {const}*/({
+export const ENGINE_SIGNAL = Object.freeze(/**@type {const}*/({
     ...TIME_SIGNAL,
     ...ENTITY_SIGNAL,
 }));
 /**
- * @typedef {EnumKey<typeof SIGNAL>} BaseEngineSignal
+ * @typedef {EnumKey<typeof ENGINE_SIGNAL>} BaseEngineSignal
  * @typedef {TimeSignalPayload & EntitySignalPayload } BaseEngineSignalPayload
  */
 // ======================================================
@@ -50,12 +50,12 @@ export const SIGNAL = Object.freeze(/**@type {const}*/({
 /** @typedef {keyof EngineSignalPayload} EngineSignal */
 
 /** @type {import("../../utils/signal_bus.js").SignalBus<EngineSignal, EngineSignalPayload>} */
-export const BUS = SB.create();
+export const ESB = signalbus_create();
 
-export function init() {
-    clear_handlers();
+export function enginesignals_init() {
+    enginesignals_clear_handlers();
 }
 
-export function clear_handlers() {
-    SB.clear(BUS);
+export function enginesignals_clear_handlers() {
+    signalbus_clear(ESB);
 }

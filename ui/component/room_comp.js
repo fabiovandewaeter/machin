@@ -7,19 +7,20 @@
  * @typedef {import("../../engine/entity/entity.js").EntityID} EntityID
  * @typedef {import("../../engine/entity/entity.js").Entity} Entity
  */
+import { ESB } from "../../engine/core/signals.js";
+import { world_move_entity } from "../../engine/core/world.js";
+import { enum_create } from "../../utils/enum.js";
+import { option_unwrap, some, option_unwrap_or_undefined } from "../../utils/option.js";
+import { repository_get } from "../../utils/repository.js";
+import { signalbus_on, signalbus_emit } from "../../utils/signal_bus.js";
 import "../../utils/types.js"
-import * as SB from "../../utils/signal_bus.js";
-import * as ESB from "../../engine/core/signals.js";
-import * as UISB from "../core/signals.js";
-import * as Store from "../core/store.js";
-import * as World from "../../engine/core/world.js";
-import * as Repo from "../../utils/repository.js";
-import * as Opt from "../../utils/option.js";
-import * as Comp from "./core/comp.js";
-import * as Utils from "../../utils/utils.js";
-import * as Enum from "../../utils/enum.js";
+import { undefined_unwrap } from "../../utils/undefined.js";
+import { utils_string_to_rkind, utils_assert_unreachable } from "../../utils/utils.js";
+import { UISB, UI_SIGNAL } from "../core/signals.js";
+import { store_get } from "../core/store.js";
+import { comp_create_comp, comp_delegate_click_with_enum } from "./core/comp.js";
 
-const ACTIONS = Enum.create(/**@type {const}*/([
+const ACTIONS = enum_create(/**@type {const}*/([
     "MOVE_ENTITY",
     "SELECT_ENTITY",
 ]));
@@ -28,7 +29,7 @@ const ACTIONS = Enum.create(/**@type {const}*/([
 /**
  * @returns {string}
  */
-export function render() {
+export function roomcomp_render() {
     return `
 <h1>Room</h1>
 id: <span class="room-id"></span>
@@ -42,10 +43,10 @@ name: <span class="room-name"></span>
 /**
  * @param {HTMLElement} el
  */
-export function update(el) {
-    const s = Store.get();
-    const current_room_id = get_current_room_id();
-    const current_room = Opt.unwrap(Repo.get(s.world.galaxy.room_repo, current_room_id));
+export function roomcomp_update(el) {
+    const s = store_get();
+    const current_room_id = roomcomp_get_current_room_id();
+    const current_room = undefined_unwrap(repository_get(s.world.galaxy.room_repo, current_room_id));
 
     const id = el.querySelector(".room-id");
     const kind = el.querySelector(".room-kind");
@@ -70,7 +71,7 @@ export function update(el) {
     if (!entity_list) return;
     let entity_list_string = "";
     for (const entity_id of current_room.entities) {
-        const entity = Opt.unwrap(Repo.get(s.world.entity_repo, entity_id));
+        const entity = undefined_unwrap(repository_get(s.world.entity_repo, entity_id));
         entity_list_string += `<button data-action="${ACTIONS.SELECT_ENTITY}" data-entity-id="${entity.id}">
             ${entity.name}
         </button>`
@@ -82,21 +83,21 @@ export function update(el) {
  * @param {HTMLElement} container 
  * @returns {{element: HTMLElement, destroy: DestroyFunction }}
  */
-export function mount(container) {
-    return Comp.create_comp(container, "room-comp", (el, add_cleanup) => {
-        el.innerHTML = render();
+export function roomcomp_mount(container) {
+    return comp_create_comp(container, "room-comp", (el, add_cleanup) => {
+        el.innerHTML = roomcomp_render();
 
-        add_cleanup(Comp.delegate_click_with_enum(el, ACTIONS, (action, event, btn) => {
-            handle_action(action, btn);
+        add_cleanup(comp_delegate_click_with_enum(el, ACTIONS, (action, event, btn) => {
+            roomcomp_handle_action(action, btn);
         }));
 
-        add_cleanup(SB.on(ESB.BUS, "entity.room_id.changed", (payload) => {
-            const current_room_id = get_current_room_id();
+        add_cleanup(signalbus_on(ESB, "entity.room_id.changed", (payload) => {
+            const current_room_id = roomcomp_get_current_room_id();
             if (payload.previous_room_id == current_room_id || payload.new_room_id == current_room_id) {
-                update(el);
+                roomcomp_update(el);
             }
         }));
-        update(el);
+        roomcomp_update(el);
     });
 }
 
@@ -104,8 +105,8 @@ export function mount(container) {
  * @param {Action} action
  * @param {HTMLElement} btn
  */
-function handle_action(action, btn) {
-    const s = Store.get();
+function roomcomp_handle_action(action, btn) {
+    const s = store_get();
     switch (action) {
         case ACTIONS.MOVE_ENTITY: {
             /**
@@ -113,28 +114,28 @@ function handle_action(action, btn) {
              * et si les conditions sont bonnes etc.
              */
             // TODO: griser si on a pas selectionne d'entity
-            const selected_entity = get_selected_entity()
-            World.move_entity(s.world, selected_entity.id, Utils.string_to_rkind(btn.dataset.roomId));
+            const selected_entity = roomcomp_get_selected_entity()
+            world_move_entity(s.world, selected_entity.id, utils_string_to_rkind(btn.dataset.roomId));
             break;
         }
         case ACTIONS.SELECT_ENTITY: {
-            // const entity = Opt.unwrap(Repo.get(s.world.entity_repo, Utils.string_to_rkind(btn.dataset.entityId)));
+            // const entity = undefined_unwrap(repository_get(s.world.entity_repo, utils_string_to_rkind(btn.dataset.entityId)));
             // console.log(entity);
             /** @type {EntityID} */
-            const entity_id = Utils.string_to_rkind(btn.dataset.entityId);
-            SB.emit(UISB.BUS, UISB.UI_SIGNAL.OPEN_ENTITY_PANEL, { entity_id });
+            const entity_id = utils_string_to_rkind(btn.dataset.entityId);
+            signalbus_emit(UISB, UI_SIGNAL.OPEN_ENTITY_PANEL, { entity_id });
 
             // change l'entity selectionnee
             const previous_selected_entity_id = s.ui_state.selected_entity_id;
-            s.ui_state.selected_entity_id = Opt.some(entity_id);
-            SB.emit(UISB.BUS, "ui_state.selected_entity_id.changed", {
-                previous_selected_entity_id: Opt.unwrap_or_undefined(previous_selected_entity_id),
+            s.ui_state.selected_entity_id = some(entity_id);
+            signalbus_emit(UISB, "ui_state.selected_entity_id.changed", {
+                previous_selected_entity_id: option_unwrap_or_undefined(previous_selected_entity_id),
                 new_selected_entity_id: entity_id,
             });
             break;
         }
         default: {
-            Utils.assert_unreachable(action);
+            utils_assert_unreachable(action);
         }
     }
 }
@@ -142,11 +143,11 @@ function handle_action(action, btn) {
 /**
  * @returns {Entity}
  */
-function get_selected_entity() {
-    const s = Store.get();
+function roomcomp_get_selected_entity() {
+    const s = store_get();
     const entity_id_opt = s.ui_state.selected_entity_id;
-    const entity_id = Opt.unwrap(entity_id_opt);
-    return Opt.unwrap(Repo.get(s.world.entity_repo, entity_id));
+    const entity_id = option_unwrap(entity_id_opt);
+    return undefined_unwrap(repository_get(s.world.entity_repo, entity_id));
 }
 
 /**
@@ -155,7 +156,7 @@ function get_selected_entity() {
 /**
  * @returns {RoomID}
  */
-function get_current_room_id() {
-    const entity = get_selected_entity();
+function roomcomp_get_current_room_id() {
+    const entity = roomcomp_get_selected_entity();
     return entity.room_id;
 }

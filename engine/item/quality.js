@@ -2,7 +2,7 @@
 // @ts-check
 
 import { assert } from "../../tests/test";
-import * as Utils from "../../utils/utils.js";
+
 
 export const QUALITY = Object.freeze(/**@type {const}*/({
     POOR: { kind: "POOR", id: 0, multiplier: 0.8 },
@@ -17,7 +17,7 @@ export const QUALITY = Object.freeze(/**@type {const}*/({
  * @param {Quality[]} qualities 
  * @returns {Quality}
  */
-export function lowest_quality(qualities) {
+export function quality_lowest_quality(qualities) {
     assert(qualities.length > 0);
     let lowest = QUALITY[qualities[0]];
     for (let i = 1; i < qualities.length; i++) {

@@ -2,7 +2,6 @@
 // @ts-check
 
 import "./types.js";
-import { some, none } from "./option.js";
 import { ok, err } from "./result.js";
 
 /**
@@ -21,7 +20,7 @@ const MAX_SAFE_ID = Number.MAX_SAFE_INTEGER;
  * @template {number} TID
  * @returns {Repo<TID, T>}
  */
-export function create() {
+export function repository_create() {
     return {
         current_id: /** @type {TID} */ (0),
         elements: [],
@@ -37,11 +36,11 @@ export function create() {
  * @param {TSpawnArgs} args
  * @returns {T}
  */
-export function spawn_element(repo, args) {
+export function repository_spawn_element(repo, args) {
     const id = repo.current_id;
 
     // Validate before mutating anything.
-    const next = next_id(repo);
+    const next = repository_next_id(repo);
 
     const new_element = /** @type {T} */ (
     /** @type {unknown} */ ({ id, ...args })
@@ -60,16 +59,16 @@ export function spawn_element(repo, args) {
  * @template {number} TID
  * @param {Repo<TID, T>} repo
  * @param {TID} id
- * @returns {Opt<T>}
+ * @returns {T|undefined} pas Opt<T> pour ne pas allouer un some à chaque fois
  */
-export function get(repo, id) {
+export function repository_get(repo, id) {
     const index = repo.indices[id];
 
     if (index === undefined) {
-        return none;
+        return undefined;
     }
 
-    return some(repo.elements[index]);
+    return repo.elements[index];
 }
 
 /**
@@ -78,7 +77,7 @@ export function get(repo, id) {
  * @param {Repo<TID, T>} repo
  * @returns {TID}
  */
-export function next_id(repo) {
+export function repository_next_id(repo) {
     if (repo.current_id >= MAX_SAFE_ID) {
         throw new Error(
             `Repository ID limit reached: ${MAX_SAFE_ID}`
@@ -95,7 +94,7 @@ export function next_id(repo) {
  * @param {TID} id
  * @returns {Res<void, string>}
  */
-export function remove_element(repo, id) {
+export function repository_remove_element(repo, id) {
     const index = repo.indices[id];
 
     if (index === undefined) {
@@ -124,7 +123,7 @@ export function remove_element(repo, id) {
  * @param {Repo<TID, T>} repo
  * @returns {TID[]}
  */
-export function all_ids(repo) {
+export function repository_all_ids(repo) {
     return /** @type {TID[]} */ (
         repo.elements.map(element => element.id)
     );
@@ -136,6 +135,6 @@ export function all_ids(repo) {
  * @param {Repo<TID, T>} repo
  * @returns {T[]}
  */
-export function all(repo) {
+export function repository_all(repo) {
     return repo.elements.slice();
 }

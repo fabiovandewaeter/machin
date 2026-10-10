@@ -1,11 +1,14 @@
 // ui/core/component/core/comp.js
 // @ts-check
 
+import { enum_is_enum_key } from "../../../utils/enum.js";
+import { subcompmanager_create, subcompmanager_destroy_all } from "./sub_comp_manager.js";
+
 /**
  * @typedef {import("./sub_comp_manager.js").SubCompManager} SubCompManager
  */
-import * as SCM from "./sub_comp_manager.js";
-import * as Enum from "../../../utils/enum.js";
+
+
 // /** @typedef {() => void} DestroyFunction */
 /**
  * @callback DestroyFunction
@@ -21,7 +24,7 @@ import * as Enum from "../../../utils/enum.js";
  *        - le retour éventuel de `setup` est aussi utilisé comme nettoyage.
  * @returns {{ element: HTMLElement, destroy: DestroyFunction }}
  */
-export function create_comp(container, name, setup) {
+export function comp_create_comp(container, name, setup) {
     const root = document.createElement("div");
     root.className = name;
     /**@type {Function[]} */
@@ -55,11 +58,11 @@ export function create_comp(container, name, setup) {
  * @param {(root: HTMLElement, sub_comps: SubCompManager, add_cleanup: (fn: DestroyFunction) => void) => void | DestroyFunction} setup
  * @returns {{ element: HTMLElement, destroy: DestroyFunction }}
  */
-export function create_comp_with_sub_comps(container, name, setup) {
-    return create_comp(container, name, (root, add_cleanup) => {
-        const sub_comps = SCM.create();
+export function comp_create_comp_with_sub_comps(container, name, setup) {
+    return comp_create_comp(container, name, (root, add_cleanup) => {
+        const sub_comps = subcompmanager_create();
         // On enregistre la destruction des sous-composants comme nettoyage automatique.
-        add_cleanup(() => SCM.destroy_all(sub_comps));
+        add_cleanup(() => subcompmanager_destroy_all(sub_comps));
         // On appelle le setup de l'utilisateur avec le manager et addCleanup.
         return setup(root, sub_comps, add_cleanup);
     });
@@ -71,7 +74,7 @@ export function create_comp_with_sub_comps(container, name, setup) {
  * @param {(action: string, event: Event, target: HTMLElement) => void} handler
  * @returns {DestroyFunction}
  */
-export function delegate_click(root, handler) {
+export function comp_delegate_click(root, handler) {
     /** @type {(event: Event) => void} */
     const on_click = (event) => {
         const target = (event.target instanceof Element)
@@ -89,16 +92,17 @@ export function delegate_click(root, handler) {
 }
 
 /**
- * Attache un écouteur de clic par délégation sur l'élément racine.
  * @template {Record<string, string>} T
  * @param {HTMLElement} root
  * @param {T} action_enum
- * @param {(action: T[keyof T], event: Event, target: HTMLElement) => void} handler
- * @returns {DestroyFunction} fonction de désabonnement
+ * @param {(action: keyof T & string, event: Event, target: HTMLElement) => void} handler
+ * @returns {DestroyFunction}
  */
-export function delegate_click_with_enum(root, action_enum, handler) {
-    return delegate_click(root, (action, event, target) => {
-        if (!Enum.is_enum_value(action_enum, action)) throw new Error(`Invalid action: ${action}`);
+export function comp_delegate_click_with_enum(root, action_enum, handler) {
+    return comp_delegate_click(root, (action, event, target) => {
+        if (!enum_is_enum_key(action_enum, action)) {
+            throw new Error(`Invalid action: ${action}`);
+        }
         handler(action, event, target);
     });
 }

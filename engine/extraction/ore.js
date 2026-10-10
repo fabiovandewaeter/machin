@@ -1,6 +1,8 @@
 // engine/extraction/ore.js
 // @ts-check
 
+import { MATERIAL } from "../item/material/material";
+
 /**
  * @typedef {import("../item/material/material").Material} Material
  * @typedef {import("../item/material/material_item").MaterialItem} MaterialItem
@@ -8,8 +10,8 @@
  * @typedef {import("../item/tool/tool").ToolKind} ToolKind
  * @typedef {import("../item/tool/tool").Tool} Tool
  */
-import * as Material from "../item/material/material.js";
-import * as MaterialItem from "../item/material/material_item.js";
+
+
 
 /**
  * @typedef {Object} Ore
@@ -23,11 +25,11 @@ import * as MaterialItem from "../item/material/material_item.js";
  * @param {MaterialItemStack[]} options.composition
  * @returns {Ore}
  */
-export function create({ composition }) {
+export function ore_create({ composition }) {
     // required_mining_level est le mining_level le plus élevé de composition
-    let max_mining_level = Material.MATERIAL[composition[0].material_item.material].mining_level;
+    let max_mining_level = MATERIAL[composition[0].material_item.material].mining_level;
     for (let i = 1; i < composition.length; i++) {
-        const current_mining_level = Material.MATERIAL[composition[i].material_item.material].mining_level;
+        const current_mining_level = MATERIAL[composition[i].material_item.material].mining_level;
         if (current_mining_level > max_mining_level) {
             max_mining_level = current_mining_level;
         }
@@ -45,7 +47,7 @@ export function create({ composition }) {
  * @param {Tool} tool
  * @returns {boolean}
  */
-export function can_be_extracted(ore, tool) {
+export function ore_can_be_extracted(ore, tool) {
     if (tool.kind !== ore.tool_kind) return false;
     return tool.mining_level >= ore.required_mining_level;
 }

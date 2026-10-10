@@ -27,23 +27,23 @@
 -> en plus comme ça on voit bien la différence entre ce qui est modifié ou pas
 -> EN FAIT NON car sinon des fois on peut passer un objet qui a été supprimé car on a inversé deux lignes alors qu'avec l'id on est toujours sur l'état actuel
 ## comp
-- pas de `addEventListener` ni `removeEventListener` faut utiliser `Comp.delegate_click()`
-- utiliser `add_cleanup()` à chaque fois pour sauvegarder les off() des SB.on()
+- pas de `addEventListener` ni `removeEventListener` faut utiliser `comp_delegate_click()`
+- utiliser `add_cleanup()` à chaque fois pour sauvegarder les off() des signalbus_on()
 ```js
 /**
  * @param {HTMLElement} container 
  * @returns {{element: HTMLElement, destroy: DestroyFunction }}
  */
 export function mount(container) {
-    return Comp.create_comp_with_sub_comps(container, (el, sub_comp_manager, add_cleanup) => {
+    return comp_create_comp_with_sub_comps(container, (el, sub_comp_manager, add_cleanup) => {
         el.innerHTML = render();
 
-        add_cleanup(Comp.delegate_click(el, {
+        add_cleanup(comp_delegate_click(el, {
             toggle_time: (event, btn) => {
-                const s = Store.get();
+                const s = store_get();
                 const visible = SCMC.mount_or_toggle(sub_comp_manager, TIME_KEY, () => TimeC.mount(el));
                 btn.textContent = visible ? "Hide time" : "Spawn time";
-                UIState.add_log(s.ui_state, "toggle_time");
+                uistate_add_log(s.ui_state, "toggle_time");
             }
         }));
     });
@@ -54,7 +54,7 @@ export function mount(container) {
  * @param {HTMLElement} el 
  */
 function update_toggle_button(el) {
-    const s = Store.get();
+    const s = store_get();
     const button = el.querySelector("button[data-action="toggle_tick"]");
     if (!button) throw new Error();
     button.textContent = s.ui_state.tick_interval_id === null ? "Start" : "Stop";
@@ -65,17 +65,17 @@ function update_toggle_button(el) {
  * @returns {{element: HTMLElement, destroy: DestroyFunction }}
  */
 export function mount(container) {
-    return Comp.create_comp(container, "controls-comp", (el, add_cleanup) => {
+    return comp_create_comp(container, "controls-comp", (el, add_cleanup) => {
         el.innerHTML = render();
 
-        // TODO: PAS BESOIN de addEventListener ni removeEventListener car on a Comp.delegate_click()
+        // TODO: PAS BESOIN de addEventListener ni removeEventListener car on a comp_delegate_click()
         // el.addEventListener("click", handle_click);
-        add_cleanup(Comp.delegate_click(el, (action, event, btn) => {
-            if (!Enum.is_enum_value(ACTIONS, action)) throw new Error();
+        add_cleanup(comp_delegate_click(el, (action, event, btn) => {
+            if (!Enum.is_enum_key(ACTIONS, action)) throw new Error();
             handle_action(action, btn);
         }));
 
-        add_cleanup(SB.on(UISB.BUS, "toggle_tick", () => update_toggle_button(el)));
+        add_cleanup(signalbus_on(UISB, "toggle_tick", () => update_toggle_button(el)));
         update_toggle_button(el);
     });
 }
@@ -90,70 +90,70 @@ function handle_action(action, btn) {
     // const btn = event.target.closest("button[data-action]");
     // if (!btn) return;
     // const action = btn.dataset.action;
-    const s = Store.get();
+    const s = store_get();
 
     switch (action) {
         case "skip_seconds": {
             const ms = Number(btn.dataset.ms);
             if (!Number.isSafeInteger(ms)) throw new Error();
-            SB.emit(UISB.BUS, "tick");
+            signalbus_emit(UISB, "tick");
             // save_timestamp(clock.timestamp);
-            UIState.add_log(s.ui_state, `skip_seconds: ${ms} ms`);
+            uistate_add_log(s.ui_state, `skip_seconds: ${ms} ms`);
             break;
         }
         case "toggle_tick": {
-            const s = Store.get();
+            const s = store_get();
             if (s.ui_state.tick_interval_id !== null) {
                 clearInterval(s.ui_state.tick_interval_id);
                 s.ui_state.tick_interval_id = null;
             }
             else {
                 s.ui_state.tick_interval_id = setInterval(() => {
-                    const s = Store.get();
-                    World.advance_by(s.world, TICK_DELAY_MS);
-                    SB.emit(UISB.BUS, "tick");
-                    UIState.add_log(s.ui_state, "tick");
+                    const s = store_get();
+                    world_advance_by(s.world, TICK_DELAY_MS);
+                    signalbus_emit(UISB, "tick");
+                    uistate_add_log(s.ui_state, "tick");
                 }, TICK_DELAY_MS);
             }
-            SB.emit(UISB.BUS, "toggle_tick");
-            UIState.add_log(s.ui_state, "toggle_tick");
+            signalbus_emit(UISB, "toggle_tick");
+            uistate_add_log(s.ui_state, "toggle_tick");
             break;
         }
         case "switch_scene": {
             const new_scene = btn.dataset.scene;
             if (new_scene) {
-                if (!Scene.is_valid_scene(new_scene)) { throw new Error(`Invalid scene: ${new_scene}`); }
+                if (!scene_is_valid_scene(new_scene)) { throw new Error(`Invalid scene: ${new_scene}`); }
                 s.ui_state.scene = new_scene;
-                UIState.add_log(s.ui_state, `switch_scene: ${new_scene}`);
-                SB.emit(UISB.BUS, "scene_switched", new_scene);
+                uistate_add_log(s.ui_state, `switch_scene: ${new_scene}`);
+                signalbus_emit(UISB, "scene_switched", new_scene);
             }
             break;
         }
         case "download_save": {
-            Save.download(s.world, s.ui_state);
+            save_download(s.world, s.ui_state);
             break;
         }
         case "upload_save": {
-            Save.upload().then((loaded => {
+            save_upload().then((loaded => {
                 if (loaded && loaded.world) {
-                    World.advance_to(loaded.world, Date.now());
-                    Store.set_world(loaded.world);
-                    SB.emit(UISB.BUS, "scene_switched", s.ui_state.scene);
+                    world_advance_to(loaded.world, Date.now());
+                    store_set_world(loaded.world);
+                    signalbus_emit(UISB, "scene_switched", s.ui_state.scene);
                 }
             }));
             break;
         }
         case "clear_save": {
-            Save.clear();
+            save_clear();
             break;
         };
         // case "hide_logs": {
         // TODO: si on le remet il faut mettre dans le parent le on() et pas dans le logs_comp directement
-        //     SB.emit(UISB.BUS, "toggle_logs")
+        //     signalbus_emit(UISB, "toggle_logs")
         //     break;
         // };
         default: {
-            Utils.assert_unreachable(action);
+            utils_assert_unreachable(action);
         }
     }
 };

@@ -4,8 +4,9 @@
 /**
  * @typedef {import("./area.js").AreaID} AreaID
  */
+import { repository_spawn_element } from "../../utils/repository.js";
 import "../../utils/types.js"
-import * as Repo from "../../utils/repository.js";
+
 
 /**
  * @typedef {Object} Region
@@ -23,8 +24,8 @@ import * as Repo from "../../utils/repository.js";
  * @param {string} options.name
  * @returns {Region}
  */
-export function spawn(repo, { name }) {
-    return Repo.spawn_element(repo, {
+export function region_spawn(repo, { name }) {
+    return repository_spawn_element(repo, {
         name,
         areas: []
     });

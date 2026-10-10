@@ -5,10 +5,10 @@
  * @typedef {import("../scene/scene.js").Scene} Scene
  * @typedef {import("../../engine/entity/entity.js").EntityID} EntityID
  */
+import { none, option_is_some } from "../../utils/option.js";
+import { signalbus_emit } from "../../utils/signal_bus.js";
 import "../../utils/types.js"
-import * as UISB from "./signals.js";
-import * as SB from "../../utils/signal_bus.js";
-import * as Opt from "../../utils/option.js";
+import { UISB, UI_SIGNAL } from "./signals.js";
 
 /**
  * @typedef {Object} UIState
@@ -21,12 +21,12 @@ import * as Opt from "../../utils/option.js";
 /**
  * @returns {UIState}
  */
-export function create() {
+export function uistate_create() {
     return {
         scene: "MAIN",
         logs: [],
-        tick_interval_id: Opt.none,
-        selected_entity_id: Opt.none,
+        tick_interval_id: none,
+        selected_entity_id: none,
     };
 }
 
@@ -34,15 +34,15 @@ export function create() {
  * @param {UIState} ui 
  * @param {string} log 
  */
-export function add_log(ui, log) { ui.logs.push(log); SB.emit(UISB.BUS, UISB.UI_SIGNAL.LOGS, { log }); }
+export function uistate_add_log(ui, log) { ui.logs.push(log); signalbus_emit(UISB, UI_SIGNAL.LOGS, { log }); }
 
 /**
  * @param {UIState} ui
  */
-export function stop_tick(ui) {
+export function uistate_stop_tick(ui) {
     // if (ui.tick_interval_id !== null) {
-    if (Opt.is_some(ui.tick_interval_id)) {
+    if (option_is_some(ui.tick_interval_id)) {
         clearInterval(ui.tick_interval_id.value);
-        ui.tick_interval_id = Opt.none;
+        ui.tick_interval_id = none;
     }
 }

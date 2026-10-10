@@ -13,7 +13,7 @@
 /**
  * @returns {Inventory}
  */
-export function create() {
+export function inventory_create() {
     return {
         stacked_items: [],
     };

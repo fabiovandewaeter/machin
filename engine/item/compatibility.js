@@ -14,7 +14,7 @@ import { err, ok } from "../../utils/result.js";
  * @param {MaterialItemKind[]} parts
  * @returns {Res<void, string>}
  */
-export function are_material_items_and_parts_compatibles(material_items, parts) {
+export function compatibility_are_material_items_and_parts_compatibles(material_items, parts) {
     const sorted_material_items = material_items.sort();
     const sorted_template_parts = parts.sort()
     if (sorted_material_items.length !== parts.length) return err(`Mauvais nombre de parts: ${sorted_material_items.length} au lieu de ${parts.length}`);
@@ -29,7 +29,7 @@ export function are_material_items_and_parts_compatibles(material_items, parts) 
  * @param {MaterialItem[]} material_items 
  * @returns {Res<Material, string>}
  */
-export function are_all_same_material(material_items) {
+export function compatibility_are_all_same_material(material_items) {
     assert(material_items.length > 0);
     const material = material_items[0].material;
     for (const item of material_items) {

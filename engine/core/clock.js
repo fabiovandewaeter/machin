@@ -9,12 +9,12 @@ import "../../utils/types.js"
  * @property {number} sim_time
  */
 
-// Note : quand on recharge une sauvegarde, runtime.js n'appelle pas Clock.create — il récupère l'objet world.clock déjà désérialisé du JSON tel quel, created_at compris. Clock.create ne sert que pour une partie neuve.
+// Note : quand on recharge une sauvegarde, runtime.js n'appelle pas clock_create — il récupère l'objet world.clock déjà désérialisé du JSON tel quel, created_at compris. clock_create ne sert que pour une partie neuve.
 /**
  * @param {number|null} saved_timestamp
  * @returns {Clock}
  */
-export function create(saved_timestamp) {
+export function clock_create(saved_timestamp) {
     // return { last_tick_timestamp: saved_timestamp ?? Date.now(), accumulated_time: 0 };
     const now = saved_timestamp ?? Date.now();
     return { created_at: now, sim_time: now };
@@ -24,7 +24,7 @@ export function create(saved_timestamp) {
  * @param {Clock} clock
  * @param {number} ms
  */
-export function advance_by(clock, ms) { clock.sim_time += ms; }
+export function clock_advance_by(clock, ms) { clock.sim_time += ms; }
 
 /**
  * Temps réel (ms) écoulé depuis la dernière simulation — indique s'il y a
@@ -32,7 +32,7 @@ export function advance_by(clock, ms) { clock.sim_time += ms; }
  * @param {Clock} clock
  * @returns {number}
  */
-export function real_time_elapsed_since(clock) {
+export function clock_real_time_elapsed_since(clock) {
     return Date.now() - clock.sim_time;
 }
 
@@ -40,4 +40,4 @@ export function real_time_elapsed_since(clock) {
  * @param {Clock} clock
  * @returns {number} temps simulé écoulé depuis la création du monde, en ms
  */
-export function get_elapsed_ms(clock) { return clock.sim_time - clock.created_at; }
+export function clock_get_elapsed_ms(clock) { return clock.sim_time - clock.created_at; }

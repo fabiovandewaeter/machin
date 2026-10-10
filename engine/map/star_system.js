@@ -4,8 +4,8 @@
 /**
  * @typedef {import("./celestial_body.js").CelestialBodyID} CelestialBodyID
  */
+import { repository_spawn_element } from "../../utils/repository.js";
 import "../../utils/types.js"
-import * as Repo from "../../utils/repository.js";
 
 /**
  * @typedef {Object} StarSystem
@@ -23,8 +23,8 @@ import * as Repo from "../../utils/repository.js";
  * @param {string} options.name
  * @returns {StarSystem}
  */
-export function spawn(repo, { name }) {
-    return Repo.spawn_element(repo, {
+export function starsystem_spawn(repo, { name }) {
+    return repository_spawn_element(repo, {
         name,
         celestial_bodies: []
     });

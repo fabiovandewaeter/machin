@@ -5,9 +5,11 @@
  * @typedef {import("./region.js").RegionID} RegionID
  * @typedef {import("./atmosphere.js").Atmosphere} Atmosphere
  */
+import { none, some } from "../../utils/option.js";
+import { repository_spawn_element } from "../../utils/repository.js";
 import "../../utils/types.js"
-import * as Repo from "../../utils/repository.js";
-import * as Opt from "../../utils/option.js";
+
+
 
 /**
  * @typedef {Object} CelestialBody
@@ -28,11 +30,11 @@ import * as Opt from "../../utils/option.js";
  * @param {Atmosphere} [options.atmosphere]
  * @returns {CelestialBody}
  */
-export function spawn(repo, { name, atmosphere }) {
-    return Repo.spawn_element(repo, {
+export function celestialbody_spawn(repo, { name, atmosphere }) {
+    return repository_spawn_element(repo, {
         name,
         orbits: [],
-        atmosphere: atmosphere ? Opt.some(atmosphere) : Opt.none,
+        atmosphere: atmosphere ? some(atmosphere) : none,
         regions: [],
     });
 }

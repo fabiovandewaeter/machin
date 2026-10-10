@@ -1,13 +1,15 @@
 // engine/entity/entity.js
 // @ts-check
 
+import { option_unwrap } from "../../utils/option.js";
+import { repository_get, repository_spawn_element } from "../../utils/repository.js";
+import { signalbus_emit } from "../../utils/signal_bus.js";
+import { undefined_unwrap } from "../../utils/undefined.js";
+import { ESB } from "../core/signals.js";
+
 /**
  * @typedef {import("../map/room.js").RoomID} RoomID
  */
-import * as ESB from "../core/signals.js";
-import * as Repo from "../../utils/repository.js";
-import * as Opt from "../../utils/option.js";
-import * as SB from "../../utils/signal_bus.js";
 
 /**
  * @typedef {Object} Entity
@@ -27,8 +29,8 @@ import * as SB from "../../utils/signal_bus.js";
  * @param {RoomID} options.room_id
  * @returns {Entity}
  */
-export function spawn(repo, { name, room_id }) {
-    return Repo.spawn_element(repo, {
+export function entity_spawn(repo, { name, room_id }) {
+    return repository_spawn_element(repo, {
         name,
         room_id,
     });
@@ -40,11 +42,11 @@ export function spawn(repo, { name, room_id }) {
  * @param {RoomID} target_id
  * @returns {RoomID}
  */
-export function move(repo, entity_id, target_id) {
-    const entity = Opt.unwrap(Repo.get(repo, entity_id));
+export function entity_move(repo, entity_id, target_id) {
+    const entity = undefined_unwrap(repository_get(repo, entity_id));
     const previous_room_id = entity.room_id;
     entity.room_id = target_id;
-    SB.emit(ESB.BUS, "entity.room_id.changed", {
+    signalbus_emit(ESB, "entity.room_id.changed", {
         entity_id,
         previous_room_id,
         new_room_id: target_id,

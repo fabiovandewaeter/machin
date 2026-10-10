@@ -13,13 +13,15 @@
  * @typedef {import("./room.js").RoomID} RoomID
  * @typedef {import("./room.js").RoomRepo} RoomRepo
  */
+import { repository_create } from "../../utils/repository.js";
 import "../../utils/types.js"
-import * as Room from "./room.js";
-import * as Repo from "../../utils/repository.js";
+import { room_add_exit, room_spawn } from "./room.js";
+
+
 
 // Galaxy > StarStarSystem > CelestialBody > Region > Area > Room
 
-export const DEFAULT_ROOM_ID = /**@type {RoomID} */ (0);
+export const GALAXY_DEFAULT_ROOM_ID = /**@type {RoomID} */ (0);
 
 /**
  * @typedef {Object} Galaxy
@@ -34,37 +36,37 @@ export const DEFAULT_ROOM_ID = /**@type {RoomID} */ (0);
 /**
  * @returns {Galaxy}
  */
-export function create() {
+export function galaxy_create() {
     return {
         star_systems: [],
-        star_system_repo: Repo.create(),
-        celestial_body_repo: Repo.create(),
-        region_repo: Repo.create(),
-        area_repo: Repo.create(),
-        room_repo: Repo.create(),
+        star_system_repo: repository_create(),
+        celestial_body_repo: repository_create(),
+        region_repo: repository_create(),
+        area_repo: repository_create(),
+        room_repo: repository_create(),
     };
 }
 
 /**
  * @param {Galaxy} galaxy 
  */
-export function init(galaxy) {
-    const default_room = Room.spawn(galaxy.room_repo, {
+export function galaxy_init(galaxy) {
+    const default_room = room_spawn(galaxy.room_repo, {
         kind: "CITY",
         name: "default",
         layer: 0,
     });
     // TODO: enlever ça faire une système plus propre
-    if (default_room.id != DEFAULT_ROOM_ID) throw new Error(`default_room_id different from DEFAULT_ROOM_ID: ${default_room.id} ${DEFAULT_ROOM_ID}`)
-    const seconde_room = Room.spawn(galaxy.room_repo, {
+    if (default_room.id != GALAXY_DEFAULT_ROOM_ID) throw new Error(`default_room_id different from DEFAULT_ROOM_ID: ${default_room.id} ${GALAXY_DEFAULT_ROOM_ID}`)
+    const seconde_room = room_spawn(galaxy.room_repo, {
         kind: "FOREST",
         name: "seconde_room",
         layer: 0,
     });
-    Room.add_exit(galaxy.room_repo, default_room.id, "sortie foret", {
+    room_add_exit(galaxy.room_repo, default_room.id, "sortie foret", {
         target_id: seconde_room.id
     });
-    Room.add_exit(galaxy.room_repo, seconde_room.id, "room default", {
+    room_add_exit(galaxy.room_repo, seconde_room.id, "room default", {
         target_id: default_room.id
     });
 }

@@ -5,14 +5,15 @@
  * @typedef {import("../entity/entity.js").EntityID} EntityID
  * @typedef {import("./atmosphere.js").Atmosphere} Atmosphere
  */
+import { enum_create } from "../../utils/enum.js";
+import { option_unwrap } from "../../utils/option.js";
+import { repository_get, repository_spawn_element } from "../../utils/repository.js";
+import { signalbus_emit } from "../../utils/signal_bus.js";
 import "../../utils/types.js"
-import * as Repo from "../../utils/repository.js";
-import * as Opt from "../../utils/option.js";
-import * as SB from "../../utils/signal_bus.js";
-import * as Enum from "../../utils/enum.js";
-import * as ESB from "../core/signals.js";
+import { undefined_unwrap } from "../../utils/undefined.js";
+import { ESB } from "../core/signals.js";
 
-export const ROOM_KIND = Enum.create(/**@type {const}*/([
+export const ROOM_KIND = enum_create(/**@type {const}*/([
     "CITY",
     "RIVER",
     "FOREST",
@@ -48,8 +49,8 @@ export const ROOM_KIND = Enum.create(/**@type {const}*/([
  * @param {number} options.layer
  * @returns {Room}
  */
-export function spawn(repo, { kind, name, layer }) {
-    return Repo.spawn_element(repo, {
+export function room_spawn(repo, { kind, name, layer }) {
+    return repository_spawn_element(repo, {
         kind,
         name,
         layer,
@@ -64,11 +65,11 @@ export function spawn(repo, { kind, name, layer }) {
  * @param {string} name
  * @param {RoomExit} exit 
  */
-export function add_exit(repo, id, name, exit) {
-    const room = Opt.unwrap(Repo.get(repo, id));
+export function room_add_exit(repo, id, name, exit) {
+    const room = undefined_unwrap(repository_get(repo, id));
     if (Object.keys(room.exits).includes(name)) throw new Error(`exit name already used for this room: ${room.id} ${name}`);
     room.exits[name] = exit;
-    SB.emit(ESB.BUS, "room.exits.set", {
+    signalbus_emit(ESB, "room.exits.set", {
         room_id: id,
         key: name,
     });
@@ -80,11 +81,11 @@ export function add_exit(repo, id, name, exit) {
  * @param {RoomID} id
  * @param {EntityID} entity_id
  */
-export function add_entity(repo, id, entity_id) {
-    const room = Opt.unwrap(Repo.get(repo, id));
+export function room_add_entity(repo, id, entity_id) {
+    const room = undefined_unwrap(repository_get(repo, id));
     if (room.entities.includes(entity_id)) throw new Error(`entity_id already in this room: ${room.id} ${entity_id}`);
     room.entities.push(entity_id);
-    SB.emit(ESB.BUS, "room.entities.added", {
+    signalbus_emit(ESB, "room.entities.added", {
         room_id: id,
         added: entity_id,
     });
@@ -95,11 +96,11 @@ export function add_entity(repo, id, entity_id) {
  * @param {RoomID} id
  * @param {EntityID} entity_id
  */
-export function remove_entity(repo, id, entity_id) {
-    const room = Opt.unwrap(Repo.get(repo, id));
+export function room_remove_entity(repo, id, entity_id) {
+    const room = undefined_unwrap(repository_get(repo, id));
     if (!room.entities.includes(entity_id)) throw new Error(`entity_id is not in this room: ${room.id} ${entity_id}`);
     room.entities = room.entities.filter(e => e != entity_id);
-    SB.emit(ESB.BUS, "room.entities.removed", {
+    signalbus_emit(ESB, "room.entities.removed", {
         room_id: id,
         removed: entity_id,
     });

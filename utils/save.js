@@ -5,13 +5,13 @@
  * @typedef {import("../engine/core/world.js").World} World
  * @typedef {import("../ui/core/ui_state.js").UIState} UIState
  */
+import { world_create, world_init } from "../engine/core/world.js";
+import { UISB, UI_SIGNAL } from "../ui/core/signals.js";
+import { store_set_world, store_set_ui_state, store_set_should_save } from "../ui/core/store.js";
+import { uistate_create } from "../ui/core/ui_state.js";
+import { some, none } from "./option.js";
+import { signalbus_emit } from "./signal_bus.js";
 import "./types.js"
-import * as Opt from "./option.js";
-import * as SB from "./signal_bus.js";
-import * as World from "../engine/core/world.js";
-import * as UISB from "../ui/core/signals.js";
-import * as Store from "../ui/core/store.js";
-import * as UIState from "../ui/core/ui_state.js";
 
 const STORAGE_KEY = "machin_save";
 const CURRENT_VERSION = 0;
@@ -27,7 +27,7 @@ const CURRENT_VERSION = 0;
  * @param {World} world
  * @param {UIState} ui
  */
-export function save(world, ui) {
+export function save_save(world, ui) {
     const save_struct = { ui, world };
     try {
         const json = JSON.stringify(save_struct);
@@ -40,34 +40,34 @@ export function save(world, ui) {
 /**
  * @returns {Opt<SaveStruct>}
  */
-export function load() {
+export function save_load() {
     try {
         const json = localStorage.getItem(STORAGE_KEY);
         if (json) {
             const res = JSON.parse(json);
             if (res && res.world) {
-                return Opt.some(res);
+                return some(res);
             }
         }
-        return Opt.none;
+        return none;
     } catch (e) {
         console.error("Could not load save:", e);
         localStorage.removeItem(STORAGE_KEY);
-        return Opt.none;
+        return none;
     }
 }
 
-export function clear() {
+export function save_clear() {
     localStorage.removeItem(STORAGE_KEY);
-    const new_world = World.create();
-    World.init(new_world);
-    Store.set_world(new_world);
-    Store.set_ui_state(UIState.create());
-    Store.set_should_save(false);
-    SB.emit(UISB.BUS, UISB.UI_SIGNAL.SCENE_SWITCHED, { new_scene: "MAIN" });
+    const new_world = world_create();
+    world_init(new_world);
+    store_set_world(new_world);
+    store_set_ui_state(uistate_create());
+    store_set_should_save(false);
+    signalbus_emit(UISB, UI_SIGNAL.SCENE_SWITCHED, { new_scene: "MAIN" });
     // Runtime.clear();
     // const app = /**@type {HTMLElement}*/(document.getElementById("app"));
-    // // Scene.render_current_scene(app, Runtime.WORLD, Runtime.UI_STATE);
+    // // scene_render_current_scene(app, Runtime.WORLD, Runtime.UI_STATE);
     // Runtime.set_should_save(false);
     // window.zone.reload();
 }
@@ -76,7 +76,7 @@ export function clear() {
  * @param {World} world
  * @param {UIState} ui
  */
-export function download(world, ui) {
+export function save_download(world, ui) {
     const save_struct = { world, ui };
     const json = JSON.stringify(save_struct, null, 2);
     const blob = new Blob([json], { type: "application/json" });
@@ -90,7 +90,7 @@ export function download(world, ui) {
     URL.revokeObjectURL(url);
 }
 
-export function upload() {
+export function save_upload() {
     return new Promise((resolve) => {
         const input = document.createElement("input");
         input.type = "file";

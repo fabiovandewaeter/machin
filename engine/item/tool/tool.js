@@ -1,9 +1,9 @@
 // engine/item/tool/tool.js
 // @ts-check
 
-import * as Enum from "../../../utils/enum.js";
+import { enum_create } from "../../../utils/enum";
 
-export const TOOL_KIND = Enum.create(/**@type {const}*/([
+export const TOOL_KIND = enum_create(/**@type {const}*/([
     "PICKAXE",
 ]));
 /**

@@ -5,13 +5,12 @@
  * @typedef {import("./material").Material} Material
  */
 import { MATERIAL } from "./material.js";
-import * as Enum from "../../../utils/enum.js";
+import { enum_create } from "../../../utils/enum.js";
 
 1) régler import circulaire avec material.js
 2) plus utiliser les modules genre Entity.create() mais faire entity_create() comme en C
 
-
-const MATERIAL_CATEGORY = Enum.create(/**@type {const} */([
+const MATERIAL_CATEGORY = enum_create(/**@type {const} */([
     "METAL",
     "ROCK",
     "CRISTAL",

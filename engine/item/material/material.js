@@ -5,7 +5,7 @@
  * @typedef {import("./category.js").MaterialCategory} MaterialCategory
  */
 import { assert } from "../../../tests/test.js";
-import * as Enum from "../../../utils/enum.js";
+
 
 /**
  * @typedef {Object} MaterialDefinition
@@ -31,7 +31,7 @@ export const MATERIAL = Object.freeze(/**@type {const}*/({
  * @param {Material[]} materials
  * @returns {number}
  */
-export function lowest_mining_level(materials) {
+export function material_lowest_mining_level(materials) {
     assert(materials.length > 0);
     let lowest = MATERIAL[materials[0]].mining_level;
     for (let i = 1; i < materials.length; i++) {

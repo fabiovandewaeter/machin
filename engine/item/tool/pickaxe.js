@@ -8,12 +8,9 @@
  * @typedef {import("../quality.js").Quality} Quality
  */
 import "../../../utils/result.js";
-import { err, ok } from "../../../utils/result.js";
-import * as Quality from "../quality.js";
-import * as Compatibility from "../compatibility.js";
-import * as Res from "../../../utils/result.js";
-import * as Material from "../material/material.js";
-import * as Durability from "../material/durability.js";
+import { err, ok, result_is_err } from "../../../utils/result.js";
+import { compatibility_are_all_same_material } from "../compatibility.js";
+import { material_lowest_mining_level } from "../material/material.js";
 
 const PARTS = /** @type {const} */ ({
     ROD: "ROD",
@@ -37,15 +34,15 @@ const PARTS = /** @type {const} */ ({
  * @param {Parts} options.parts
  * @returns {Res<Pickaxe, string>}
  */
-export function craft({ parts }) {
+export function pickaxe_craft({ parts }) {
     const material_items = [parts.HEAD, parts.ROD];
-    const parts_res = Compatibility.are_all_same_material(material_items);
-    if (Res.is_err(parts_res)) return parts_res;
+    const parts_res = compatibility_are_all_same_material(material_items);
+    if (result_is_err(parts_res)) return parts_res;
 
     return ok({
         kind: "PICKAXE",
         parts,
-        mining_level: Material.lowest_mining_level(material_items.map(mi => mi.material)),
+        mining_level: material_lowest_mining_level(material_items.map(mi => mi.material)),
     });
 }
 

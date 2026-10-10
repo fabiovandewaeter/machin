@@ -16,14 +16,14 @@ export const none = Object.freeze({ _tag: "None" });
  * @param {Opt<T>} opt
  * @returns {opt is Some<T>}
  */
-export const is_some = (opt) => opt._tag === "Some";
+export const option_is_some = (opt) => opt._tag === "Some";
 
 /**
  * @template T
  * @param {Opt<T>} opt
  * @returns {opt is None}
  */
-export const is_none = (opt) => opt._tag === "None";
+export const option_is_none = (opt) => opt._tag === "None";
 
 /**
  * Unwrap or throw
@@ -32,9 +32,8 @@ export const is_none = (opt) => opt._tag === "None";
  * @param {string} [msg]
  * @returns {T}
  */
-export const unwrap = (opt, msg) => {
-    if (is_some(opt)) return opt.value;
-    throw new Error(msg ?? "Tried to unwrap a None");
+export const option_unwrap = (opt, msg) => {
+    return option_expect(opt, msg ?? "Tried to unwrap a None");
 }
 
 /**
@@ -44,8 +43,8 @@ export const unwrap = (opt, msg) => {
  * @param {string} msg
  * @returns {T}
  */
-export const expect = (opt, msg) => {
-    if (is_some(opt)) return opt.value;
+export const option_expect = (opt, msg) => {
+    if (option_is_some(opt)) return opt.value;
     throw new Error(msg);
 }
 
@@ -55,7 +54,7 @@ export const expect = (opt, msg) => {
  * @param {T} fallback
  * @returns {T}
  */
-export const unwrap_or = (opt, fallback) => is_some(opt) ? opt.value : fallback;
+export const option_unwrap_or = (opt, fallback) => option_is_some(opt) ? opt.value : fallback;
 
 /**
  * Unwrap sans throw : retourne `undefined` si None.
@@ -63,7 +62,7 @@ export const unwrap_or = (opt, fallback) => is_some(opt) ? opt.value : fallback;
  * @param {Opt<T>} opt
  * @returns {T | undefined}
  */
-export const unwrap_or_undefined = (opt) => is_some(opt) ? opt.value : undefined;
+export const option_unwrap_or_undefined = (opt) => option_is_some(opt) ? opt.value : undefined;
 
 /**
  * Throw si None, narrow `opt` en Some après l'appel.
@@ -72,8 +71,8 @@ export const unwrap_or_undefined = (opt) => is_some(opt) ? opt.value : undefined
  * @param {string} [msg]
  * @returns {asserts opt is Some<T>}
  */
-export const assert_some = (opt, msg) => {
-    if (is_none(opt)) throw new Error(msg ?? "Expected Some, got None");
+export const option_assert_some = (opt, msg) => {
+    if (option_is_none(opt)) throw new Error(msg ?? "Expected Some, got None");
 };
 
 /**
@@ -83,8 +82,8 @@ export const assert_some = (opt, msg) => {
  * @param {string} [msg]
  * @returns {asserts opt is None}
  */
-export const assert_none = (opt, msg) => {
-    if (is_some(opt)) throw new Error(msg ?? `Expected None, got Some(${String(opt.value)})`);
+export const option_assert_none = (opt, msg) => {
+    if (option_is_some(opt)) throw new Error(msg ?? `Expected None, got Some(${String(opt.value)})`);
 };
 
 /**
@@ -93,7 +92,7 @@ export const assert_none = (opt, msg) => {
  * @param {(v: T) => U} fn
  * @returns {Opt<U>}
  */
-export const map = (opt, fn) => is_some(opt) ? some(fn(opt.value)) : none;
+export const option_map = (opt, fn) => option_is_some(opt) ? some(fn(opt.value)) : none;
 
 /**
  * @template T, U
@@ -101,4 +100,4 @@ export const map = (opt, fn) => is_some(opt) ? some(fn(opt.value)) : none;
  * @param {(v: T) => Opt<U>} fn
  * @returns {Opt<U>}
  */
-export const flat_map = (opt, fn) => is_some(opt) ? fn(opt.value) : none;
+export const option_flat_map = (opt, fn) => option_is_some(opt) ? fn(opt.value) : none;

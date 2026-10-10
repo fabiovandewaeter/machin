@@ -8,7 +8,7 @@
  * @param {string|undefined} id_string
  * @returns {RType}
  */
-export function string_to_rkind(id_string) {
+export function utils_string_to_rkind(id_string) {
     if (!id_string) throw new Error();
     const id = Number(id_string);
     if (!Number.isSafeInteger(id) || id < 0) throw new Error;
@@ -18,10 +18,10 @@ export function string_to_rkind(id_string) {
 /**
  * @param {object} data
  */
-export function data_key(data) { return JSON.stringify(data, Object.keys(data).sort()); }
+export function utils_data_key(data) { return JSON.stringify(data, Object.keys(data).sort()); }
 
 /**
  * @param {never} value
  * @returns {never}
  */
-export function assert_unreachable(value) { throw new Error(`Unexpected value: ${String(value)}`); }
+export function utils_assert_unreachable(value) { throw new Error(`Unexpected value: ${String(value)}`); }

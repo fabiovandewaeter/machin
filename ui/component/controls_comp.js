@@ -6,22 +6,22 @@
  */
 import "../../utils/types.js"
 import { SECONDS_PER_DAY, SECONDS_PER_HOUR, SECONDS_PER_MINUTE, SECONDS_PER_WEEK, SECONDS_PER_YEAR } from "../../utils/const.js";
-import * as SB from "../../utils/signal_bus.js";
-import * as UISB from "../core/signals.js";
-import * as Store from "../core/store.js";
-import * as World from "../../engine/core/world.js";
-import * as UIState from "../core/ui_state.js";
-import * as Scene from "../scene/scene.js";
-import * as Save from "../../utils/save.js";
-import * as Comp from "./core/comp.js";
-import * as Runtime from "../core/runtime.js";
-import * as Utils from "../../utils/utils.js";
-import * as Enum from "../../utils/enum.js";
-import * as Opt from "../../utils/option.js";
+import { utils_assert_unreachable, utils_string_to_rkind } from "../../utils/utils.js";
+import { runtime_init } from "../core/runtime.js";
+import { save_clear, save_download, save_upload } from "../../utils/save.js";
+import { uistate_add_log, uistate_stop_tick } from "../core/ui_state.js";
+import { signalbus_emit, signalbus_off, signalbus_on } from "../../utils/signal_bus.js";
+import { store_get, store_set_world } from "../core/store.js";
+import { world_advance_by, world_advance_to } from "../../engine/core/world.js";
+import { enum_create, enum_is_enum_key } from "../../utils/enum.js";
+import { none, option_is_none, option_is_some, some } from "../../utils/option.js";
+import { comp_create_comp, comp_delegate_click_with_enum } from "./core/comp.js";
+import { SCENES } from "../scene/scene.js";
+import { UI_SIGNAL, UISB } from "../core/signals.js";
 
 const TICK_DELAY_MS = 1000;
 
-const ACTIONS = Enum.create(/**@type {const}*/([
+const ACTIONS = enum_create(/**@type {const}*/([
     "SKIP_SECONDS",
     "TOGGLE_TICK",
     "SWITCH_SCENE",
@@ -34,7 +34,7 @@ const ACTIONS = Enum.create(/**@type {const}*/([
 /**
  * @returns {string}
  */
-export function render() {
+export function controlscomp_render() {
     return `
 <div class="controls-time">
     <button data-action="${ACTIONS.SKIP_SECONDS}" data-amount=${TICK_DELAY_MS}>1 seconde</button>
@@ -46,7 +46,7 @@ export function render() {
 </div>
 
 <button data-action="${ACTIONS.TOGGLE_TICK}">Start</button>
-<button data-action="${ACTIONS.SWITCH_SCENE}" data-scene="${Scene.SCENES.MENU}">Switch to menu</button>
+<button data-action="${ACTIONS.SWITCH_SCENE}" data-scene="${SCENES.MENU}">Switch to menu</button>
 
 <div class="controls-save">
     <button data-action="${ACTIONS.DOWNLOAD_SAVE}">download save</button>
@@ -59,8 +59,8 @@ export function render() {
 /**
  * @param {HTMLElement} el 
  */
-function update_toggle_button(el) {
-    const s = Store.get();
+function controlscomp_update_toggle_button(el) {
+    const s = store_get();
     const button = el.querySelector(`button[data-action="${ACTIONS.TOGGLE_TICK}"]`);
     if (!button) throw new Error();
     button.textContent = s.ui_state.tick_interval_id === null ? "Start" : "Stop";
@@ -70,18 +70,18 @@ function update_toggle_button(el) {
  * @param {HTMLElement} container 
  * @returns {{element: HTMLElement, destroy: DestroyFunction }}
  */
-export function mount(container) {
-    return Comp.create_comp(container, "controls-comp", (el, add_cleanup) => {
-        el.innerHTML = render();
+export function controlscomp_mount(container) {
+    return comp_create_comp(container, "controls-comp", (el, add_cleanup) => {
+        el.innerHTML = controlscomp_render();
 
-        // TODO: PAS BESOIN de addEventListener ni removeEventListener car on a Comp.delegate_click()
+        // TODO: PAS BESOIN de addEventListener ni removeEventListener car on a comp_delegate_click()
         // el.addEventListener("click", handle_click);
-        add_cleanup(Comp.delegate_click_with_enum(el, ACTIONS, (action, event, btn) => {
-            handle_action(action, btn);
+        add_cleanup(comp_delegate_click_with_enum(el, ACTIONS, (action, event, btn) => {
+            controlscomp_handle_action(action, btn);
         }));
 
-        add_cleanup(SB.on(UISB.BUS, UISB.UI_SIGNAL.TICK, () => update_toggle_button(el)));
-        update_toggle_button(el);
+        add_cleanup(signalbus_on(UISB, UI_SIGNAL.TICK, () => controlscomp_update_toggle_button(el)));
+        controlscomp_update_toggle_button(el);
     });
 }
 
@@ -89,72 +89,72 @@ export function mount(container) {
  * @param {Action} action
  * @param {HTMLElement} btn
  */
-function handle_action(action, btn) {
-    const s = Store.get();
+function controlscomp_handle_action(action, btn) {
+    const s = store_get();
     switch (action) {
         case ACTIONS.SKIP_SECONDS: {
-            const ms = Utils.string_to_rkind(btn.dataset.amount);
-            World.advance_by(s.world, ms);
-            SB.emit(UISB.BUS, UISB.UI_SIGNAL.TICK);
+            const ms = utils_string_to_rkind(btn.dataset.amount);
+            world_advance_by(s.world, ms);
+            signalbus_emit(UISB, UI_SIGNAL.TICK);
             // save_timestamp(clock.timestamp);
-            UIState.add_log(s.ui_state, `skip_seconds: ${ms} ms`);
+            uistate_add_log(s.ui_state, `skip_seconds: ${ms} ms`);
             break;
         }
         case ACTIONS.TOGGLE_TICK: {
-            const s = Store.get();
-            if (Opt.is_some(s.ui_state.tick_interval_id)) {
+            const s = store_get();
+            if (option_is_some(s.ui_state.tick_interval_id)) {
                 clearInterval(s.ui_state.tick_interval_id.value);
-                s.ui_state.tick_interval_id = Opt.none;
+                s.ui_state.tick_interval_id = none;
             }
             else {
-                s.ui_state.tick_interval_id = Opt.some(setInterval(() => {
-                    const s = Store.get();
-                    World.advance_by(s.world, TICK_DELAY_MS);
-                    SB.emit(UISB.BUS, UISB.UI_SIGNAL.TICK);
-                    UIState.add_log(s.ui_state, "tick");
+                s.ui_state.tick_interval_id = some(setInterval(() => {
+                    const s = store_get();
+                    world_advance_by(s.world, TICK_DELAY_MS);
+                    signalbus_emit(UISB, UI_SIGNAL.TICK);
+                    uistate_add_log(s.ui_state, "tick");
                 }, TICK_DELAY_MS));
             }
-            SB.emit(UISB.BUS, UISB.UI_SIGNAL.TOGGLE_TICK);
-            UIState.add_log(s.ui_state, "toggle_tick");
+            signalbus_emit(UISB, UI_SIGNAL.TOGGLE_TICK);
+            uistate_add_log(s.ui_state, "toggle_tick");
             break;
         }
         case ACTIONS.SWITCH_SCENE: {
             const new_scene = btn.dataset.scene;
             if (new_scene) {
-                if (!Enum.is_enum_value(Scene.SCENES, new_scene)) { throw new Error(`Invalid scene: ${new_scene}`); }
+                if (!enum_is_enum_key(SCENES, new_scene)) { throw new Error(`Invalid scene: ${new_scene}`); }
                 s.ui_state.scene = new_scene;
-                UIState.add_log(s.ui_state, `switch_scene: ${new_scene}`);
-                SB.emit(UISB.BUS, UISB.UI_SIGNAL.SCENE_SWITCHED, { new_scene: new_scene });
+                uistate_add_log(s.ui_state, `switch_scene: ${new_scene}`);
+                signalbus_emit(UISB, UI_SIGNAL.SCENE_SWITCHED, { new_scene: new_scene });
             }
             break;
         }
         case ACTIONS.DOWNLOAD_SAVE: {
-            Save.download(s.world, s.ui_state);
+            save_download(s.world, s.ui_state);
             break;
         }
         case ACTIONS.UPLOAD_SAVE: {
-            Save.upload().then((loaded => {
+            save_upload().then((loaded => {
                 if (loaded && loaded.world) {
-                    World.advance_to(loaded.world, Date.now());
-                    Store.set_world(loaded.world);
-                    SB.emit(UISB.BUS, UISB.UI_SIGNAL.SCENE_SWITCHED, { new_scene: s.ui_state.scene });
+                    world_advance_to(loaded.world, Date.now());
+                    store_set_world(loaded.world);
+                    signalbus_emit(UISB, UI_SIGNAL.SCENE_SWITCHED, { new_scene: s.ui_state.scene });
                 }
             }));
             break;
         }
         case ACTIONS.CLEAR_SAVE: {
-            UIState.stop_tick(s.ui_state);
-            Save.clear();
-            Runtime.init();
+            uistate_stop_tick(s.ui_state);
+            save_clear();
+            runtime_init();
             break;
         }
         // case "hide_logs": {
         // TODO: si on le remet il faut mettre dans le parent le on() et pas dans le logs_comp directement
-        //     SB.emit(UISB.BUS, "toggle_logs")
+        //     signalbus_emit(UISB, "toggle_logs")
         //     break;
         // };
         default: {
-            Utils.assert_unreachable(action);
+            utils_assert_unreachable(action);
         }
     }
 };

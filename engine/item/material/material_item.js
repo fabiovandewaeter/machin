@@ -1,6 +1,9 @@
 // engine/item/material/material_item.js
 // @ts-check
 
+import { enum_create } from "../../../utils/enum.js";
+import { BASE_DURABILITY } from "./durability.js";
+
 // 1: items basiques (une plaque d'un certains materiau) (structure de donnée plate)
 // 2: items qui viennent d'autres items (un moteur) (structure de donnée plate)
 // 3: trucs composés d'items, on construit un support pour d'autes items (un véhicule modulaire) (structure de donnée profonde)
@@ -12,8 +15,8 @@
  * @typedef {import("./material.js").Material} Material
  * @typedef {import("../../utils/gauge.js").Gauge} Gauge
  */
-import * as Enum from "../../../utils/enum.js";
-import * as Durability from "./durability.js";
+
+
 
 /**
  * @typedef {Object} MaterialItem
@@ -23,7 +26,7 @@ import * as Durability from "./durability.js";
  * @property {number} durability
  */
 
-export const MATERIAL_ITEM_KIND = Enum.create(/**@type {const}*/([
+export const MATERIAL_ITEM_KIND = enum_create(/**@type {const}*/([
     "ORE",
     "INGOT",
     "PLATE",
@@ -47,12 +50,12 @@ export const MATERIAL_ITEM_KIND = Enum.create(/**@type {const}*/([
  * @param {Quality} options.quality
  * @returns {MaterialItem & {kind: K}}
  */
-export function create({ kind, material, quality }) {
+export function materialitem_create({ kind, material, quality }) {
     return {
         kind,
         material,
         quality,
-        durability: Durability.BASE_DURABILITY,
+        durability: BASE_DURABILITY,
     };
 }
 
@@ -67,7 +70,7 @@ export function create({ kind, material, quality }) {
  * @param {number} amount
  * @returns {MaterialItemStack}
  */
-export function create_stack(material_item, amount) {
+export function materialitem_create_stack(material_item, amount) {
     return {
         material_item,
         amount,

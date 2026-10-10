@@ -20,22 +20,22 @@ export const err = (error) => ({ _tag: "Err", error });
  * @param {Res<T, E>} res
  * @returns {res is Ok<T, E>}
  */
-export const is_ok = (res) => res._tag === "Ok";
+export const result_is_ok = (res) => res._tag === "Ok";
 
 /**
  * @template T, E
  * @param {Res<T, E>} res
  * @returns {res is Err<T, E>}
  */
-export const is_err = (res) => res._tag === "Err";
+export const result_is_err = (res) => res._tag === "Err";
 
 /**
  * @template T, E
  * @param {Res<T, E>} res
  * @returns {T}
  */
-export const unwrap = (res) => {
-    if (is_ok(res)) return res.value;
+export const result_unwrap = (res) => {
+    if (result_is_ok(res)) return res.value;
     throw new Error(String(res.error));
 }
 
@@ -45,7 +45,7 @@ export const unwrap = (res) => {
  * @param {T} fallback
  * @returns {T}
  */
-export const unwrap_or = (res, fallback) => is_ok(res) ? res.value : fallback;
+export const result_unwrap_or = (res, fallback) => result_is_ok(res) ? res.value : fallback;
 
 /**
  * Throw si Err, narrow `res` en Ok après l'appel.
@@ -54,8 +54,8 @@ export const unwrap_or = (res, fallback) => is_ok(res) ? res.value : fallback;
  * @param {string} [msg]
  * @returns {asserts res is Ok<T, E>}
  */
-export const assert_ok = (res, msg) => {
-    if (is_err(res)) {
+export const result_assert_ok = (res, msg) => {
+    if (result_is_err(res)) {
         throw new Error(msg ? `${msg}: ${String(res.error)}` : String(res.error));
     }
 };
@@ -68,8 +68,8 @@ export const assert_ok = (res, msg) => {
  * @param {string} [msg]
  * @returns {asserts res is Err<T, E>}
  */
-export const assert_err = (res, msg) => {
-    if (is_ok(res)) {
+export const result_assert_err = (res, msg) => {
+    if (result_is_ok(res)) {
         throw new Error(msg ?? `Expected Err, got Ok(${String(res.value)})`);
     }
 };
@@ -80,4 +80,4 @@ export const assert_err = (res, msg) => {
  * @param {(val: T) => U} fn
  * @returns {Res<U, E>}
  */
-export const map = (res, fn) => is_ok(res) ? ok(fn(res.value)) : res;
+export const result_map = (res, fn) => result_is_ok(res) ? ok(fn(res.value)) : res;

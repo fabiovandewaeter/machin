@@ -5,9 +5,9 @@
  * @typedef {import("../../engine/core/world.js").World} World
  * @typedef {import("./ui_state.js").UIState} UIState
  */
+import { world_create } from "../../engine/core/world.js";
 import "../../utils/types.js"
-import * as World from "../../engine/core/world.js";
-import * as UIState from "./ui_state.js";
+import { uistate_create } from "./ui_state.js";
 
 /**
  * @typedef {Object} GameStore
@@ -18,17 +18,17 @@ import * as UIState from "./ui_state.js";
 
 /** @type {GameStore} */
 let store = {
-    world: World.create(),
-    ui_state: UIState.create(),
+    world: world_create(),
+    ui_state: uistate_create(),
     should_save: true,
 };
 
 /** @returns {GameStore} */
-export function get() { return store; }
+export function store_get() { return store; }
 
 /** @param {World} new_world */
-export function set_world(new_world) { store.world = new_world; }
+export function store_set_world(new_world) { store.world = new_world; }
 /** @param {UIState} new_ui_state */
-export function set_ui_state(new_ui_state) { store.ui_state = new_ui_state; }
+export function store_set_ui_state(new_ui_state) { store.ui_state = new_ui_state; }
 /** @param {boolean} val */
-export function set_should_save(val) { store.should_save = val; }
+export function store_set_should_save(val) { store.should_save = val; }

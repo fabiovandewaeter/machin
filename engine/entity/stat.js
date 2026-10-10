@@ -1,10 +1,12 @@
 // engine/entity/stat.js
 // @ts-check
 
+import { gauge_create } from "../utils/gauge.js";
+
 /**
  * @typedef {import("../utils/gauge.js").Gauge} Gauge
  */
-import * as Gauge from "../utils/gauge.js";
+
 
 /**
  * @typedef { Object } GaugeStat
@@ -22,20 +24,20 @@ import * as Gauge from "../utils/gauge.js";
  * @param {number} max
  * @returns {GaugeStat}
  */
-export function HP(max) {
-    return { key: "HP", gauge: Gauge.create({ max }) };
+export function stat_HP(max) {
+    return { key: "HP", gauge: gauge_create({ max }) };
 }
 /**
  * @param {number} max
  * @returns {GaugeStat}
  */
-export function ENERGY(max) {
-    return { key: "ENERGY", gauge: Gauge.create({ max }) };
+export function stat_ENERGY(max) {
+    return { key: "ENERGY", gauge: gauge_create({ max }) };
 }
 /**
  * @param {number} amount
  * @returns {ValueStat}
  */
-export function DEFENSE(amount) {
+export function stat_DEFENSE(amount) {
     return { key: "DEFENSE", value: amount };
 }

@@ -1,10 +1,11 @@
 // engine/map/hazard.js
 // @ts-check
 
+import { enum_create } from "../../utils/enum.js";
 import "../../utils/types.js";
-import * as Enum from "../../utils/enum.js";
 
-export const HAZARD_KIND = Enum.create(/**@type {const}*/([
+
+export const HAZARD_KIND = enum_create(/**@type {const}*/([
     "RADIATION",
     "HEAT",
     "COLD",
@@ -28,7 +29,7 @@ export const HAZARD_KIND = Enum.create(/**@type {const}*/([
  * @param {number} options.intensity 
  * @returns {Hazard}
  */
-export function create({ kind, intensity }) {
+export function hazard_create({ kind, intensity }) {
     if (intensity < 0 || intensity > 1) {
         throw new Error(`has to be between 0 and 1: ${intensity}`);
     }

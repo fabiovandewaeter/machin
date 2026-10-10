@@ -19,13 +19,13 @@ const HANDLERS = {};
  * @param {TimelineEventKind} kind
  * @param {TimelineEventHandler} handler
  */
-export function register(kind, handler) { HANDLERS[kind] = handler; }
+export function timelinedispatcher_register(kind, handler) { HANDLERS[kind] = handler; }
 
 /**
  * @param {World} world 
  * @param {TimelineEvent} event 
  */
-export function dispatch(world, event) {
+export function timelinedispatcher_dispatch(world, event) {
     const handler = HANDLERS[event.kind];
     if (!handler) {
         throw new Error(`Aucun handler enregistré pour l'event kind: ${event.kind}`);

@@ -7,17 +7,16 @@
  */
 import "../../utils/types.js"
 import { SECONDS_PER_DAY, SECONDS_PER_HOUR, SECONDS_PER_MINUTE, SECONDS_PER_WEEK, SECONDS_PER_YEAR } from "../../utils/const.js";
-import * as UISB from "../core/signals.js";
-import * as SB from "../../utils/signal_bus.js";
-import * as Store from "../core/store.js";
-import * as Clock from "../../engine/core/clock.js";
-import * as Comp from "./core/comp.js";
-import * as ESB from "../../engine/core/signals.js";
+import { signalbus_on } from "../../utils/signal_bus.js";
+import { store_get } from "../core/store.js";
+import { comp_create_comp } from "./core/comp.js";
+import { clock_get_elapsed_ms } from "../../engine/core/clock.js";
+import { ESB, ENGINE_SIGNAL } from "../../engine/core/signals.js";
 
 /**
  * @returns {string}
  */
-export function render() {
+export function timecomp_render() {
     return `
 <h1>Temps passé: </h1>
 <span class="time-seconds">0</span> secondes
@@ -33,14 +32,14 @@ export function render() {
  * @param {GameStore} store
  * @returns {number} temps simulé écoulé depuis la création du monde, en ms
  */
-function get_accumulated_seconds(store) { return Clock.get_elapsed_ms(store.world.clock) / 1000; }
+function timecomp_get_accumulated_seconds(store) { return clock_get_elapsed_ms(store.world.clock) / 1000; }
 
 /**
  * @param {HTMLElement} el
  */
-export function update(el) {
-    let s = Store.get();
-    const accumulated_seconds = get_accumulated_seconds(s);
+export function timecomp_update(el) {
+    let s = store_get();
+    const accumulated_seconds = timecomp_get_accumulated_seconds(s);
 
     const s_counter = el.querySelector(".time-seconds");
     const m_counter = el.querySelector(".time-minutes");
@@ -63,11 +62,11 @@ export function update(el) {
  * @param {HTMLElement} container 
  * @returns {{element: HTMLElement, destroy: DestroyFunction }}
  */
-export function mount(container) {
-    return Comp.create_comp(container, "time-comp", (el, add_cleanup) => {
-        el.innerHTML = render();
+export function timecomp_mount(container) {
+    return comp_create_comp(container, "time-comp", (el, add_cleanup) => {
+        el.innerHTML = timecomp_render();
 
-        add_cleanup(SB.on(ESB.BUS, ESB.SIGNAL.ENTITY_BROKE, (payload) => update(el)));
-        update(el);
+        add_cleanup(signalbus_on(ESB, ENGINE_SIGNAL.ENTITY_BROKE, (payload) => timecomp_update(el)));
+        timecomp_update(el);
     });
 }

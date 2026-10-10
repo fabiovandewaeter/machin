@@ -1,16 +1,17 @@
 // ui/core/signals.js
 // @ts-check
 
+import { enum_create } from "../../utils/enum.js";
+import { signalbus_create, signalbus_clear } from "../../utils/signal_bus.js";
+
 /**
  * @typedef {import("../../engine/entity/entity.js").EntityID} EntityID
  * @typedef {import("../../engine/map/room.js").RoomID} RoomID
  * @typedef {import("../scene/scene.js").Scene} Scene
  * @typedef {import("./ui_state.js").UIState} UIState
  */
-import * as SB from "../../utils/signal_bus.js";
-import * as Enum from "../../utils/enum.js";
 
-const OTHER_SIGNAL = Enum.create(/**@type {const} */([
+const OTHER_SIGNAL = enum_create(/**@type {const} */([
     "TICK",
     "LOGS",
     "SCENE_SWITCHED",
@@ -28,7 +29,7 @@ const OTHER_SIGNAL = Enum.create(/**@type {const} */([
  * }} OtherUISignalPayload
  */
 
-const MAIN_MENU_SIGNAL = Enum.create(/**@type {const}*/([
+const MAIN_MENU_SIGNAL = enum_create(/**@type {const}*/([
     "OPEN_ENTITY_PANEL",
     "CLOSE_ENTITY_PANEL",
 ]));
@@ -40,7 +41,7 @@ const MAIN_MENU_SIGNAL = Enum.create(/**@type {const}*/([
  * }} MainMenuUISignalPayload
  */
 
-const ENTITY_SIGNAL = Enum.create(/**@type {const}*/([
+const ENTITY_SIGNAL = enum_create(/**@type {const}*/([
     "SELECTED_ENTITY_CHANGED",
 ]));
 /**
@@ -68,12 +69,12 @@ export const UI_SIGNAL = Object.freeze(/**@type {const}*/({
 /** @typedef {keyof UISignalPayload} UISignal */
 
 /**@type {import("../../utils/signal_bus.js").SignalBus<UISignal, UISignalPayload>} */
-export const BUS = SB.create();
+export const UISB = signalbus_create();
 
-export function init() {
-    clear_handlers();
+export function uisignals_init() {
+    uisignals_clear_handlers();
 }
 
-export function clear_handlers() {
-    SB.clear(BUS);
+export function uisignals_clear_handlers() {
+    signalbus_clear(UISB);
 }

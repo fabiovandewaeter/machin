@@ -153,25 +153,25 @@ import "./types.js"
 
 /** @template {string} SType @template {Record<SType, unknown[]>} M
  *  @returns {SignalBus<SType, M>} */
-export function create() { return { listeners: {} }; }
+export function signalbus_create() { return { listeners: {} }; }
 
 /** @template {string} SType @template {Record<SType, unknown[]>} M @template {SType} K
  *  @param {SignalBus<SType, M>} bus
  *  @param {K} signal_kind
  *  @param {(...args: M[K]) => void} callback
  *  @returns {() => void} */
-export function on(bus, signal_kind, callback) {
+export function signalbus_on(bus, signal_kind, callback) {
     const handlers = (bus.listeners[signal_kind] ??= []);
     if (handlers.includes(callback)) throw new Error(`duplicate: ${String(signal_kind)}`);
     handlers.push(callback);
-    return () => off(bus, signal_kind, callback);
+    return () => signalbus_off(bus, signal_kind, callback);
 }
 
 /** @template {string} SType @template {Record<SType, unknown[]>} M @template {SType} K
  *  @param {SignalBus<SType, M>} bus
  *  @param {K} signal_kind
  *  @param {(...args: M[K]) => void} callback */
-export function off(bus, signal_kind, callback) {
+export function signalbus_off(bus, signal_kind, callback) {
     const handlers = bus.listeners[signal_kind];
     if (!handlers?.length) return;
     const next = handlers.filter(cb => cb !== callback);
@@ -179,11 +179,12 @@ export function off(bus, signal_kind, callback) {
     else bus.listeners[signal_kind] = next;
 }
 
+// TODO: CLAUDE DIT emit fait un slice() à chaque émission. Comme off est déjà copy-on-write, fais pareil dans on ([...handlers, cb]) et supprime le slice().
 /** @template {string} SType @template {Record<SType, unknown[]>} M @template {SType} K
  *  @param {SignalBus<SType, M>} bus
  *  @param {K} signal_kind
  *  @param {M[K]} args */
-export function emit(bus, signal_kind, ...args) {
+export function signalbus_emit(bus, signal_kind, ...args) {
     const handlers = bus.listeners[signal_kind];
     if (!handlers?.length) return;
     for (const cb of handlers.slice()) cb(...args);
@@ -191,4 +192,4 @@ export function emit(bus, signal_kind, ...args) {
 
 /** @template {string} SType @template {Record<SType, unknown[]>} M
  *  @param {SignalBus<SType, M>} bus */
-export function clear(bus) { bus.listeners = {}; }
+export function signalbus_clear(bus) { bus.listeners = {}; }

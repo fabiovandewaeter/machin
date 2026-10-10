@@ -18,7 +18,7 @@ import "../../../utils/types.js"
  * @param {HeapEntry} a
  * @param {HeapEntry} b
  */
-export function is_before(a, b) {
+export function heap_is_before(a, b) {
     return a.at !== b.at ? a.at < b.at : a.id < b.id;
 }
 
@@ -26,21 +26,21 @@ export function is_before(a, b) {
  * @param {HeapEntry[]} heap
  * @param {HeapEntry} entry
  */
-export function push(heap, entry) {
+export function heap_push(heap, entry) {
     heap.push(entry);
-    sift_up(heap, heap.length - 1);
+    heap_sift_up(heap, heap.length - 1);
 }
 
 /**
  * @param {HeapEntry[]} heap
  * @returns {HeapEntry|undefined}
  */
-export function pop(heap) {
+export function heap_pop(heap) {
     const top = heap[0];
     const last = heap.pop();
     if (heap.length > 0 && last !== undefined) {
         heap[0] = last;
-        sift_down(heap, 0);
+        heap_sift_down(heap, 0);
     }
     return top;
 }
@@ -49,10 +49,10 @@ export function pop(heap) {
  * @param {HeapEntry[]} heap
  * @param {number} i
  */
-function sift_up(heap, i) {
+function heap_sift_up(heap, i) {
     while (i > 0) {
         const parent = (i - 1) >> 1;
-        if (!is_before(heap[i], heap[parent])) break;
+        if (!heap_is_before(heap[i], heap[parent])) break;
         [heap[i], heap[parent]] = [heap[parent], heap[i]];
         i = parent;
     }
@@ -62,12 +62,12 @@ function sift_up(heap, i) {
  * @param {HeapEntry[]} heap
  * @param {number} i
  */
-function sift_down(heap, i) {
+function heap_sift_down(heap, i) {
     const n = heap.length;
     while (true) {
         let smallest = i, l = 2 * i + 1, r = 2 * i + 2;
-        if (l < n && is_before(heap[l], heap[smallest])) smallest = l;
-        if (r < n && is_before(heap[r], heap[smallest])) smallest = r;
+        if (l < n && heap_is_before(heap[l], heap[smallest])) smallest = l;
+        if (r < n && heap_is_before(heap[r], heap[smallest])) smallest = r;
         if (smallest === i) break;
         [heap[i], heap[smallest]] = [heap[smallest], heap[i]];
         i = smallest;

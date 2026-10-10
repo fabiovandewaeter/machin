@@ -1,69 +1,70 @@
 // ui/core/runtime.js
 // @ts-check
 
+import { timeline_init } from "../../engine/core/timeline/timeline.js";
+import { world_create, world_init, world_advance_to } from "../../engine/core/world.js";
+import { option_is_some } from "../../utils/option.js";
+import { save_load, save_save } from "../../utils/save.js";
+import { scene_init, scene_render_current_scene } from "../scene/scene.js";
+import { uisignals_init } from "./signals.js";
+import { store_set_world, store_set_ui_state, store_get } from "./store.js";
+import { uistate_create } from "./ui_state.js";
+
 /**
  * @typedef {import("../../engine/core/world.js").World} World
  */
-import * as World from "../../engine/core/world.js";
-import * as Save from "../../utils/save.js";
-import * as UIState from "./ui_state.js";
-import * as Opt from "../../utils/option.js";
-import * as Scene from "../scene/scene.js";
-import * as Store from "./store.js";
-import * as Timeline from "../../engine/core/timeline/timeline.js";
-import * as Signal from "../../engine/core/signals.js";
 
-init();
+runtime_init();
 
-export function init() {
-    Scene.init();
+export function runtime_init() {
+    scene_init();
 
-    Timeline.init();
-    Signal.init();
+    timeline_init();
+    uisignals_init();
 
     const app = /**@type {HTMLElement}*/(document.getElementById("app"));
     app.tabIndex = -1
     app.focus();
 
-    const saved_opt = Save.load();
-    if (Opt.is_some(saved_opt)) {
+    const saved_opt = save_load();
+    if (option_is_some(saved_opt)) {
         let { world, ui_state } = saved_opt.value;
         if (world) {
-            load_world(world);
-            Store.set_world(world);
+            runtime_load_world(world);
+            store_set_world(world);
         } else {
-            const new_world = World.create();
-            World.init(new_world);
-            Store.set_world(new_world);
+            const new_world = world_create();
+            world_init(new_world);
+            store_set_world(new_world);
         }
-        Store.set_ui_state(ui_state || UIState.create());
+        store_set_ui_state(ui_state || uistate_create());
     } else {
-        const new_world = World.create();
-        World.init(new_world);
-        Store.set_world(new_world);
-        Store.set_ui_state(UIState.create());
+        const new_world = world_create();
+        world_init(new_world);
+        store_set_world(new_world);
+        store_set_ui_state(uistate_create());
     }
 
     // // attache les events listeners au app pour qu'ils ne soient jamais détruit par un innerHTML
     // add_event_listener_click(app);
     // add_event_listener_keydown(app);
 
-    Scene.render_current_scene(app);
+    scene_render_current_scene(app);
 
     window.addEventListener("beforeunload", () => {
-        const store = Store.get();
-        if (store.should_save) Save.save(store.world, store.ui_state);
+        const store = store_get();
+        if (store.should_save) save_save(store.world, store.ui_state);
     })
     window.addEventListener("pagehide", () => {
-        const store = Store.get();
-        if (store.should_save) Save.save(store.world, store.ui_state);
+        const store = store_get();
+        if (store.should_save) save_save(store.world, store.ui_state);
     })
 }
 
 /**
  * @param {World} world
  */
-function load_world(world) { World.advance_to(world, Date.now()); }
+function runtime_load_world(world) { world_advance_to(world, Date.now()); }
 
 // /**
 //  * @param {HTMLElement} app 
@@ -79,7 +80,7 @@ function load_world(world) { World.advance_to(world, Date.now()); }
 
 //         // @ts-ignore
 //         // const handler = Action.get(action_name);
-//         // if (Opt.is_some(handler)) {
+//         // if (option_is_some(handler)) {
 //         //     handler.value({ element: action_el, event });
 //         // }
 
@@ -108,7 +109,7 @@ function load_world(world) { World.advance_to(world, Date.now()); }
 // function add_event_listener_keydown(app) {
 //     app.addEventListener("keydown", (event) => {
 //         // const delta = key_to_delta(event.key);
-//         // if (Opt.is_some(delta)) {
+//         // if (option_is_some(delta)) {
 //         //     event.preventDefault(); // empêche scroll avec flèches
 //         //     dispatch({ kind: "movement", delta: delta.value });
 //         // }
@@ -123,8 +124,8 @@ function load_world(world) { World.advance_to(world, Date.now()); }
 //         );
 //     });
 
-//     const world = World.create();
-//     World.init(world);
+//     const world = world_create();
+//     world_init(world);
 
 //     const now = Date.now();
 //     console.log("⏳ Temps actuel (now)          :", now);
@@ -134,11 +135,11 @@ function load_world(world) { World.advance_to(world, Date.now()); }
 //     TimelineScheduler.schedule(world.events, "craft_complete', now + 2000, { item: 'épée en bois" });
 //     TimelineScheduler.schedule(world.events, "craft_complete', now + 2000, { item: 'épée en bois" });
 
-//     console.log("📅 Prochain event à            :", World.next_event_at(world));
+//     console.log("📅 Prochain event à            :", world_next_event_at(world));
 
 //     // 4. Avancer la simulation de 3 secondes (dépasse la date de l’event)
-//     World.advance_by(world, 3000);
+//     world_advance_by(world, 3000);
 
 //     console.log("🕒 sim_time après avance       :", world.clock.sim_time);
-//     console.log("📅 Prochain event (doit être null) :", World.next_event_at(world));
+//     console.log("📅 Prochain event (doit être null) :", world_next_event_at(world));
 // }
