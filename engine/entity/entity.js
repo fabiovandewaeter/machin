@@ -1,26 +1,15 @@
 // engine/entity/entity.js
-// @ts-check
 
-import { option_unwrap } from "../../utils/option.js";
+/**
+ * @typedef {import("../core/ids.types.js").RoomID} RoomID
+ * @typedef {import("./entity.types.js").EntityRepo} EntityRepo
+ * @typedef {import("./entity.types.js").Entity} Entity
+ * @typedef {import("../core/ids.types.js").EntityID} EntityID
+ */
 import { repository_get, repository_spawn_element } from "../../utils/repository.js";
 import { signalbus_emit } from "../../utils/signal_bus.js";
 import { undefined_unwrap } from "../../utils/undefined.js";
-import { ESB } from "../core/signals.js";
-
-/**
- * @typedef {import("../map/room.js").RoomID} RoomID
- */
-
-/**
- * @typedef {Object} Entity
- * @property {EntityID} id
- * @property {string} name
- * @property {RoomID} room_id
- * 
- * @typedef {number & {readonly __brand:"EntityID"}} EntityID
- * @typedef {import("../../utils/repository.js").Repo<EntityID, Entity>} EntityRepo
- */
-// TODO: classe de départ donne boost de début mais on peut tout maxer ça va juste dépendre des combinaisons qu'on fait
+import { ESB } from "../core/signal/signal.js";
 
 /**
  * @param {EntityRepo} repo

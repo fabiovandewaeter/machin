@@ -1,5 +1,4 @@
 // engine/item/tool/action.js
-// @ts-check
 
 miner avec des steps, déplacement etc.
 

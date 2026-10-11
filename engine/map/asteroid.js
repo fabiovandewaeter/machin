@@ -1,5 +1,4 @@
 // engine/map/asteroid.js
-// @ts-check
 
 /**
  * @typedef {Object} LargeAsteroid

@@ -1,10 +1,10 @@
 // tests/engine/item/material/durability.js
-// @ts-check
 
 /**
  * @typedef {import("../../../../engine/item/material/material_item.js").MaterialItem} MaterialItem
  */
-import { BASE_COST, BASE_DURABILITY, durability_decrease_durability } from "../../../../engine/item/material/durability.js";
+import { durability_decrease_durability } from "../../../../engine/item/material/durability.js";
+import { BASE_DURABILITY, BASE_COST } from "../../../../engine/item/material/durability.types.js";
 import { MATERIAL } from "../../../../engine/item/material/material.js";
 import { materialitem_create } from "../../../../engine/item/material/material_item.js";
 import { pickaxe_craft } from "../../../../engine/item/tool/pickaxe.js";

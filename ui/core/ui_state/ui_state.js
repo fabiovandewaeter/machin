@@ -1,22 +1,15 @@
-// ui/core/ui_state.js
-// @ts-check
+// ui/core/ui_state/ui_state.js
 
 /**
- * @typedef {import("../scene/scene.js").Scene} Scene
- * @typedef {import("../../engine/entity/entity.js").EntityID} EntityID
+ * @typedef {import("../../scene/scene.types.js").Scene} Scene
+ * @typedef {import("../../../engine/core/ids.types.js").EntityID} EntityID
+ * @typedef {import("./ui_state.types.js").UIState} UIState
  */
-import { none, option_is_some } from "../../utils/option.js";
-import { signalbus_emit } from "../../utils/signal_bus.js";
-import "../../utils/types.js"
-import { UISB, UI_SIGNAL } from "./signals.js";
-
-/**
- * @typedef {Object} UIState
- * @property {Scene} scene
- * @property {string[]} logs
- * @property {Opt<number>} tick_interval_id
- * @property {Opt<EntityID>} selected_entity_id
- */
+/** @template T @typedef {import("../../../utils/option.js").Opt<T>} Opt */
+import { none, option_is_some } from "../../../utils/option.js";
+import { signalbus_emit } from "../../../utils/signal_bus.js";
+import { UISB } from "../signal/signal.js";
+import { UI_SIGNAL } from "../signal/signal.types.js";
 
 /**
  * @returns {UIState}

@@ -1,13 +1,13 @@
 // ui/core/store.js
-// @ts-check
+
 
 /**
- * @typedef {import("../../engine/core/world.js").World} World
- * @typedef {import("./ui_state.js").UIState} UIState
+ * @typedef {import("../../engine/core/world/world.js").World} World
+ * @typedef {import("./ui_state/ui_state.js").UIState} UIState
  */
-import { world_create } from "../../engine/core/world.js";
-import "../../utils/types.js"
-import { uistate_create } from "./ui_state.js";
+import { world_create } from "../../engine/core/world/world.js";
+
+import { uistate_create } from "./ui_state/ui_state.js";
 
 /**
  * @typedef {Object} GameStore

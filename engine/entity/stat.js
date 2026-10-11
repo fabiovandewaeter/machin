@@ -1,5 +1,4 @@
 // engine/entity/stat.js
-// @ts-check
 
 import { gauge_create } from "../utils/gauge.js";
 

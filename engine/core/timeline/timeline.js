@@ -1,15 +1,13 @@
 // engine/core/timeline/timeline.js
-// @ts-check
 
 // VOIR SI event pour referencer ou pas(avoir autre structure pour ceux à annuler ou alors parcourir et aller supprimer)
 
 /**
- * @typedef {import("../world.js").World} World
+ * @typedef {import("../world/world.types.js").World} World
  */
-import "../../../utils/types.js"
+
 import { timelinedispatcher_dispatch } from "./dispatcher.js";
 import { timelinescheduler_pop_due } from "./scheduler.js";
-
 
 
 /**
@@ -25,7 +23,17 @@ export function timeline_advance_to(world, target_time) {
         if (!event) break;
         timelinedispatcher_dispatch(world, event);
     }
+    world.clock.sim_time = target_time;
 }
+/**
+ * @param {World} world
+ */
+export function timeline_advance_to_now(world) { timeline_advance_to(world, Date.now()); }
+/**
+ * @param {World} world
+ * @param {number} delta_ms
+ */
+export function timeline_advance_by(world, delta_ms) { timeline_advance_to(world, world.clock.sim_time + delta_ms); }
 
 // TODO
 export function timeline_init() {

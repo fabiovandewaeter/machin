@@ -1,7 +1,6 @@
 // engine/extraction/ore.js
-// @ts-check
 
-import { MATERIAL } from "../item/material/material";
+import { MATERIAL } from "../item/material/material.js";
 
 /**
  * @typedef {import("../item/material/material").Material} Material
@@ -10,8 +9,6 @@ import { MATERIAL } from "../item/material/material";
  * @typedef {import("../item/tool/tool").ToolKind} ToolKind
  * @typedef {import("../item/tool/tool").Tool} Tool
  */
-
-
 
 /**
  * @typedef {Object} Ore

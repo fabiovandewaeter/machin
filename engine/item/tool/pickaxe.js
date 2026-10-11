@@ -1,5 +1,4 @@
 // engine/item/tool/pickaxe.js
-// @ts-check
 
 /**
  * @typedef {import("../material/material_item.js").Material} Material
@@ -7,18 +6,19 @@
  * @typedef {import("../material/material_item.js").MaterialItemKind} MaterialItemKind
  * @typedef {import("../quality.js").Quality} Quality
  */
+/** @template T, E @typedef {import("../../../utils/result.js").Res<T, E>} Res */
 import "../../../utils/result.js";
 import { err, ok, result_is_err } from "../../../utils/result.js";
 import { compatibility_are_all_same_material } from "../compatibility.js";
 import { material_lowest_mining_level } from "../material/material.js";
 
-const PARTS = /** @type {const} */ ({
+const __PARTS = /** @type {const} */ ({
     ROD: "ROD",
     HEAD: "HEAD",
 });
 /**
  * @typedef {{
- *   [K in keyof typeof PARTS]: MaterialItem & { kind: typeof PARTS[K] }
+ *   [K in keyof typeof __PARTS]: MaterialItem & { kind: typeof __PARTS[K] }
  * }} Parts
  */
 

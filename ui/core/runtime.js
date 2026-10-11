@@ -1,17 +1,16 @@
 // ui/core/runtime.js
-// @ts-check
 
-import { timeline_init } from "../../engine/core/timeline/timeline.js";
-import { world_create, world_init, world_advance_to } from "../../engine/core/world.js";
+import { timeline_advance_to, timeline_init } from "../../engine/core/timeline/timeline.js";
+import { world_create, world_init } from "../../engine/core/world/world.js";
 import { option_is_some } from "../../utils/option.js";
 import { save_load, save_save } from "../../utils/save.js";
 import { scene_init, scene_render_current_scene } from "../scene/scene.js";
-import { uisignals_init } from "./signals.js";
+import { uisignals_init } from "./signal/signal.js";
 import { store_set_world, store_set_ui_state, store_get } from "./store.js";
-import { uistate_create } from "./ui_state.js";
+import { uistate_create } from "./ui_state/ui_state.js";
 
 /**
- * @typedef {import("../../engine/core/world.js").World} World
+ * @typedef {import("../../engine/core/world/world.js").World} World
  */
 
 runtime_init();
@@ -30,7 +29,7 @@ export function runtime_init() {
     if (option_is_some(saved_opt)) {
         let { world, ui_state } = saved_opt.value;
         if (world) {
-            runtime_load_world(world);
+            __runtime_load_world(world);
             store_set_world(world);
         } else {
             const new_world = world_create();
@@ -64,7 +63,7 @@ export function runtime_init() {
 /**
  * @param {World} world
  */
-function runtime_load_world(world) { world_advance_to(world, Date.now()); }
+function __runtime_load_world(world) { timeline_advance_to(world, Date.now()); }
 
 // /**
 //  * @param {HTMLElement} app 

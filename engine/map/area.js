@@ -1,11 +1,10 @@
 // engine/map/area.js
-// @ts-check
 
 /**
- * @typedef {import("./room.js").RoomID} RoomID
+ * @typedef {import("../core/ids.types.js").RoomID} RoomID
+ * @typedef {import("../core/ids.types.js").AreaID} AreaID
  */
 import { repository_spawn_element } from "../../utils/repository.js";
-import "../../utils/types.js"
 
 
 /**
@@ -14,7 +13,6 @@ import "../../utils/types.js"
  * @property {string} name
  * @property {RoomID[]} rooms
  * 
- * @typedef {number & {readonly __brand:"AreaID"}} AreaID
  * @typedef {import("../../utils/repository.js").Repo<AreaID, Area>} AreaRepo
  */
 

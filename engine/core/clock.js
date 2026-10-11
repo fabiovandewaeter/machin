@@ -1,7 +1,4 @@
 // engine/core/clock.js
-// @ts-check
-
-import "../../utils/types.js"
 
 /**
  * @typedef {Object} Clock

@@ -1,13 +1,12 @@
 // ui/scene/main_scene.js
-// @ts-check
 
 /**
  * @typedef {import("../component/core/comp.js").DestroyFunction} DestroyFunction
  * @typedef {import("../component/core/sub_comp_manager.js").SubCompKey} SubCompKey
- * @typedef {import("../../engine/entity/entity.js").EntityID} EntityID
+ * @typedef {import("../../engine/core/ids.types.js").EntityID} EntityID
  */
 import { signalbus_on } from "../../utils/signal_bus.js";
-import "../../utils/types.js"
+
 import { controlscomp_mount } from "../component/controls_comp.js";
 import { comp_create_comp_with_sub_comps } from "../component/core/comp.js";
 import { subcompmanager_add, subcompmanager_remove } from "../component/core/sub_comp_manager.js";
@@ -16,10 +15,11 @@ import { logscomp_mount } from "../component/logs_comp.js";
 import { menucomp_mount } from "../component/menu_comp.js";
 import { roomcomp_mount } from "../component/room_comp.js";
 import { timecomp_mount } from "../component/time_comp.js";
-import { UISB, UI_SIGNAL } from "../core/signals.js";
+import { UISB } from "../core/signal/signal.js";
+import { UI_SIGNAL } from "../core/signal/signal.types.js";
 
 /**@type {SubCompKey} */
-const ENTITY_PANEL_KEY = "entity_panel";
+const __ENTITY_PANEL_KEY = "entity_panel";
 
 /**
  * @returns {string}
@@ -50,13 +50,13 @@ export function mainscene_mount(container) {
 
         add_cleanup(signalbus_on(UISB, UI_SIGNAL.OPEN_ENTITY_PANEL,
             (payload) => {
-                subcompmanager_remove(sub_comps, ENTITY_PANEL_KEY); // no-op si absent
-                subcompmanager_add(sub_comps, ENTITY_PANEL_KEY, entitycomp_mount(right, payload.entity_id));
+                subcompmanager_remove(sub_comps, __ENTITY_PANEL_KEY); // no-op si absent
+                subcompmanager_add(sub_comps, __ENTITY_PANEL_KEY, entitycomp_mount(right, payload.entity_id));
             }));
 
         add_cleanup(signalbus_on(UISB, UI_SIGNAL.CLOSE_ENTITY_PANEL,
             () => {
-                subcompmanager_remove(sub_comps, ENTITY_PANEL_KEY);
+                subcompmanager_remove(sub_comps, __ENTITY_PANEL_KEY);
             }));
     });
 }

@@ -1,7 +1,6 @@
 // utils/signal_bus.js
-// @ts-check
 
-import "./types.js"
+/** @template T @typedef {import("./option.js").Opt<T>} Opt */
 
 // ======================================================
 // Helpers de types

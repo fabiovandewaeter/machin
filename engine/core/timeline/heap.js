@@ -1,10 +1,9 @@
 // engine/core/timeline/heap.js
-// @ts-check
 
 /**
- * @typedef {import("./event.js").TimelineEventID} TimelineEventID
+ * @typedef {import("../ids.types").TimelineEventID} TimelineEventID
  */
-import "../../../utils/types.js"
+
 
 /**
  * @typedef {Object} HeapEntry
@@ -28,7 +27,7 @@ export function heap_is_before(a, b) {
  */
 export function heap_push(heap, entry) {
     heap.push(entry);
-    heap_sift_up(heap, heap.length - 1);
+    __heap_sift_up(heap, heap.length - 1);
 }
 
 /**
@@ -40,7 +39,7 @@ export function heap_pop(heap) {
     const last = heap.pop();
     if (heap.length > 0 && last !== undefined) {
         heap[0] = last;
-        heap_sift_down(heap, 0);
+        __heap_sift_down(heap, 0);
     }
     return top;
 }
@@ -49,7 +48,7 @@ export function heap_pop(heap) {
  * @param {HeapEntry[]} heap
  * @param {number} i
  */
-function heap_sift_up(heap, i) {
+function __heap_sift_up(heap, i) {
     while (i > 0) {
         const parent = (i - 1) >> 1;
         if (!heap_is_before(heap[i], heap[parent])) break;
@@ -62,7 +61,7 @@ function heap_sift_up(heap, i) {
  * @param {HeapEntry[]} heap
  * @param {number} i
  */
-function heap_sift_down(heap, i) {
+function __heap_sift_down(heap, i) {
     const n = heap.length;
     while (true) {
         let smallest = i, l = 2 * i + 1, r = 2 * i + 2;

@@ -1,18 +1,13 @@
 // ui/core/component/core/comp.js
-// @ts-check
 
+/**
+ * @typedef {import("./utils.js").DestroyFunction} DestroyFunction
+ */
 import { enum_is_enum_key } from "../../../utils/enum.js";
 import { subcompmanager_create, subcompmanager_destroy_all } from "./sub_comp_manager.js";
 
 /**
  * @typedef {import("./sub_comp_manager.js").SubCompManager} SubCompManager
- */
-
-
-// /** @typedef {() => void} DestroyFunction */
-/**
- * @callback DestroyFunction
- * @returns {void}
  */
 
 /**

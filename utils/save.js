@@ -1,20 +1,20 @@
 // utils/save.js
-// @ts-check
 
 /**
- * @typedef {import("../engine/core/world.js").World} World
- * @typedef {import("../ui/core/ui_state.js").UIState} UIState
+ * @typedef {import("../engine/core/world/world.js").World} World
+ * @typedef {import("../ui/core/ui_state/ui_state.js").UIState} UIState
  */
-import { world_create, world_init } from "../engine/core/world.js";
-import { UISB, UI_SIGNAL } from "../ui/core/signals.js";
+/** @template T @typedef {import("./option.js").Opt<T>} Opt */
+import { world_create, world_init } from "../engine/core/world/world.js";
+import { UISB } from "../ui/core/signal/signal.js";
+import { UI_SIGNAL } from "../ui/core/signal/signal.types.js";
 import { store_set_world, store_set_ui_state, store_set_should_save } from "../ui/core/store.js";
-import { uistate_create } from "../ui/core/ui_state.js";
+import { uistate_create } from "../ui/core/ui_state/ui_state.js";
 import { some, none } from "./option.js";
 import { signalbus_emit } from "./signal_bus.js";
-import "./types.js"
 
-const STORAGE_KEY = "machin_save";
-const CURRENT_VERSION = 0;
+const __STORAGE_KEY = "machin_save";
+const __CURRENT_VERSION = 0;
 
 /**
  * @typedef {Object} SaveStruct
@@ -31,7 +31,7 @@ export function save_save(world, ui) {
     const save_struct = { ui, world };
     try {
         const json = JSON.stringify(save_struct);
-        localStorage.setItem(STORAGE_KEY, json);
+        localStorage.setItem(__STORAGE_KEY, json);
     } catch (e) {
         console.error("Could not save:", e);
     }
@@ -42,7 +42,7 @@ export function save_save(world, ui) {
  */
 export function save_load() {
     try {
-        const json = localStorage.getItem(STORAGE_KEY);
+        const json = localStorage.getItem(__STORAGE_KEY);
         if (json) {
             const res = JSON.parse(json);
             if (res && res.world) {
@@ -52,13 +52,13 @@ export function save_load() {
         return none;
     } catch (e) {
         console.error("Could not load save:", e);
-        localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(__STORAGE_KEY);
         return none;
     }
 }
 
 export function save_clear() {
-    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(__STORAGE_KEY);
     const new_world = world_create();
     world_init(new_world);
     store_set_world(new_world);

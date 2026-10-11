@@ -1,13 +1,11 @@
 // engine/item/tool/step.js
-// @ts-check
 
 /**
- * @typedef {import("../material/material_item").MaterialItem} MaterialItem
- * @typedef {import("../material/material").Material} Material
+ * @typedef {import("../material/material_item.js").MaterialItem} MaterialItem
+ * @typedef {import("../material/material.js").Material} Material
  */
 import { assert } from "../../../tests/test.js";
-import { MATERIAL } from "../material/material";
-
+import { MATERIAL } from "../material/material.js";
 
 export const BASE_STEP_AMOUNT = 3;
 export const MIN_STEP_AMOUNT = 1;

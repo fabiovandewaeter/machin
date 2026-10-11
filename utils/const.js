@@ -1,5 +1,5 @@
 // utils/const.js
-// @ts-check
+
 
 export const SECONDS_PER_MINUTE = 60;
 export const SECONDS_PER_HOUR = 60 * SECONDS_PER_MINUTE;

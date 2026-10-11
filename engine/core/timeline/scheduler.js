@@ -1,15 +1,14 @@
 // engine/core/timeline/scheduler.js
-// @ts-check
 
 /**
  * @typedef {import("./heap.js").HeapEntry} HeapEntry
  * @typedef {import("./event.js").TimelineEventKind} TimelineEventKind
  * @typedef {import("./event.js").TimelineEvent} TimelineEvent
- * @typedef {import("./event.js").TimelineEventID} TimelineEventID
+ * @typedef {import("../ids.types.js").TimelineEventID} TimelineEventID
  * @typedef {import("./event.js").TimelineEventRepo} TimelineEventRepo
  */
 import { repository_all, repository_create, repository_remove_element, repository_spawn_element } from "../../../utils/repository.js";
-import "../../../utils/types.js"
+
 import { heap_pop, heap_push } from "./heap.js";
 
 /**
@@ -54,7 +53,7 @@ export function timelinescheduler_cancel(scheduler, id) {
  * @returns {TimelineEvent|null}
  */
 export function timelinescheduler_peek(scheduler) {
-    timelinescheduler_purge_stale(scheduler);
+    __timelinescheduler_purge_stale(scheduler);
     const top = scheduler.heap[0];
     return top ? scheduler.repo.elements[top.id] : null;
 }
@@ -67,7 +66,7 @@ export function timelinescheduler_peek(scheduler) {
  * @returns {TimelineEvent|null}
  */
 export function timelinescheduler_pop_due(scheduler, target_time) {
-    timelinescheduler_purge_stale(scheduler);
+    __timelinescheduler_purge_stale(scheduler);
     const top = scheduler.heap[0];
     if (!top || top.at > target_time) return null;
     heap_pop(scheduler.heap);
@@ -83,7 +82,7 @@ export function timelinescheduler_pop_due(scheduler, target_time) {
 export function timelinescheduler_all_pending(scheduler) { return repository_all(scheduler.repo); }
 
 /** @param {TimelineScheduler} scheduler */
-function timelinescheduler_purge_stale(scheduler) {
+function __timelinescheduler_purge_stale(scheduler) {
     while (scheduler.heap.length > 0 && !(scheduler.heap[0].id in scheduler.repo.elements)) {
         heap_pop(scheduler.heap);
     }

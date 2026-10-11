@@ -1,6 +1,4 @@
 // tests/test.js
-// @ts-check
-
 
 /**
  * Run a test

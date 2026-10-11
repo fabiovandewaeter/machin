@@ -1,9 +1,7 @@
 // engine/map/hazard.js
-// @ts-check
 
+/** @template {Record<string, unknown>} T @typedef {import("../../utils/enum.js").EnumKey<T>} EnumKey */
 import { enum_create } from "../../utils/enum.js";
-import "../../utils/types.js";
-
 
 export const HAZARD_KIND = enum_create(/**@type {const}*/([
     "RADIATION",

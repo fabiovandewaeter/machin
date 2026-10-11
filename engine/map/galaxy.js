@@ -1,23 +1,20 @@
 // engine/galaxy/galaxy.js
-// @ts-check
 
 /**
- * @typedef {import("./star_system.js").StarSystemID} StarSystemID
+ * @typedef {import("../core/ids.types.js").StarSystemID} StarSystemID
  * @typedef {import("./star_system.js").StarSystemRepo} StarSystemRepo
- * @typedef {import("./celestial_body.js").CelestialBodyID} CelestialBodyID
+ * @typedef {import("../core/ids.types.js").CelestialBodyID} CelestialBodyID
  * @typedef {import("./celestial_body.js").CelestialBodyRepo} CelestialBodyRepo
- * @typedef {import("./region.js").RegionID} RegionID
+ * @typedef {import("../core/ids.types.js").RegionID} RegionID
  * @typedef {import("./region.js").RegionRepo} RegionRepo
- * @typedef {import("./area.js").AreaID} AreaID
+ * @typedef {import("../core/ids.types.js").AreaID} AreaID
  * @typedef {import("./area.js").AreaRepo} AreaRepo
- * @typedef {import("./room.js").RoomID} RoomID
- * @typedef {import("./room.js").RoomRepo} RoomRepo
+ * @typedef {import("../core/ids.types.js").RoomID} RoomID
+ * @typedef {import("./room/room.js").RoomRepo} RoomRepo
  */
 import { repository_create } from "../../utils/repository.js";
-import "../../utils/types.js"
-import { room_add_exit, room_spawn } from "./room.js";
 
-
+import { room_add_exit, room_spawn } from "./room/room.js";
 
 // Galaxy > StarStarSystem > CelestialBody > Region > Area > Room
 

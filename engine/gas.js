@@ -1,5 +1,6 @@
 // engine/gas.js
-// @ts-check
+
+/** @template {Record<string, unknown>} T @typedef {import("../utils/enum.js").EnumKey<T>} EnumKey */
 
 /**
  * @typedef {Object} GasDefinition

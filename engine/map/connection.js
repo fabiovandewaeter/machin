@@ -1,5 +1,4 @@
 // engine/map/connection.js
-// @ts-check
 
 /**
  * @typedef {import("./hazard.js").Hazard} Hazard

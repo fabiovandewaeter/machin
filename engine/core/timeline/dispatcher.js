@@ -1,8 +1,7 @@
 // engine/core/timeline/dispatcher.js
-// @ts-check
 
 /**
- * @typedef {import("../world").World} World
+ * @typedef {import("../world/world.types.js").World} World
  */
 
 /**
@@ -13,20 +12,20 @@
  */
 
 /** @type {Partial<Record<TimelineEventKind, TimelineEventHandler>>} */
-const HANDLERS = {};
+const __HANDLERS = {};
 
 /**
  * @param {TimelineEventKind} kind
  * @param {TimelineEventHandler} handler
  */
-export function timelinedispatcher_register(kind, handler) { HANDLERS[kind] = handler; }
+export function timelinedispatcher_register(kind, handler) { __HANDLERS[kind] = handler; }
 
 /**
  * @param {World} world 
  * @param {TimelineEvent} event 
  */
 export function timelinedispatcher_dispatch(world, event) {
-    const handler = HANDLERS[event.kind];
+    const handler = __HANDLERS[event.kind];
     if (!handler) {
         throw new Error(`Aucun handler enregistré pour l'event kind: ${event.kind}`);
     }

@@ -1,5 +1,5 @@
 // utils/undefined.js
-// @ts-check
+
 
 /**
  * Unwrap a possibly undefined value or throw.

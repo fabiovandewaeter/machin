@@ -1,17 +1,18 @@
 // ui/core/component/time_comp.js
-// @ts-check
+
 
 /**
  * @typedef {import("./core/comp.js").DestroyFunction} DestroyFunction
  * @typedef {import("../core/store.js").GameStore} GameStore
  */
-import "../../utils/types.js"
+
 import { SECONDS_PER_DAY, SECONDS_PER_HOUR, SECONDS_PER_MINUTE, SECONDS_PER_WEEK, SECONDS_PER_YEAR } from "../../utils/const.js";
 import { signalbus_on } from "../../utils/signal_bus.js";
 import { store_get } from "../core/store.js";
 import { comp_create_comp } from "./core/comp.js";
 import { clock_get_elapsed_ms } from "../../engine/core/clock.js";
-import { ESB, ENGINE_SIGNAL } from "../../engine/core/signals.js";
+import { ESB } from "../../engine/core/signal/signal.js";
+import { ENGINE_SIGNAL } from "../../engine/core/signal/signal.types.js";
 
 /**
  * @returns {string}
@@ -32,14 +33,14 @@ export function timecomp_render() {
  * @param {GameStore} store
  * @returns {number} temps simulé écoulé depuis la création du monde, en ms
  */
-function timecomp_get_accumulated_seconds(store) { return clock_get_elapsed_ms(store.world.clock) / 1000; }
+function __timecomp_get_accumulated_seconds(store) { return clock_get_elapsed_ms(store.world.clock) / 1000; }
 
 /**
  * @param {HTMLElement} el
  */
 export function timecomp_update(el) {
     let s = store_get();
-    const accumulated_seconds = timecomp_get_accumulated_seconds(s);
+    const accumulated_seconds = __timecomp_get_accumulated_seconds(s);
 
     const s_counter = el.querySelector(".time-seconds");
     const m_counter = el.querySelector(".time-minutes");

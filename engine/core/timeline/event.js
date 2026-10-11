@@ -1,5 +1,8 @@
 // engine/core/timeline/types.js
-// @ts-check
+
+/**
+ * @typedef {import("../ids.types.js").TimelineEventID} TimelineEventID
+ */
 
 // craft_complete, building_complete, potion_effect ...
 
@@ -11,7 +14,6 @@
  * @property {Object} payload
  * 
  * @typedef {'craft_complete'|'building_complete'|'potion_effect'} TimelineEventKind
- * @typedef {number & {readonly __brand:"TimelineEventID"}} TimelineEventID
  * @typedef {import("../../../utils/repository.js").Repo<TimelineEventID, TimelineEvent>} TimelineEventRepo
  */
 

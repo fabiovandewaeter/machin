@@ -1,5 +1,5 @@
 // ui/i18n/fr/tag.js
-// @ts-check
+
 
 // /** @type {Record<TagKey, string>} */
 // export const TAG_LABEL_FR = {

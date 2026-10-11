@@ -1,17 +1,13 @@
 // engine/item/material/durability.js
-// @ts-check
 
-import { assert } from "../../../tests/test";
-import { MATERIAL } from "./material";
+import { assert } from "../../../tests/test.js";
+import { BASE_COST } from "./durability.types.js";
+import { MATERIAL } from "./material.js";
 
 /**
- * @typedef {import("./material_item").MaterialItem} MaterialItem
- * @typedef {import("./material").Material} Material
+ * @typedef {import("./material_item.js").MaterialItem} MaterialItem
+ * @typedef {import("./material.js").Material} Material
  */
-
-
-export const BASE_DURABILITY = 10000;
-export const BASE_COST = Math.floor(BASE_DURABILITY / 100);
 
 /**
  * @param {MaterialItem[]} material_items 

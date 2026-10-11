@@ -1,26 +1,26 @@
 // ui/core/component/entity_comp.js
-// @ts-check
+
 
 /**
  * @typedef {import("./core/comp.js").DestroyFunction} DestroyFunction
- * @typedef {import("../../engine/entity/entity.js").EntityID} EntityID
+ * @typedef {import("../../engine/core/ids.types.js").EntityID} EntityID
  */
-import { ESB } from "../../engine/core/signals.js";
+/** @template {Record<string, unknown>} T @typedef {import("../../utils/enum.js").EnumKey<T>} EnumKey */
+import { ESB } from "../../engine/core/signal/signal.js";
 import { enum_create } from "../../utils/enum.js";
-import { option_unwrap } from "../../utils/option.js";
 import { repository_get } from "../../utils/repository.js";
 import { signalbus_on, signalbus_emit } from "../../utils/signal_bus.js";
-import "../../utils/types.js"
 import { undefined_unwrap } from "../../utils/undefined.js";
 import { utils_assert_unreachable } from "../../utils/utils.js";
-import { UI_SIGNAL, UISB } from "../core/signals.js";
+import { UISB } from "../core/signal/signal.js";
+import { UI_SIGNAL } from "../core/signal/signal.types.js";
 import { store_get } from "../core/store.js";
 import { comp_create_comp, comp_delegate_click_with_enum } from "./core/comp.js";
 
-const ACTIONS = enum_create(/**@type {const}*/([
+const __ACTIONS = enum_create(/**@type {const}*/([
     "CLOSE_PANEL",
 ]));
-/**@typedef {EnumKey<typeof ACTIONS>} Action*/
+/**@typedef {EnumKey<typeof __ACTIONS>} Action*/
 
 /**
  * @returns {string}
@@ -28,7 +28,7 @@ const ACTIONS = enum_create(/**@type {const}*/([
 export function entitycomp_render() {
     return `
 <h1>Entity</h1>
-<button data-action="${ACTIONS.CLOSE_PANEL}">Close</button>
+<button data-action="${__ACTIONS.CLOSE_PANEL}">Close</button>
 <p>id: <span class="entity-id"></span></p>
 <p>name: <span class="entity-name"></span></p>
 <p>room_id: <span class="entity-room-id"></span></p>
@@ -63,8 +63,8 @@ export function entitycomp_mount(container, entity_id) {
     return comp_create_comp(container, "entity-comp", (el, add_cleanup) => {
         el.innerHTML = entitycomp_render();
 
-        add_cleanup(comp_delegate_click_with_enum(el, ACTIONS, (action, event, btn) => {
-            entitycomp_handle_action(action, btn, entity_id);
+        add_cleanup(comp_delegate_click_with_enum(el, __ACTIONS, (action, event, btn) => {
+            __entitycomp_handle_action(action, btn, entity_id);
         }));
 
 
@@ -84,10 +84,10 @@ export function entitycomp_mount(container, entity_id) {
  * @param {HTMLElement} btn
  * @param {EntityID} entity_id
  */
-function entitycomp_handle_action(action, btn, entity_id) {
+function __entitycomp_handle_action(action, btn, entity_id) {
     const s = store_get();
     switch (action) {
-        case ACTIONS.CLOSE_PANEL: {
+        case __ACTIONS.CLOSE_PANEL: {
             signalbus_emit(UISB, UI_SIGNAL.CLOSE_ENTITY_PANEL);
             break;
         }

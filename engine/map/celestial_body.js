@@ -1,14 +1,13 @@
 // engine/map/celestial_body.js
-// @ts-check
 
 /**
- * @typedef {import("./region.js").RegionID} RegionID
+ * @typedef {import("../core/ids.types.js").RegionID} RegionID
+ * @typedef {import("../core/ids.types.js").CelestialBodyID} CelestialBodyID
  * @typedef {import("./atmosphere.js").Atmosphere} Atmosphere
  */
+/** @template T @typedef {import("../../utils/option.js").Opt<T>} Opt */
 import { none, some } from "../../utils/option.js";
 import { repository_spawn_element } from "../../utils/repository.js";
-import "../../utils/types.js"
-
 
 
 /**
@@ -19,7 +18,6 @@ import "../../utils/types.js"
  * @property {Opt<Atmosphere>} atmosphere
  * @property {RegionID[]} regions
  * 
- * @typedef {number & {readonly __brand:"CelestialBody"}} CelestialBodyID
  * @typedef {import("../../utils/repository.js").Repo<CelestialBodyID, CelestialBody>} CelestialBodyRepo
  */
 

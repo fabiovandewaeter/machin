@@ -1,5 +1,17 @@
 // utils/result.js
-// @ts-check
+
+/**
+ * @template T, E
+ * @typedef {{ readonly _tag: "Ok", readonly value: T}} Ok
+ */
+/**
+ * @template T, E
+ * @typedef {{ readonly _tag: "Err", readonly error: E}} Err
+ */
+/**
+ * @template T, E
+ * @typedef {Ok<T, E> | Err<T, E>} Res
+ */
 
 /**
  * @template T, E

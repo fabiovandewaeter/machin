@@ -1,7 +1,10 @@
 // engine/item/tool/tool.js
-// @ts-check
 
-import { enum_create } from "../../../utils/enum";
+/**
+ * @template {Record<string, unknown>} T
+ * @typedef {import("../../../utils/enum.js").EnumKey<T>} EnumKey
+ */
+import { enum_create } from "../../../utils/enum.js";
 
 export const TOOL_KIND = enum_create(/**@type {const}*/([
     "PICKAXE",

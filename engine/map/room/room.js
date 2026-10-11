@@ -1,45 +1,19 @@
-// engine/map/room.js
-// @ts-check
+// engine/map/room/room.js
 
 /**
- * @typedef {import("../entity/entity.js").EntityID} EntityID
- * @typedef {import("./atmosphere.js").Atmosphere} Atmosphere
+ * @typedef {import("../../core/ids.types.js").EntityID} EntityID
+ * @typedef {import("../atmosphere.js").Atmosphere} Atmosphere
+ * @typedef {import("./room.types.js").RoomKind} RoomKind
+ * @typedef {import("./room.types.js").Room} Room
+ * @typedef {import("./room.types.js").RoomRepo} RoomRepo
+ * @typedef {import("../../core/ids.types.js").RoomID} RoomID
+ * @typedef {import("./room.types.js").RoomExit} RoomExit
  */
-import { enum_create } from "../../utils/enum.js";
-import { option_unwrap } from "../../utils/option.js";
-import { repository_get, repository_spawn_element } from "../../utils/repository.js";
-import { signalbus_emit } from "../../utils/signal_bus.js";
-import "../../utils/types.js"
-import { undefined_unwrap } from "../../utils/undefined.js";
-import { ESB } from "../core/signals.js";
-
-export const ROOM_KIND = enum_create(/**@type {const}*/([
-    "CITY",
-    "RIVER",
-    "FOREST",
-    "MOUNTAIN",
-]));
-/** @typedef {EnumKey<typeof ROOM_KIND>} RoomKind */
-
-/**
- * @typedef {Object} Room
- * @property {RoomID} id
- * @property {RoomKind} kind
- * @property {string} name
- * @property {number} layer
- * @property {Record<string, RoomExit>} exits // "north", "portal"
- * @property {EntityID[]} entities
- * @property {Atmosphere} default_atmosphere pour pouvoir retourner à ça quand on unseal
- * 
- * @typedef {number & {readonly __brand:"RoomID"}} RoomID
- * @typedef {import("../../utils/repository.js").Repo<RoomID, Room>} RoomRepo
- */
-
-/**
- * Un seul sens, ajouter conditions passage, cooldown etc.
- * @typedef {Object} RoomExit
- * @property {RoomID} target_id
- */
+/** @template {Record<string, unknown>} T @typedef {import("../../../utils/enum.js").EnumKey<T>} EnumKey */
+import { repository_get, repository_spawn_element } from "../../../utils/repository.js";
+import { signalbus_emit } from "../../../utils/signal_bus.js";
+import { undefined_unwrap } from "../../../utils/undefined.js";
+import { ESB } from "../../core/signal/signal.js";
 
 /**
  * @param {RoomRepo} repo

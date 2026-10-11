@@ -1,5 +1,4 @@
 // engine/map/parent_ref.js
-// @ts-check
 
 /**
  * @typedef {Object} StarSystemParent

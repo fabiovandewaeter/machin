@@ -1,5 +1,15 @@
 // utils/enum.js
-// @ts-check
+
+/**
+ * Extrait l'union des valeurs d'un objet constant.
+ * @template {Record<string, unknown>} T
+ * @typedef {T[keyof T]} EnumValue
+ */
+/**
+ * Extrait les clés d'un objet constant
+ * @template {Record<string, unknown>} T
+ * @typedef {keyof T & string} EnumKey
+ */
 
 /**
  * Crée un enum figé où chaque valeur == sa clé (style C : Enum.FOO === "FOO").

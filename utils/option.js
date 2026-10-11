@@ -1,5 +1,16 @@
 // utils/option.js
-// @ts-check
+
+/**
+ * @template T
+ * @typedef {{ readonly _tag: "Some", readonly value: T}} Some
+ */
+/**
+ * @typedef {{ readonly _tag: "None"}} None
+ */
+/**
+ * @template T
+ * @typedef { Some<T> | None} Opt
+ */
 
 /**
  * @template T

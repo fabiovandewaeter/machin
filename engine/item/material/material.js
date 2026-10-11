@@ -1,11 +1,10 @@
 // engine/item/material/material.js
-// @ts-check
 
 /**
- * @typedef {import("./category.js").MaterialCategory} MaterialCategory
+ * @typedef {import("./category.types.js").MaterialCategory} MaterialCategory
  */
+/** @template {Record<string, unknown>} T @typedef {import("../../../utils/enum.js").EnumKey<T>} EnumKey */
 import { assert } from "../../../tests/test.js";
-
 
 /**
  * @typedef {Object} MaterialDefinition
@@ -43,3 +42,11 @@ export function material_lowest_mining_level(materials) {
 
     return lowest;
 }
+
+/**
+ * @template {MaterialCategory} C
+ * @typedef {{
+ *   [K in Material]:
+ *     C extends (typeof MATERIAL)[K]["categories"][number] ? K : never
+ * }[Material]} MaterialsOfCategory
+ */

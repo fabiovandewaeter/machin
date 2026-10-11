@@ -1,11 +1,11 @@
 // engine/item/core/compatibility.js
-// @ts-check
 
 /**
  * @typedef {import("./material/material.js").Material} Material
  * @typedef {import("./material/material_item.js").MaterialItem} MaterialItem
  * @typedef {import("./material/material_item.js").MaterialItemKind} MaterialItemKind
  */
+/** @template T, E @typedef {import("../../utils/result.js").Res<T, E>} Res */
 import { assert } from "../../tests/test.js";
 import { err, ok } from "../../utils/result.js";
 

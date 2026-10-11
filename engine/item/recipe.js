@@ -1,3 +1,4 @@
+// engine/item/recipe.js
 
 // TODO:
 // une combinaison est possible car il y a un craft qui existe(par exemple on peut faire une pioche en fer car il y a un craft de pioche en fer mais meme si le typage autorise une pioche en sable peut - être qu'il y a aucun craft pour ça donc c'est pas faisable)

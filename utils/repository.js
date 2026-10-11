@@ -1,7 +1,6 @@
 // utils/repository.js
-// @ts-check
 
-import "./types.js";
+/** @template T, E @typedef {import("./result.js").Res<T, E>} Res */
 import { ok, err } from "./result.js";
 
 /**
@@ -13,7 +12,7 @@ import { ok, err } from "./result.js";
  * @property {Record<TID, number>} indices
  */
 
-const MAX_SAFE_ID = Number.MAX_SAFE_INTEGER;
+const __MAX_SAFE_ID = Number.MAX_SAFE_INTEGER;
 
 /**
  * @template T
@@ -78,9 +77,9 @@ export function repository_get(repo, id) {
  * @returns {TID}
  */
 export function repository_next_id(repo) {
-    if (repo.current_id >= MAX_SAFE_ID) {
+    if (repo.current_id >= __MAX_SAFE_ID) {
         throw new Error(
-            `Repository ID limit reached: ${MAX_SAFE_ID}`
+            `Repository ID limit reached: ${__MAX_SAFE_ID}`
         );
     }
 

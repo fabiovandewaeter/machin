@@ -1,16 +1,17 @@
 // ui/core/component/logs_comp.js
-// @ts-check
+
 
 /**
  * @typedef {import("./core/comp.js").DestroyFunction} DestroyFunction
  */
+/** @template {Record<string, unknown>} T @typedef {import("../../utils/enum.js").EnumKey<T>} EnumKey */
 import { signalbus_on } from "../../utils/signal_bus.js";
-import "../../utils/types.js"
-import { UI_SIGNAL, UISB } from "../core/signals.js";
+import { UISB } from "../core/signal/signal.js";
+import { UI_SIGNAL } from "../core/signal/signal.types.js";
 import { store_get } from "../core/store.js";
 import { comp_create_comp } from "./core/comp.js";
 
-const MAX_RENDERED_LOGS = 10;
+const __MAX_RENDERED_LOGS = 10;
 
 /**
  * @returns {string}
@@ -35,7 +36,7 @@ export function logscomp_mount(container) {
             const list = el.querySelector(".logs-list");
             if (!list) return;
             list.innerHTML = s.ui_state.logs
-                .slice(-MAX_RENDERED_LOGS)
+                .slice(-__MAX_RENDERED_LOGS)
                 .map(log => `<li>${log}</li>`)
                 .join("");
         };

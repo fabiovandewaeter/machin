@@ -1,5 +1,4 @@
 // engine/machine/machine.js
-// @ts-check
 
 machine full pression:
 2 slots et on peut mettre des modules de pression de lvl 1 à 3 max
