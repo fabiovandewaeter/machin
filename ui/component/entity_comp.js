@@ -6,13 +6,13 @@
  * @typedef {import("../../engine/core/ids.types.js").EntityID} EntityID
  */
 /** @template {Record<string, unknown>} T @typedef {import("../../utils/enum.js").EnumKey<T>} EnumKey */
-import { ESB } from "../../engine/core/signal/signal.js";
+import { enginesignal_on } from "../../engine/core/signal/signal.js";
 import { enum_create } from "../../utils/enum.js";
 import { repository_get } from "../../utils/repository.js";
 import { signalbus_on, signalbus_emit } from "../../utils/signal_bus.js";
 import { undefined_unwrap } from "../../utils/undefined.js";
 import { utils_assert_unreachable } from "../../utils/utils.js";
-import { UISB } from "../core/signal/signal.js";
+import { uisignal_emit } from "../core/signal/signal.js";
 import { UI_SIGNAL } from "../core/signal/signal.types.js";
 import { store_get } from "../core/store.js";
 import { comp_create_comp, comp_delegate_click_with_enum } from "./core/comp.js";
@@ -68,10 +68,10 @@ export function entitycomp_mount(container, entity_id) {
         }));
 
 
-        add_cleanup(signalbus_on(ESB, "entity.name.changed", (payload) => {
+        add_cleanup(enginesignal_on("entity.name.changed", (payload) => {
             if (payload.entity_id === entity_id) entitycomp_update(el, entity_id);
         }));
-        add_cleanup(signalbus_on(ESB, "entity.room_id.changed", (payload) => {
+        add_cleanup(enginesignal_on("entity.room_id.changed", (payload) => {
             if (payload.entity_id === entity_id) entitycomp_update(el, entity_id);
         }));
 
@@ -88,7 +88,7 @@ function __entitycomp_handle_action(action, btn, entity_id) {
     const s = store_get();
     switch (action) {
         case __ACTIONS.CLOSE_PANEL: {
-            signalbus_emit(UISB, UI_SIGNAL.CLOSE_ENTITY_PANEL);
+            uisignal_emit(UI_SIGNAL.CLOSE_ENTITY_PANEL);
             break;
         }
         default: {

@@ -15,7 +15,7 @@ import { logscomp_mount } from "../component/logs_comp.js";
 import { menucomp_mount } from "../component/menu_comp.js";
 import { roomcomp_mount } from "../component/room_comp.js";
 import { timecomp_mount } from "../component/time_comp.js";
-import { UISB } from "../core/signal/signal.js";
+import { uisignal_on } from "../core/signal/signal.js";
 import { UI_SIGNAL } from "../core/signal/signal.types.js";
 
 /**@type {SubCompKey} */
@@ -48,13 +48,13 @@ export function mainscene_mount(container) {
         subcompmanager_add(sub_comps, "menu", menucomp_mount(left));
         subcompmanager_add(sub_comps, "logs", logscomp_mount(left));
 
-        add_cleanup(signalbus_on(UISB, UI_SIGNAL.OPEN_ENTITY_PANEL,
+        add_cleanup(uisignal_on(UI_SIGNAL.OPEN_ENTITY_PANEL,
             (payload) => {
                 subcompmanager_remove(sub_comps, __ENTITY_PANEL_KEY); // no-op si absent
                 subcompmanager_add(sub_comps, __ENTITY_PANEL_KEY, entitycomp_mount(right, payload.entity_id));
             }));
 
-        add_cleanup(signalbus_on(UISB, UI_SIGNAL.CLOSE_ENTITY_PANEL,
+        add_cleanup(uisignal_on(UI_SIGNAL.CLOSE_ENTITY_PANEL,
             () => {
                 subcompmanager_remove(sub_comps, __ENTITY_PANEL_KEY);
             }));

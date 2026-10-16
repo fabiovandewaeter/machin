@@ -15,10 +15,11 @@ import { uistate_create } from "./ui_state/ui_state.js";
 runtime_init();
 
 export function runtime_init() {
-    scene_init();
 
     timeline_init();
     uisignals_init();
+
+    scene_init();
 
     const app = /**@type {HTMLElement}*/(document.getElementById("app"));
     app.tabIndex = -1

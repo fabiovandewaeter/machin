@@ -6,7 +6,7 @@
  */
 /** @template {Record<string, unknown>} T @typedef {import("../../utils/enum.js").EnumKey<T>} EnumKey */
 import { signalbus_on } from "../../utils/signal_bus.js";
-import { UISB } from "../core/signal/signal.js";
+import { uisignal_on } from "../core/signal/signal.js";
 import { UI_SIGNAL } from "../core/signal/signal.types.js";
 import { store_get } from "../core/store.js";
 import { comp_create_comp } from "./core/comp.js";
@@ -41,7 +41,7 @@ export function logscomp_mount(container) {
                 .join("");
         };
 
-        add_cleanup(signalbus_on(UISB, UI_SIGNAL.LOGS, update));
+        add_cleanup(uisignal_on(UI_SIGNAL.LOGS, update));
         // TODO: NE PAS METTRE CAR les components ne doivent pas se toggle eux meme ça se fait dans menu_comp.js
         // const off_toggle = signalbus_on(UISB, "toggle_logs", () => {
         //     el.classList.toggle("hidden");

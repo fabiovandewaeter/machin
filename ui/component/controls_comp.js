@@ -12,11 +12,11 @@ import { signalbus_emit, signalbus_on } from "../../utils/signal_bus.js";
 import { store_get, store_set_world } from "../core/store.js";
 import { enum_create } from "../../utils/enum.js";
 import { comp_create_comp, comp_delegate_click_with_enum } from "./core/comp.js";
-import { UISB } from "../core/signal/signal.js";
 import { UI_SIGNAL } from "../core/signal/signal.types.js";
 import { SCENES } from "../scene/scene.types.js";
 import { timeline_advance_by, timeline_advance_to } from "../../engine/core/timeline/timeline.js";
 import { scene_switch } from "../scene/scene.ops.js";
+import { uisignal_emit, uisignal_on } from "../core/signal/signal.js";
 
 const __TICK_DELAY_MS = 1000;
 
@@ -79,7 +79,7 @@ export function controlscomp_mount(container) {
             __controlscomp_handle_action(action, btn);
         }));
 
-        add_cleanup(signalbus_on(UISB, UI_SIGNAL.TICK, () => __controlscomp_update_toggle_button(el)));
+        add_cleanup(uisignal_on(UI_SIGNAL.TICK, () => __controlscomp_update_toggle_button(el)));
         __controlscomp_update_toggle_button(el);
     });
 }
@@ -94,7 +94,7 @@ function __controlscomp_handle_action(action, btn) {
         case __ACTIONS.SKIP_SECONDS: {
             const ms = utils_string_to_rkind(btn.dataset.amount);
             timeline_advance_by(s.world, ms);
-            signalbus_emit(UISB, UI_SIGNAL.TICK);
+            uisignal_emit(UI_SIGNAL.TICK);
             // save_timestamp(clock.timestamp);
             uistate_add_log(s.ui_state, `skip_seconds: ${ms} ms`);
             break;
@@ -109,17 +109,17 @@ function __controlscomp_handle_action(action, btn) {
                 s.ui_state.tick_interval_id = setInterval(() => {
                     const s = store_get();
                     timeline_advance_by(s.world, __TICK_DELAY_MS);
-                    signalbus_emit(UISB, UI_SIGNAL.TICK);
+                    uisignal_emit(UI_SIGNAL.TICK);
                     uistate_add_log(s.ui_state, "tick");
                 }, __TICK_DELAY_MS);
             }
-            signalbus_emit(UISB, UI_SIGNAL.TOGGLE_TICK);
+            uisignal_emit(UI_SIGNAL.TOGGLE_TICK);
             uistate_add_log(s.ui_state, "toggle_tick");
             break;
         }
         case __ACTIONS.SWITCH_SCENE: {
             const new_scene = btn.dataset.scene;
-            if (new_scene) {
+            if (new_scene != undefined) {
                 //     if (!enum_is_enum_key(SCENES, new_scene)) { throw new Error(`Invalid scene: ${new_scene}`); }
                 //     s.ui_state.scene = new_scene;
                 //     uistate_add_log(s.ui_state, `switch_scene: ${new_scene}`);
@@ -137,7 +137,7 @@ function __controlscomp_handle_action(action, btn) {
                 if (loaded && loaded.world) {
                     timeline_advance_to(loaded.world, Date.now());
                     store_set_world(loaded.world);
-                    signalbus_emit(UISB, UI_SIGNAL.SCENE_SWITCHED, { new_scene: s.ui_state.scene });
+                    uisignal_emit(UI_SIGNAL.SCENE_SWITCHED, { new_scene: s.ui_state.scene });
                 }
             }));
             break;

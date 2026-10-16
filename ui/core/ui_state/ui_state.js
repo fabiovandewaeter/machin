@@ -6,7 +6,7 @@
  * @typedef {import("./ui_state.types.js").UIState} UIState
  */
 import { signalbus_emit } from "../../../utils/signal_bus.js";
-import { UISB } from "../signal/signal.js";
+import { uisignal_emit } from "../signal/signal.js";
 import { UI_SIGNAL } from "../signal/signal.types.js";
 
 /**
@@ -25,7 +25,10 @@ export function uistate_create() {
  * @param {UIState} ui 
  * @param {string} log 
  */
-export function uistate_add_log(ui, log) { ui.logs.push(log); signalbus_emit(UISB, UI_SIGNAL.LOGS, { log }); }
+export function uistate_add_log(ui, log) {
+    ui.logs.push(log);
+    uisignal_emit(UI_SIGNAL.LOGS, { log });
+}
 
 /**
  * @param {UIState} ui

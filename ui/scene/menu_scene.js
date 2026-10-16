@@ -23,7 +23,7 @@ function __menuscene_render() {
     return `
 <h1>Scene: Menu</h1>
 <div id="controls">
-    <button data-action=${__ACTIONS.SWITCH_SCENE} data-scene="main">Switch to main</button>
+    <button data-action=${__ACTIONS.SWITCH_SCENE} data-scene="MAIN">Switch to main</button>
 </div>
     `;
 }
@@ -52,7 +52,7 @@ function __menuscene_handle_action(action, btn) {
         case __ACTIONS.SWITCH_SCENE: {
             const s = store_get();
             const new_scene = btn.dataset.scene;
-            if (new_scene) {
+            if (new_scene != undefined) {
                 // if (!enum_is_enum_key(SCENES, new_scene)) throw new Error();
                 // s.ui_state.scene = new_scene;
                 // uistate_add_log(s.ui_state, `switch_scene: ${new_scene}`);

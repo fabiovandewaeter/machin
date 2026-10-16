@@ -11,8 +11,9 @@ import { signalbus_on } from "../../utils/signal_bus.js";
 import { store_get } from "../core/store.js";
 import { comp_create_comp } from "./core/comp.js";
 import { clock_get_elapsed_ms } from "../../engine/core/clock.js";
-import { ESB } from "../../engine/core/signal/signal.js";
 import { ENGINE_SIGNAL } from "../../engine/core/signal/signal.types.js";
+import { UI_SIGNAL } from "../core/signal/signal.types.js";
+import { uisignal_on } from "../core/signal/signal.js";
 
 /**
  * @returns {string}
@@ -67,7 +68,8 @@ export function timecomp_mount(container) {
     return comp_create_comp(container, "time-comp", (el, add_cleanup) => {
         el.innerHTML = timecomp_render();
 
-        add_cleanup(signalbus_on(ESB, ENGINE_SIGNAL.ENTITY_BROKE, (payload) => timecomp_update(el)));
+        // add_cleanup(signalbus_on(ESB, ENGINE_SIGNAL.ENTITY_BROKE, (payload) => timecomp_update(el)));
+        add_cleanup(uisignal_on(UI_SIGNAL.TICK, () => timecomp_update(el)));
         timecomp_update(el);
     });
 }

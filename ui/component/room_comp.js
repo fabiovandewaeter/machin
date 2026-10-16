@@ -8,14 +8,14 @@
  * @typedef {import("../../engine/entity/entity.js").Entity} Entity
  */
 /** @template {Record<string, unknown>} T @typedef {import("../../utils/enum.js").EnumKey<T>} EnumKey */
-import { ESB } from "../../engine/core/signal/signal.js";
+import { enginesignal_on } from "../../engine/core/signal/signal.js";
 import { world_move_entity } from "../../engine/core/world/world.js";
 import { enum_create } from "../../utils/enum.js";
 import { repository_get } from "../../utils/repository.js";
 import { signalbus_on, signalbus_emit } from "../../utils/signal_bus.js";
 import { undefined_unwrap } from "../../utils/undefined.js";
 import { utils_string_to_rkind, utils_assert_unreachable } from "../../utils/utils.js";
-import { UISB } from "../core/signal/signal.js";
+import { uisignal_emit } from "../core/signal/signal.js";
 import { UI_SIGNAL } from "../core/signal/signal.types.js";
 import { store_get } from "../core/store.js";
 import { comp_create_comp, comp_delegate_click_with_enum } from "./core/comp.js";
@@ -95,7 +95,7 @@ export function roomcomp_mount(container) {
             __roomcomp_handle_action(action, btn);
         }));
 
-        add_cleanup(signalbus_on(ESB, "entity.room_id.changed", (payload) => {
+        add_cleanup(enginesignal_on("entity.room_id.changed", (payload) => {
             const current_room_id = __roomcomp_get_current_room_id();
             if (payload.previous_room_id == current_room_id || payload.new_room_id == current_room_id) {
                 roomcomp_update(el);
@@ -127,12 +127,12 @@ function __roomcomp_handle_action(action, btn) {
             // console.log(entity);
             /** @type {EntityID} */
             const entity_id = utils_string_to_rkind(btn.dataset.entityId);
-            signalbus_emit(UISB, UI_SIGNAL.OPEN_ENTITY_PANEL, { entity_id });
+            uisignal_emit(UI_SIGNAL.OPEN_ENTITY_PANEL, { entity_id });
 
             // change l'entity selectionnee
             const previous_selected_entity_id = s.ui_state.selected_entity_id;
             s.ui_state.selected_entity_id = entity_id;
-            signalbus_emit(UISB, "ui_state.selected_entity_id.changed", {
+            uisignal_emit("ui_state.selected_entity_id.changed", {
                 previous_selected_entity_id: previous_selected_entity_id,
                 new_selected_entity_id: entity_id,
             });

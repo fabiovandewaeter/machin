@@ -4,15 +4,34 @@
  * @typedef {import("./signal.types.js").UISignal} UISignal
  * @typedef {import("./signal.types.js").UISignalPayload} UISignalPayload
  */
-import { signalbus_create, signalbus_clear } from "../../../utils/signal_bus.js";
+import { signalbus_create, signalbus_clear, signalbus_on, signalbus_emit } from "../../../utils/signal_bus.js";
 
 /**@type {import("../../../utils/signal_bus.js").SignalBus<UISignal, UISignalPayload>} */
-export const UISB = signalbus_create();
+export const __UISB = signalbus_create();
 
 export function uisignals_init() {
     uisignals_clear_handlers();
 }
 
 export function uisignals_clear_handlers() {
-    signalbus_clear(UISB);
+    signalbus_clear(__UISB);
+}
+
+/**
+ * @template {UISignal} K
+ * @param {K} signal_kind
+ * @param {(...args: UISignalPayload[K]) => void} callback
+ * @returns {() => void}
+ */
+export function uisignal_on(signal_kind, callback) {
+    return signalbus_on(__UISB, signal_kind, callback);
+}
+
+/**
+ * @template {UISignal} K
+ * @param {K} signal_kind
+ * @param {UISignalPayload[K]} args
+ */
+export function uisignal_emit(signal_kind, ...args) {
+    signalbus_emit(__UISB, signal_kind, ...args);
 }

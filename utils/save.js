@@ -5,7 +5,7 @@
  * @typedef {import("../ui/core/ui_state/ui_state.js").UIState} UIState
  */
 import { world_create, world_init } from "../engine/core/world/world.js";
-import { UISB } from "../ui/core/signal/signal.js";
+import { uisignal_emit } from "../ui/core/signal/signal.js";
 import { UI_SIGNAL } from "../ui/core/signal/signal.types.js";
 import { store_set_world, store_set_ui_state, store_set_should_save } from "../ui/core/store.js";
 import { uistate_create } from "../ui/core/ui_state/ui_state.js";
@@ -14,6 +14,7 @@ import { signalbus_emit } from "./signal_bus.js";
 const __STORAGE_KEY = "machin_save";
 const __CURRENT_VERSION = 0;
 
+// TODO: ne pas inclure les logs dans la save + recréer avec liste logs vides au chargements
 /**
  * @typedef {Object} SaveStruct
  * @property {number} version
@@ -23,10 +24,15 @@ const __CURRENT_VERSION = 0;
 
 /**
  * @param {World} world
- * @param {UIState} ui
+ * @param {UIState} ui_state
  */
-export function save_save(world, ui) {
-    const save_struct = { ui, world };
+export function save_save(world, ui_state) {
+    /** @type {SaveStruct} */
+    const save_struct = {
+        version: __CURRENT_VERSION,
+        world,
+        ui_state,
+    };
     try {
         const json = JSON.stringify(save_struct);
         localStorage.setItem(__STORAGE_KEY, json);
@@ -62,7 +68,7 @@ export function save_clear() {
     store_set_world(new_world);
     store_set_ui_state(uistate_create());
     store_set_should_save(false);
-    signalbus_emit(UISB, UI_SIGNAL.SCENE_SWITCHED, { new_scene: "MAIN" });
+    uisignal_emit(UI_SIGNAL.SCENE_SWITCHED, { new_scene: "MAIN" });
     // Runtime.clear();
     // const app = /**@type {HTMLElement}*/(document.getElementById("app"));
     // // scene_render_current_scene(app, Runtime.WORLD, Runtime.UI_STATE);
@@ -72,10 +78,15 @@ export function save_clear() {
 
 /**
  * @param {World} world
- * @param {UIState} ui
+ * @param {UIState} ui_state
  */
-export function save_download(world, ui) {
-    const save_struct = { world, ui };
+export function save_download(world, ui_state) {
+    /** @type {SaveStruct} */
+    const save_struct = {
+        version: __CURRENT_VERSION,
+        world,
+        ui_state,
+    };
     const json = JSON.stringify(save_struct, null, 2);
     const blob = new Blob([json], { type: "application/json" });
     const url = URL.createObjectURL(blob);
