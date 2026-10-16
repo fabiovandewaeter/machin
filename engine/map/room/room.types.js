@@ -24,10 +24,10 @@ export const ROOM_KIND = enum_create(/**@type {const}*/([
  * @property {number} layer
  * @property {Record<string, RoomExit>} exits // "north", "portal"
  * @property {EntityID[]} entities
- * @property {Atmosphere} default_atmosphere pour pouvoir retourner à ça quand on unseal
- * 
+ *
  * @typedef {import("../../../utils/repository.js").Repo<RoomID, Room>} RoomRepo
  */
+// TODO: @property {Atmosphere} default_atmosphere pour pouvoir retourner à ça quand on unseal
 
 /**
  * Un seul sens, ajouter conditions passage, cooldown etc.

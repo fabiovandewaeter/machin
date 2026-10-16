@@ -6,7 +6,6 @@
  */
 import { repository_spawn_element } from "../../utils/repository.js";
 
-
 /**
  * @typedef {Object} Area
  * @property {AreaID} id

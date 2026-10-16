@@ -1,7 +1,5 @@
 // utils/signal_bus.js
 
-/** @template T @typedef {import("./option.js").Opt<T>} Opt */
-
 // ======================================================
 // Helpers de types
 // ======================================================
@@ -16,25 +14,17 @@
  * @typedef {T extends Primitive ? T : never} AsPrimitive
  */
 
-/**
- * Déballe `Opt<V>` en `V | undefined`, laisse les autres types tels quels.
- *
- * ⚠️ Le tuple `[T]` est indispensable : sans lui, TS distribue la condition
- * sur les branches de `Opt<…>` et la branche "none" ({kind:"none"}) n'est
- * pas déballée, ce qui pollue le résultat.
- *
- * @template T @typedef {[T] extends [Opt<infer V>] ? V | undefined : T} UnwrapOption */
-
 /** Valeur transportable dans un signal : Option déballée puis restreinte aux primitives.
- *  @template T @typedef {AsPrimitive<UnwrapOption<T>>} SignalValue */
+ *  @template T @typedef {AsPrimitive<T>} SignalValue */
 
 /** `true` si T (Option déballée) est transportable. Pour les scalaires. 
- *  @template T @typedef {UnwrapOption<T> extends Primitive ? true : false} IsSignalable */
+ *  @template T @typedef {[T] extends [Primitive] ? true : false} IsSignalable */
 
 /** `true` si T est une primitive nue (pas d'Option). Pour les éléments de tableau.
  *  @template T @typedef {T extends Primitive ? true : false} IsPrimitive */
 
-/** Élément d'un tableau. @template T @typedef {T extends (infer E)[] ? E : never} ArrayElement */
+/** Élément d'un tableau.
+ * @template T @typedef {T extends (infer E)[] ? E : never} ArrayElement */
 
 /** `true` si T est un dictionnaire (`Record<string, V>`).
  *  @template T @typedef {string extends keyof T ? true : false} IsMapLike */

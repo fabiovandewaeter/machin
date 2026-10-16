@@ -2,7 +2,6 @@
 
 import { timeline_advance_to, timeline_init } from "../../engine/core/timeline/timeline.js";
 import { world_create, world_init } from "../../engine/core/world/world.js";
-import { option_is_some } from "../../utils/option.js";
 import { save_load, save_save } from "../../utils/save.js";
 import { scene_init, scene_render_current_scene } from "../scene/scene.js";
 import { uisignals_init } from "./signal/signal.js";
@@ -26,8 +25,8 @@ export function runtime_init() {
     app.focus();
 
     const saved_opt = save_load();
-    if (option_is_some(saved_opt)) {
-        let { world, ui_state } = saved_opt.value;
+    if (saved_opt != undefined) {
+        let { world, ui_state } = saved_opt;
         if (world) {
             __runtime_load_world(world);
             store_set_world(world);

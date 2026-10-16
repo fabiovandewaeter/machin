@@ -4,13 +4,11 @@
  * @typedef {import("../engine/core/world/world.js").World} World
  * @typedef {import("../ui/core/ui_state/ui_state.js").UIState} UIState
  */
-/** @template T @typedef {import("./option.js").Opt<T>} Opt */
 import { world_create, world_init } from "../engine/core/world/world.js";
 import { UISB } from "../ui/core/signal/signal.js";
 import { UI_SIGNAL } from "../ui/core/signal/signal.types.js";
 import { store_set_world, store_set_ui_state, store_set_should_save } from "../ui/core/store.js";
 import { uistate_create } from "../ui/core/ui_state/ui_state.js";
-import { some, none } from "./option.js";
 import { signalbus_emit } from "./signal_bus.js";
 
 const __STORAGE_KEY = "machin_save";
@@ -38,7 +36,7 @@ export function save_save(world, ui) {
 }
 
 /**
- * @returns {Opt<SaveStruct>}
+ * @returns {SaveStruct|undefined}
  */
 export function save_load() {
     try {
@@ -46,14 +44,14 @@ export function save_load() {
         if (json) {
             const res = JSON.parse(json);
             if (res && res.world) {
-                return some(res);
+                return res;
             }
         }
-        return none;
+        return undefined;
     } catch (e) {
         console.error("Could not load save:", e);
         localStorage.removeItem(__STORAGE_KEY);
-        return none;
+        return undefined;
     }
 }
 

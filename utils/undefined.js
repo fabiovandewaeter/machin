@@ -1,6 +1,5 @@
 // utils/undefined.js
 
-
 /**
  * Unwrap a possibly undefined value or throw.
  * @template T
@@ -19,7 +18,7 @@ export function undefined_unwrap(value, msg) {
  * @param {string} msg
  * @returns {T}
  */
-export const undefined_expect = (value, msg) => {
+export function undefined_expect(value, msg) {
     if (value !== undefined) return value;
     throw new Error(msg);
 }

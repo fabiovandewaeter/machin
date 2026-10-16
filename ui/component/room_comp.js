@@ -11,7 +11,6 @@
 import { ESB } from "../../engine/core/signal/signal.js";
 import { world_move_entity } from "../../engine/core/world/world.js";
 import { enum_create } from "../../utils/enum.js";
-import { option_unwrap, some, option_unwrap_or_undefined } from "../../utils/option.js";
 import { repository_get } from "../../utils/repository.js";
 import { signalbus_on, signalbus_emit } from "../../utils/signal_bus.js";
 import { undefined_unwrap } from "../../utils/undefined.js";
@@ -46,8 +45,12 @@ name: <span class="room-name"></span>
  */
 export function roomcomp_update(el) {
     const s = store_get();
-    const current_room_id = __roomcomp_get_current_room_id();
-    const current_room = undefined_unwrap(repository_get(s.world.galaxy.room_repo, current_room_id));
+    const current_room_id_opt = __roomcomp_get_current_room_id();
+    if (current_room_id_opt == undefined) {
+        console.warn(`current_room_id_opt vide donc room_comp ne peut pas être update`);
+        return;
+    }
+    const current_room = undefined_unwrap(repository_get(s.world.galaxy.room_repo, current_room_id_opt));
 
     const id = el.querySelector(".room-id");
     const kind = el.querySelector(".room-kind");
@@ -115,8 +118,8 @@ function __roomcomp_handle_action(action, btn) {
              * et si les conditions sont bonnes etc.
              */
             // TODO: griser si on a pas selectionne d'entity
-            const selected_entity = __roomcomp_get_selected_entity()
-            world_move_entity(s.world, selected_entity.id, utils_string_to_rkind(btn.dataset.roomId));
+            const selected_entity_opt = undefined_unwrap(__roomcomp_get_selected_entity());
+            world_move_entity(s.world, selected_entity_opt.id, utils_string_to_rkind(btn.dataset.roomId));
             break;
         }
         case __ACTIONS.SELECT_ENTITY: {
@@ -128,9 +131,9 @@ function __roomcomp_handle_action(action, btn) {
 
             // change l'entity selectionnee
             const previous_selected_entity_id = s.ui_state.selected_entity_id;
-            s.ui_state.selected_entity_id = some(entity_id);
+            s.ui_state.selected_entity_id = entity_id;
             signalbus_emit(UISB, "ui_state.selected_entity_id.changed", {
-                previous_selected_entity_id: option_unwrap_or_undefined(previous_selected_entity_id),
+                previous_selected_entity_id: previous_selected_entity_id,
                 new_selected_entity_id: entity_id,
             });
             break;
@@ -142,22 +145,25 @@ function __roomcomp_handle_action(action, btn) {
 }
 
 /**
- * @returns {Entity}
+ * @returns {Entity|undefined}
  */
 function __roomcomp_get_selected_entity() {
     const s = store_get();
     const entity_id_opt = s.ui_state.selected_entity_id;
-    const entity_id = option_unwrap(entity_id_opt);
-    return undefined_unwrap(repository_get(s.world.entity_repo, entity_id));
+    if (entity_id_opt == undefined) return undefined;
+    return undefined_unwrap(repository_get(s.world.entity_repo, entity_id_opt));
 }
 
 /**
  * TODO: ajouter système pour voir d'autres rooms sans déplacer le player mais il faut stocker l'information dans l'UI state
  */
 /**
- * @returns {RoomID}
+ * @returns {RoomID|undefined}
  */
 function __roomcomp_get_current_room_id() {
-    const entity = __roomcomp_get_selected_entity();
+    const s = store_get();
+    const entity_id_opt = s.ui_state.selected_entity_id;
+    if (entity_id_opt == undefined) return undefined;
+    const entity = undefined_unwrap(repository_get(s.world.entity_repo, entity_id_opt));
     return entity.room_id;
 }
