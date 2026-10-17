@@ -8,7 +8,7 @@
 import { repository_create, repository_get } from "../../../utils/repository.js";
 import { result_unwrap } from "../../../utils/result.js";
 import { undefined_expect } from "../../../utils/undefined.js";
-import { entity_move, entity_spawn } from "../../entity/entity.js";
+import { entity_add_item, entity_move, entity_spawn } from "../../entity/entity.js";
 import { materialitem_create } from "../../item/material/material_item.js";
 import { pickaxe_craft } from "../../item/tool/pickaxe.js";
 import { galaxy_create, GALAXY_DEFAULT_ROOM_ID, galaxy_init } from "../../map/galaxy.js";
@@ -39,12 +39,26 @@ export function world_init(world) {
             ROD: materialitem_create({
                 kind: "ROD",
                 material: "STONE",
-                quality: "POOR"
+                quality: "POOR",
             }),
             HEAD: materialitem_create({
                 kind: "HEAD",
                 material: "STONE",
-                quality: "POOR"
+                quality: "POOR",
+            }),
+        }
+    }));
+    const robot_1_item = result_unwrap(pickaxe_craft({
+        parts: {
+            ROD: materialitem_create({
+                kind: "ROD",
+                material: "IRON",
+                quality: "PERFECT",
+            }),
+            HEAD: materialitem_create({
+                kind: "HEAD",
+                material: "IRON",
+                quality: "PERFECT",
             }),
         }
     }));
@@ -53,17 +67,18 @@ export function world_init(world) {
         room_id: GALAXY_DEFAULT_ROOM_ID,
         tool: robot_1_pickaxe,
     });
+    entity_add_item(world.entity_repo, robot_1.id, robot_1_item);
     const second_entity_pickaxe = result_unwrap(pickaxe_craft({
         parts: {
             ROD: materialitem_create({
                 kind: "ROD",
                 material: "STONE",
-                quality: "POOR"
+                quality: "POOR",
             }),
             HEAD: materialitem_create({
                 kind: "HEAD",
                 material: "STONE",
-                quality: "POOR"
+                quality: "POOR",
             }),
         }
     }));

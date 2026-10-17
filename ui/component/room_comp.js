@@ -30,7 +30,7 @@ const __ACTIONS = enum_create(/**@type {const}*/([
 /**
  * @returns {string}
  */
-export function roomcomp_render() {
+function __roomcomp_render() {
     return `
 <h1>Room</h1>
 id: <span class="room-id"></span>
@@ -45,7 +45,7 @@ content: <div class="content"></div>
 /**
  * @param {HTMLElement} el
  */
-export function roomcomp_update(el) {
+function __roomcomp_update(el) {
     const s = store_get();
     const current_room_id_opt = __roomcomp_get_current_room_id();
     if (current_room_id_opt == undefined) {
@@ -102,7 +102,7 @@ export function roomcomp_update(el) {
  */
 export function roomcomp_mount(container) {
     return comp_create_comp(container, "room-comp", (el, add_cleanup) => {
-        el.innerHTML = roomcomp_render();
+        el.innerHTML = __roomcomp_render();
 
         add_cleanup(comp_delegate_click_with_enum(el, __ACTIONS, (action, event, btn) => {
             __roomcomp_handle_action(action, btn);
@@ -111,17 +111,17 @@ export function roomcomp_mount(container) {
         add_cleanup(enginesignal_on("entity.room_id.changed", (payload) => {
             const current_room_id = __roomcomp_get_current_room_id();
             if (payload.previous_room_id == current_room_id || payload.new_room_id == current_room_id) {
-                roomcomp_update(el);
+                __roomcomp_update(el);
             }
         }));
         add_cleanup(enginesignal_on("room.content.removed", (payload) => {
             const current_room_id = __roomcomp_get_current_room_id();
             if (payload.room_id == current_room_id) {
-                roomcomp_update(el);
+                __roomcomp_update(el);
             }
         }));
 
-        roomcomp_update(el);
+        __roomcomp_update(el);
     });
 }
 

@@ -8,7 +8,6 @@ import { SECONDS_PER_DAY, SECONDS_PER_HOUR, SECONDS_PER_MINUTE, SECONDS_PER_WEEK
 import { utils_assert_unreachable, utils_string_to_rkind } from "../../utils/utils.js";
 import { save_clear, save_download, save_upload } from "../../utils/save.js";
 import { uistate_add_log, uistate_stop_tick } from "../core/ui_state/ui_state.js";
-import { signalbus_emit, signalbus_on } from "../../utils/signal_bus.js";
 import { store_get, store_set_world } from "../core/store.js";
 import { enum_create } from "../../utils/enum.js";
 import { comp_create_comp, comp_delegate_click_with_enum } from "./core/comp.js";

@@ -6,10 +6,13 @@
  * @typedef {import("./entity.types.js").Entity} Entity
  * @typedef {import("../core/ids.types.js").EntityID} EntityID
  * @typedef {import("../item/tool/tool.js").Tool} Tool
+ * @typedef {import("../item/item.types.js").Item} Item
+ * @typedef {import("../inventory.js").InternalItemID} InternalItemID
  */
 import { repository_get, repository_spawn_element } from "../../utils/repository.js";
 import { undefined_unwrap } from "../../utils/undefined.js";
 import { __ESB, enginesignal_emit } from "../core/signal/signal.js";
+import { inventory_add_item, inventory_create } from "../inventory.js";
 
 /**
  * @param {EntityRepo} repo
@@ -24,6 +27,7 @@ export function entity_spawn(repo, { name, room_id, tool }) {
         name,
         room_id,
         tool,
+        inventory: inventory_create(),
     });
 }
 
@@ -43,4 +47,15 @@ export function entity_move(repo, entity_id, target_id) {
         new_room_id: target_id,
     });
     return previous_room_id;
+}
+
+/**
+ * @param {EntityRepo} repo 
+ * @param {EntityID} id 
+ * @param {Item} item 
+ * @returns {InternalItemID}
+ */
+export function entity_add_item(repo, id, item) {
+    const entity = undefined_unwrap(repository_get(repo, id));
+    return inventory_add_item(entity.inventory, item);
 }

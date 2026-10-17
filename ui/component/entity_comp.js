@@ -1,21 +1,24 @@
 // ui/core/component/entity_comp.js
 
-
 /**
  * @typedef {import("./core/comp.js").DestroyFunction} DestroyFunction
  * @typedef {import("../../engine/core/ids.types.js").EntityID} EntityID
+ * @typedef {import("./menu_comp.js").SubCompManager} SubCompManager
  */
 /** @template {Record<string, unknown>} T @typedef {import("../../utils/enum.js").EnumKey<T>} EnumKey */
 import { enginesignal_on } from "../../engine/core/signal/signal.js";
 import { enum_create } from "../../utils/enum.js";
 import { repository_get } from "../../utils/repository.js";
-import { signalbus_on, signalbus_emit } from "../../utils/signal_bus.js";
 import { undefined_unwrap } from "../../utils/undefined.js";
 import { utils_assert_unreachable } from "../../utils/utils.js";
 import { uisignal_emit } from "../core/signal/signal.js";
 import { UI_SIGNAL } from "../core/signal/signal.types.js";
 import { store_get } from "../core/store.js";
-import { comp_create_comp, comp_delegate_click_with_enum } from "./core/comp.js";
+import { comp_create_comp, comp_create_comp_with_sub_comps, comp_delegate_click_with_enum } from "./core/comp.js";
+import { subcompmanager_add } from "./core/sub_comp_manager.js";
+import { inventorycomp_mount } from "./inventory_comp.js";
+
+const __INVENTORY_KEY = "INVENTORY_KEY";
 
 const __ACTIONS = enum_create(/**@type {const}*/([
     "CLOSE_PANEL",
@@ -25,13 +28,14 @@ const __ACTIONS = enum_create(/**@type {const}*/([
 /**
  * @returns {string}
  */
-export function entitycomp_render() {
+function __entitycomp_render() {
     return `
 <h1>Entity</h1>
 <button data-action="${__ACTIONS.CLOSE_PANEL}">Close</button>
-<p>id: <span class="entity-id"></span></p>
-<p>name: <span class="entity-name"></span></p>
-<p>room_id: <span class="entity-room-id"></span></p>
+id: <span class="entity-id"></span>
+name: <span class="entity-name"></span>
+room_id: <span class="entity-room-id"></span>
+inventory: <div class="inventory"></div>
     `;
 }
 
@@ -39,7 +43,7 @@ export function entitycomp_render() {
  * @param {HTMLElement} el
  * @param {EntityID} entity_id
  */
-export function entitycomp_update(el, entity_id) {
+function __entitycomp_update(el, entity_id) {
     const s = store_get();
     const entity = undefined_unwrap(repository_get(s.world.entity_repo, entity_id));
 
@@ -60,31 +64,40 @@ export function entitycomp_update(el, entity_id) {
  * @returns {{element: HTMLElement, destroy: DestroyFunction }}
  */
 export function entitycomp_mount(container, entity_id) {
-    return comp_create_comp(container, "entity-comp", (el, add_cleanup) => {
-        el.innerHTML = entitycomp_render();
+    return comp_create_comp_with_sub_comps(container, "entity-comp", (el, sub_comp_manager, add_cleanup) => {
+        el.innerHTML = __entitycomp_render();
+
+        // subcomps
+        const inventory_container = /**@type {HTMLElement}*/(el.querySelector(".inventory"));
+        if (!inventory_container) throw new Error();
+        subcompmanager_add(
+            sub_comp_manager,
+            __INVENTORY_KEY,
+            inventorycomp_mount(inventory_container, entity_id));
 
         add_cleanup(comp_delegate_click_with_enum(el, __ACTIONS, (action, event, btn) => {
-            __entitycomp_handle_action(action, btn, entity_id);
+            __entitycomp_handle_action(action, btn, sub_comp_manager, entity_id);
         }));
 
-
+        // signaux
         add_cleanup(enginesignal_on("entity.name.changed", (payload) => {
-            if (payload.entity_id === entity_id) entitycomp_update(el, entity_id);
+            if (payload.entity_id === entity_id) __entitycomp_update(el, entity_id);
         }));
         add_cleanup(enginesignal_on("entity.room_id.changed", (payload) => {
-            if (payload.entity_id === entity_id) entitycomp_update(el, entity_id);
+            if (payload.entity_id === entity_id) __entitycomp_update(el, entity_id);
         }));
 
-        entitycomp_update(el, entity_id);
+        __entitycomp_update(el, entity_id);
     });
 }
 
 /**
  * @param {Action} action
  * @param {HTMLElement} btn
+ * @param {SubCompManager} sub_comp_manager
  * @param {EntityID} entity_id
  */
-function __entitycomp_handle_action(action, btn, entity_id) {
+function __entitycomp_handle_action(action, btn, sub_comp_manager, entity_id) {
     const s = store_get();
     switch (action) {
         case __ACTIONS.CLOSE_PANEL: {

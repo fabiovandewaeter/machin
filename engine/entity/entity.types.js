@@ -1,9 +1,11 @@
 // engine/entity/entity.types.js
 
 /**
- * @typedef {import("../core/ids.types").RoomID} RoomID
- * @typedef {import("../core/ids.types").EntityID} EntityID
+ * @typedef {import("../core/ids.types.js").RoomID} RoomID
+ * @typedef {import("../core/ids.types.js").EntityID} EntityID
  * @typedef {import("../item/tool/tool.js").Tool} Tool
+ * @typedef {import("../item/item.types.js").Item} Item
+ * @typedef {import("../inventory.js").Inventory} Inventory
  */
 
 /**
@@ -12,6 +14,7 @@
  * @property {string} name
  * @property {RoomID} room_id
  * @property {Tool|undefined} tool
+ * @property {Inventory} inventory
  *
  * @typedef {import("../../utils/repository.js").Repo<EntityID, Entity>} EntityRepo
  */

@@ -1,6 +1,5 @@
 // ui/core/component/menu_comp.js
 
-
 /**
  * @typedef {import("./core/comp.js").DestroyFunction} DestroyFunction
  * @typedef {import("./core/sub_comp_manager.js").SubCompKey} SubCompKey

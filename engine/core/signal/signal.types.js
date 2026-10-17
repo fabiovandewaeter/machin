@@ -1,15 +1,17 @@
 // engine/core/signal/signal.types.js
 
-/** @template {Record<string, unknown>} T @typedef {import("../../../utils/enum.js").EnumKey<T>} EnumKey */
-import { enum_create } from "../../../utils/enum.js";
-
 /**
  * @typedef {import("../ids.types.js").EntityID} EntityID
  * @typedef {import("../../entity/entity.types.js").Entity} Entity
  * @typedef {import("../ids.types.js").RoomID} RoomID
  * @typedef {import("../../map/room/room.types.js").Room} Room
  * @typedef {import("../../extraction/ore.js").InternalOreID} InternalOreID
+ * @typedef {import("../../inventory.js").InternalItemID} InternalItemID
+ * @typedef {import("../../inventory.js").Inventory} Inventory
  */
+/** @template {Record<string, unknown>} T @typedef {import("../../../utils/enum.js").EnumKey<T>} EnumKey */
+/** @template {string} Base @template Id @template {Record<string, unknown>} T @typedef {import("../../../utils/signal_bus.js").ChangedSignals<Base, Id, T>} ChangedSignals*/
+import { enum_create } from "../../../utils/enum.js";
 
 const __TIME_SIGNAL = enum_create(/**@type {const}*/([
     "TICK",
@@ -43,11 +45,18 @@ export const ENGINE_SIGNAL = Object.freeze(/**@type {const}*/({
 
 /**
  * @typedef {BaseEngineSignalPayload
- *      & import("../../../utils/signal_bus.js").ChangedSignals<"entity", EntityID, Entity>
- *      & import("../../../utils/signal_bus.js").ChangedSignals<"room", RoomID, Room>
+ *      & ChangedSignals<"entity", EntityID, Entity>
+ *      & {
+ *       "entity.items.modified": [{ entity_id: EntityID }],
+ *      }
+ *      & ChangedSignals<"room", RoomID, Room>
  *      & {
  *       "room.content.added": [{ room_id: RoomID, added: InternalOreID }],
  *       "room.content.removed": [{ room_id: RoomID, removed: InternalOreID }],
+ *      }
+ *      & {
+ *       "inventory.item_stack.added": [{ entity_id: EntityID, added: InternalItemID }],
+ *       "inventory.item_stack.removed": [{ entity_id: EntityID, removed: InternalItemID }],
  *      }
  * } EngineSignalPayload
  */
