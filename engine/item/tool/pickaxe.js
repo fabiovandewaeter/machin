@@ -4,6 +4,7 @@
  * @typedef {import("../material/material_item.js").MaterialItem} MaterialItem
  * @typedef {import("../material/material_item.js").MaterialItemKind} MaterialItemKind
  * @typedef {import("../quality.js").Quality} Quality
+ * @typedef {import("../../action/action.js").ActionKind} ActionKind
  */
 /** @template T, E @typedef {import("../../../utils/result.js").Res<T, E>} Res */
 import "../../../utils/result.js";
@@ -26,6 +27,7 @@ const __PARTS = /** @type {const} */ ({
  * @property {"PICKAXE"} kind
  * @property {Parts} parts
  * @property {number} mining_level
+ * @property {ActionKind[]} compatible_actions
  */
 
 /**
@@ -42,6 +44,7 @@ export function pickaxe_craft({ parts }) {
         kind: "PICKAXE",
         parts,
         mining_level: material_lowest_mining_level(material_items.map(mi => mi.material)),
+        compatible_actions: ["MINING"],
     });
 }
 

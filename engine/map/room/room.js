@@ -8,11 +8,17 @@
  * @typedef {import("./room.types.js").RoomRepo} RoomRepo
  * @typedef {import("../../core/ids.types.js").RoomID} RoomID
  * @typedef {import("./room.types.js").RoomExit} RoomExit
- * @typedef {import("./room.types.js").Ore} Ore
+ * @typedef {import("../../extraction/ore.js").Ore} Ore
+ * @typedef {import("../../extraction/ore.js").InternalOreID} InternalOreID
+ * @typedef {import("../../item/tool/tool.js").Tool} Tool
+ * @typedef {import("../../extraction/ore.js").MaterialItemStack} MaterialItemStack
  */
 /** @template {Record<string, unknown>} T @typedef {import("../../../utils/enum.js").EnumKey<T>} EnumKey */
+/** @template T, E @typedef {import("../../../utils/result.js").Res<T, E>} Res */
 import { repository_get, repository_spawn_element } from "../../../utils/repository.js";
+import { err, result_assert_err, result_is_err } from "../../../utils/result.js";
 import { undefined_unwrap } from "../../../utils/undefined.js";
+import { mining_mine } from "../../action/mining.js";
 import { enginesignal_emit } from "../../core/signal/signal.js";
 
 /**
@@ -80,4 +86,32 @@ export function room_remove_entity(repo, id, entity_id) {
         room_id: id,
         removed: entity_id,
     });
+}
+
+/**
+ * @param {RoomRepo} repo 
+ * @param {RoomID} id 
+ * @param {InternalOreID} ore_id 
+ * @param {Tool} tool
+ * @returns {Res<MaterialItemStack[], string>}
+ */
+export function room_mine(repo, id, ore_id, tool) {
+    const room = undefined_unwrap(repository_get(repo, id));
+    const ore_index = room.content.findIndex((ore) => ore.internal_id === ore_id);
+    if (ore_index === -1) {
+        return err(`ore_id n'est pas dans room: ${ore_id} ${id}`);
+    }
+    const ore = undefined_unwrap(room.content[ore_index]);
+    const loot_res = mining_mine(ore, tool);
+    if (result_is_err(loot_res)) {
+        return loot_res;
+    }
+
+    room.content.splice(ore_index, 1);
+    enginesignal_emit("room.content.removed", {
+        room_id: id,
+        removed: ore_id,
+    });
+
+    return loot_res;
 }

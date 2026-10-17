@@ -13,7 +13,12 @@ import { MATERIAL_ITEM_KIND, materialitem_create, materialitem_create_stack } fr
  */
 
 /**
+ * @typedef {number & {readonly __brand:"InternalOreID"}} InternalOreID
+ */
+
+/**
  * @typedef {Object} Ore
+ * @property {InternalOreID} internal_id
  * @property {MaterialItemStack[]} composition
  * @property {number} required_mining_level
  * @property {ToolKind} tool_kind
@@ -21,12 +26,11 @@ import { MATERIAL_ITEM_KIND, materialitem_create, materialitem_create_stack } fr
 
 /**
  * @param {Object} options
+ * @param {InternalOreID} options.internal_id
  * @param {MaterialItemStack[]} options.composition
  * @returns {Ore}
  */
-export function ore_create({ composition }) {
-    console.log(composition);
-
+export function ore_create({ internal_id, composition }) {
     // required_mining_level est le mining_level le plus élevé de composition
     let max_mining_level = MATERIAL[composition[0].material_item.material].mining_level;
     for (let i = 1; i < composition.length; i++) {
@@ -37,6 +41,7 @@ export function ore_create({ composition }) {
     }
 
     return {
+        internal_id,
         composition,
         required_mining_level: max_mining_level,
         tool_kind: "PICKAXE",
@@ -75,6 +80,7 @@ export function random(amount) {
         });
         const stack = materialitem_create_stack(mi, random_amount);
         ores.push(ore_create({
+            internal_id: /**@type {InternalOreID} */(i),
             composition: [stack],
         }));
     }

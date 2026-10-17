@@ -8,6 +8,7 @@ import { enum_create } from "../../../utils/enum.js";
  * @typedef {import("../../entity/entity.types.js").Entity} Entity
  * @typedef {import("../ids.types.js").RoomID} RoomID
  * @typedef {import("../../map/room/room.types.js").Room} Room
+ * @typedef {import("../../extraction/ore.js").InternalOreID} InternalOreID
  */
 
 const __TIME_SIGNAL = enum_create(/**@type {const}*/([
@@ -42,8 +43,12 @@ export const ENGINE_SIGNAL = Object.freeze(/**@type {const}*/({
 
 /**
  * @typedef {BaseEngineSignalPayload
- *   & import("../../../utils/signal_bus.js").ChangedSignals<"entity", EntityID, Entity>
- *   & import("../../../utils/signal_bus.js").ChangedSignals<"room", RoomID, Room>
+ *      & import("../../../utils/signal_bus.js").ChangedSignals<"entity", EntityID, Entity>
+ *      & import("../../../utils/signal_bus.js").ChangedSignals<"room", RoomID, Room>
+ *      & {
+ *       "room.content.added": [{ room_id: RoomID, added: InternalOreID }],
+ *       "room.content.removed": [{ room_id: RoomID, removed: InternalOreID }],
+ *      }
  * } EngineSignalPayload
  */
 /** @typedef {keyof EngineSignalPayload} EngineSignal */

@@ -5,9 +5,9 @@
  * @typedef {import("./entity.types.js").EntityRepo} EntityRepo
  * @typedef {import("./entity.types.js").Entity} Entity
  * @typedef {import("../core/ids.types.js").EntityID} EntityID
+ * @typedef {import("../item/tool/tool.js").Tool} Tool
  */
 import { repository_get, repository_spawn_element } from "../../utils/repository.js";
-import { signalbus_emit } from "../../utils/signal_bus.js";
 import { undefined_unwrap } from "../../utils/undefined.js";
 import { __ESB, enginesignal_emit } from "../core/signal/signal.js";
 
@@ -16,12 +16,14 @@ import { __ESB, enginesignal_emit } from "../core/signal/signal.js";
  * @param {Object} options
  * @param {string} options.name
  * @param {RoomID} options.room_id
+ * @param {Tool} [options.tool]
  * @returns {Entity}
  */
-export function entity_spawn(repo, { name, room_id }) {
+export function entity_spawn(repo, { name, room_id, tool }) {
     return repository_spawn_element(repo, {
         name,
         room_id,
+        tool,
     });
 }
 

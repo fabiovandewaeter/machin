@@ -3,6 +3,7 @@
 /**
  * @typedef {import("../core/ids.types").RoomID} RoomID
  * @typedef {import("../core/ids.types").EntityID} EntityID
+ * @typedef {import("../item/tool/tool.js").Tool} Tool
  */
 
 /**
@@ -10,6 +11,7 @@
  * @property {EntityID} id
  * @property {string} name
  * @property {RoomID} room_id
+ * @property {Tool|undefined} tool
  *
  * @typedef {import("../../utils/repository.js").Repo<EntityID, Entity>} EntityRepo
  */

@@ -1,9 +1,9 @@
 // engine/item/tool/tool.js
 
 /**
- * @template {Record<string, unknown>} T
- * @typedef {import("../../../utils/enum.js").EnumKey<T>} EnumKey
+ * @typedef {import("./pickaxe.js").Pickaxe} Pickaxe
  */
+/** @template {Record<string, unknown>} T @typedef {import("../../../utils/enum.js").EnumKey<T>} EnumKey */
 import { enum_create } from "../../../utils/enum.js";
 
 export const TOOL_KIND = enum_create(/**@type {const}*/([
@@ -14,7 +14,6 @@ export const TOOL_KIND = enum_create(/**@type {const}*/([
  */
 
 /**
- * @typedef {
- *      | import("./pickaxe").Pickaxe
+ * @typedef {Pickaxe
  * } Tool
  */

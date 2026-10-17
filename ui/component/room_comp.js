@@ -10,6 +10,7 @@
 /** @template {Record<string, unknown>} T @typedef {import("../../utils/enum.js").EnumKey<T>} EnumKey */
 import { enginesignal_on } from "../../engine/core/signal/signal.js";
 import { world_move_entity } from "../../engine/core/world/world.js";
+import { room_mine } from "../../engine/map/room/room.js";
 import { enum_create } from "../../utils/enum.js";
 import { repository_get } from "../../utils/repository.js";
 import { undefined_unwrap } from "../../utils/undefined.js";
@@ -89,7 +90,7 @@ export function roomcomp_update(el) {
 
     if (!content) return;
     content.innerHTML = current_room.content.map((ore) => (
-        `<button data-action="${__ACTIONS.EXTRACT}" data-mining-level="${ore.required_mining_level}">
+        `<button data-action="${__ACTIONS.EXTRACT}" data-internal-id="${ore.internal_id}">
             ${ore.required_mining_level}
         </button>`
     )).join("");
@@ -113,6 +114,13 @@ export function roomcomp_mount(container) {
                 roomcomp_update(el);
             }
         }));
+        add_cleanup(enginesignal_on("room.content.removed", (payload) => {
+            const current_room_id = __roomcomp_get_current_room_id();
+            if (payload.room_id == current_room_id) {
+                roomcomp_update(el);
+            }
+        }));
+
         roomcomp_update(el);
     });
 }
@@ -151,7 +159,8 @@ function __roomcomp_handle_action(action, btn) {
             break;
         }
         case __ACTIONS.EXTRACT: {
-            throw new Error("TODO: miner");
+            const selected_entity_opt = undefined_unwrap(__roomcomp_get_selected_entity());
+            const material_item_stack = room_mine(s.world.galaxy.room_repo, selected_entity_opt.room_id, utils_string_to_rkind(btn.dataset.internalId), undefined_unwrap(selected_entity_opt.tool));
             break;
         }
         default: {
