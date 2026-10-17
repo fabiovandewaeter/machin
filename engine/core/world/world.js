@@ -29,7 +29,7 @@ export function world_create() {
  * @param {World} world 
  */
 export function world_init(world) {
-    const map = galaxy_init(world.galaxy);
+    galaxy_init(world.galaxy);
     // TODO: système pour ajouter les entity directement dans leur room au spawn
     const robot_1 = entity_spawn(world.entity_repo, {
         name: "robot 1",

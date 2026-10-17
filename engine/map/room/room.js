@@ -8,10 +8,10 @@
  * @typedef {import("./room.types.js").RoomRepo} RoomRepo
  * @typedef {import("../../core/ids.types.js").RoomID} RoomID
  * @typedef {import("./room.types.js").RoomExit} RoomExit
+ * @typedef {import("./room.types.js").Ore} Ore
  */
 /** @template {Record<string, unknown>} T @typedef {import("../../../utils/enum.js").EnumKey<T>} EnumKey */
 import { repository_get, repository_spawn_element } from "../../../utils/repository.js";
-import { signalbus_emit } from "../../../utils/signal_bus.js";
 import { undefined_unwrap } from "../../../utils/undefined.js";
 import { enginesignal_emit } from "../../core/signal/signal.js";
 
@@ -21,15 +21,17 @@ import { enginesignal_emit } from "../../core/signal/signal.js";
  * @param {RoomKind} options.kind
  * @param {string} options.name
  * @param {number} options.layer
+ * @param {Ore[]} options.content
  * @returns {Room}
  */
-export function room_spawn(repo, { kind, name, layer }) {
+export function room_spawn(repo, { kind, name, layer, content }) {
     return repository_spawn_element(repo, {
         kind,
         name,
         layer,
         exits: {},
         entities: [],
+        content,
     });
 }
 

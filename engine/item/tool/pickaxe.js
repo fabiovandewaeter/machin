@@ -1,7 +1,6 @@
 // engine/item/tool/pickaxe.js
 
 /**
- * @typedef {import("../material/material_item.js").Material} Material
  * @typedef {import("../material/material_item.js").MaterialItem} MaterialItem
  * @typedef {import("../material/material_item.js").MaterialItemKind} MaterialItemKind
  * @typedef {import("../quality.js").Quality} Quality

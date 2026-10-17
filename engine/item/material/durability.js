@@ -6,12 +6,12 @@ import { MATERIAL } from "./material.js";
 
 /**
  * @typedef {import("./material_item.js").MaterialItem} MaterialItem
- * @typedef {import("./material.js").Material} Material
+ * @typedef {import("./material.js").MaterialKind} MaterialKind
  */
 
 /**
  * @param {MaterialItem[]} material_items 
- * @param {Material} target
+ * @param {MaterialKind} target
  * @throws {Error} si la target est impossible à miner
  */
 export function durability_decrease_durability(material_items, target) {

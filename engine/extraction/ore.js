@@ -1,10 +1,12 @@
 // engine/extraction/ore.js
 
-import { MATERIAL } from "../item/material/material.js";
+import { MATERIAL, MATERIAL_KIND } from "../item/material/material.js";
+import { MATERIAL_ITEM_KIND, materialitem_create, materialitem_create_stack } from "../item/material/material_item.js";
 
 /**
- * @typedef {import("../item/material/material").Material} Material
+ * @typedef {import("../item/material/material").MaterialKind} MaterialKind
  * @typedef {import("../item/material/material_item").MaterialItem} MaterialItem
+ * @typedef {import("../item/material/material_item").MaterialItemKind} MaterialItemKind
  * @typedef {import("../item/material/material_item").MaterialItemStack} MaterialItemStack
  * @typedef {import("../item/tool/tool").ToolKind} ToolKind
  * @typedef {import("../item/tool/tool").Tool} Tool
@@ -23,6 +25,8 @@ import { MATERIAL } from "../item/material/material.js";
  * @returns {Ore}
  */
 export function ore_create({ composition }) {
+    console.log(composition);
+
     // required_mining_level est le mining_level le plus élevé de composition
     let max_mining_level = MATERIAL[composition[0].material_item.material].mining_level;
     for (let i = 1; i < composition.length; i++) {
@@ -47,4 +51,33 @@ export function ore_create({ composition }) {
 export function ore_can_be_extracted(ore, tool) {
     if (tool.kind !== ore.tool_kind) return false;
     return tool.mining_level >= ore.required_mining_level;
+}
+
+/**
+ * @param {number} amount 
+ * @returns {Ore[]}
+ */
+export function random(amount) {
+    /** @type {Ore[]} */
+    let ores = [];
+    let random = 0;
+    let random_amount = 0;
+    const size = Object.keys(MATERIAL_KIND).length;
+    const max_amount = 20;
+    for (let i = 0; i < amount; i++) {
+        random = Math.floor(Math.random() * size);
+        random_amount = Math.floor(Math.random() * (max_amount + 1));
+
+        const mi = materialitem_create({
+            kind: "ORE",
+            material: /**@type {MaterialKind}*/(Object.keys(MATERIAL_KIND)[random]),
+            quality: "NORMAL",
+        });
+        const stack = materialitem_create_stack(mi, random_amount);
+        ores.push(ore_create({
+            composition: [stack],
+        }));
+    }
+
+    return ores;
 }

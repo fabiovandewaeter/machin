@@ -44,7 +44,13 @@ export function runtime_init() {
         store_set_ui_state(uistate_create());
     }
 
-    // // attache les events listeners au app pour qu'ils ne soient jamais détruit par un innerHTML
+    // TODO: virer ça
+    const s = store_get();
+    if (s.ui_state.selected_entity_id == undefined) {
+        s.ui_state.selected_entity_id = 0;
+    }
+
+    // attache les events listeners au app pour qu'ils ne soient jamais détruit par un innerHTML
     // add_event_listener_click(app);
     // add_event_listener_keydown(app);
 

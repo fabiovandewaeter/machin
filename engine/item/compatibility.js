@@ -1,7 +1,7 @@
 // engine/item/core/compatibility.js
 
 /**
- * @typedef {import("./material/material.js").Material} Material
+ * @typedef {import("./material/material.js").MaterialKind} MaterialKind
  * @typedef {import("./material/material_item.js").MaterialItem} MaterialItem
  * @typedef {import("./material/material_item.js").MaterialItemKind} MaterialItemKind
  */
@@ -27,7 +27,7 @@ export function compatibility_are_material_items_and_parts_compatibles(material_
 
 /**
  * @param {MaterialItem[]} material_items 
- * @returns {Res<Material, string>}
+ * @returns {Res<MaterialKind, string>}
  */
 export function compatibility_are_all_same_material(material_items) {
     assert(material_items.length > 0);

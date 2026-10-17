@@ -2,7 +2,7 @@
 
 /**
  * @typedef {import("../quality.js").Quality} Quality
- * @typedef {import("./material.js").Material} Material
+ * @typedef {import("./material.js").MaterialKind} MaterialKind
  * @typedef {import("../../utils/gauge.js").Gauge} Gauge
  */
 /** @template {Record<string, unknown>} T @typedef {import("../../../utils/enum.js").EnumKey<T>} EnumKey */
@@ -17,7 +17,7 @@ import { BASE_DURABILITY } from "./durability.types.js";
 /**
  * @typedef {Object} MaterialItem
  * @property {MaterialItemKind} kind
- * @property {Material} material
+ * @property {MaterialKind} material
  * @property {Quality} quality
  * @property {number} durability
  */
@@ -42,7 +42,7 @@ export const MATERIAL_ITEM_KIND = enum_create(/**@type {const}*/([
  * @template {MaterialItemKind} K
  * @param {Object} options
  * @param {K} options.kind 
- * @param {Material} options.material 
+ * @param {MaterialKind} options.material 
  * @param {Quality} options.quality
  * @returns {MaterialItem & {kind: K}}
  */

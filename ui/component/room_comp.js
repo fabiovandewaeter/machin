@@ -5,14 +5,13 @@
  * @typedef {import("./core/comp.js").DestroyFunction} DestroyFunction
  * @typedef {import("../../engine/core/ids.types.js").RoomID} RoomID
  * @typedef {import("../../engine/core/ids.types.js").EntityID} EntityID
- * @typedef {import("../../engine/entity/entity.js").Entity} Entity
+ * @typedef {import("../../engine/entity/entity.types.js").Entity} Entity
  */
 /** @template {Record<string, unknown>} T @typedef {import("../../utils/enum.js").EnumKey<T>} EnumKey */
 import { enginesignal_on } from "../../engine/core/signal/signal.js";
 import { world_move_entity } from "../../engine/core/world/world.js";
 import { enum_create } from "../../utils/enum.js";
 import { repository_get } from "../../utils/repository.js";
-import { signalbus_on, signalbus_emit } from "../../utils/signal_bus.js";
 import { undefined_unwrap } from "../../utils/undefined.js";
 import { utils_string_to_rkind, utils_assert_unreachable } from "../../utils/utils.js";
 import { uisignal_emit } from "../core/signal/signal.js";
@@ -23,6 +22,7 @@ import { comp_create_comp, comp_delegate_click_with_enum } from "./core/comp.js"
 const __ACTIONS = enum_create(/**@type {const}*/([
     "MOVE_ENTITY",
     "SELECT_ENTITY",
+    "EXTRACT",
 ]));
 /**@typedef {EnumKey<typeof __ACTIONS>} Action*/
 
@@ -35,8 +35,9 @@ export function roomcomp_render() {
 id: <span class="room-id"></span>
 kind: <span class="room-kind"></span>
 name: <span class="room-name"></span>
-<div class="visible-entities"></div>
-<div class="connected-rooms"></div>
+exits: <div class="connected-rooms"></div>
+entities: <div class="visible-entities"></div>
+content: <div class="content"></div>
     `;
 }
 
@@ -71,6 +72,7 @@ export function roomcomp_update(el) {
         </button>`
     )).join("");
 
+    // visible entities
     const entity_list = el.querySelector(".visible-entities");
     if (!entity_list) return;
     let entity_list_string = "";
@@ -81,6 +83,16 @@ export function roomcomp_update(el) {
         </button>`
     }
     entity_list.innerHTML = entity_list_string;
+
+    // content
+    const content = el.querySelector(".content");
+
+    if (!content) return;
+    content.innerHTML = current_room.content.map((ore) => (
+        `<button data-action="${__ACTIONS.EXTRACT}" data-mining-level="${ore.required_mining_level}">
+            ${ore.required_mining_level}
+        </button>`
+    )).join("");
 }
 
 /**
@@ -136,6 +148,10 @@ function __roomcomp_handle_action(action, btn) {
                 previous_selected_entity_id: previous_selected_entity_id,
                 new_selected_entity_id: entity_id,
             });
+            break;
+        }
+        case __ACTIONS.EXTRACT: {
+            throw new Error("TODO: miner");
             break;
         }
         default: {

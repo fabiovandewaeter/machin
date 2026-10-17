@@ -2,7 +2,7 @@
 
 /**
  * @typedef {import("../material/material_item.js").MaterialItem} MaterialItem
- * @typedef {import("../material/material.js").Material} Material
+ * @typedef {import("../material/material.js").MaterialKind} MaterialKind
  */
 import { assert } from "../../../tests/test.js";
 import { MATERIAL } from "../material/material.js";
@@ -12,7 +12,7 @@ export const MIN_STEP_AMOUNT = 1;
 
 /**
  * @param {MaterialItem & {kind: "HEAD"}} head
- * @param {Material} target
+ * @param {MaterialKind} target
  * @throws {Error} si la target est impossible à miner
  */
 export function step_how_many_steps(head, target) {

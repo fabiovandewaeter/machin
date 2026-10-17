@@ -5,16 +5,28 @@
  */
 /** @template {Record<string, unknown>} T @typedef {import("../../../utils/enum.js").EnumKey<T>} EnumKey */
 import { assert } from "../../../tests/test.js";
+import { enum_create } from "../../../utils/enum.js";
+
+export const MATERIAL_KIND = enum_create(/**@type {const} */([
+    "STONE",
+    "COPPER",
+    "IRON",
+    "BRONZE",
+    "STEEL",
+]));
+/**
+ * @typedef {EnumKey<typeof MATERIAL_KIND>} MaterialKind
+ */
 
 /**
  * @typedef {Object} MaterialDefinition
- * @property {string} kind
+ * @property {MaterialKind} kind
  * @property {MaterialCategory[]} categories
  * @property {number} mining_level
  */
 
 // différentes roches voir si catégories pour les items ou alors propriété physiques style température fusion ???
-/** @satisfies {Record<string, MaterialDefinition>} */
+/** @satisfies {Record<MaterialKind, MaterialDefinition>} */
 export const MATERIAL = Object.freeze(/**@type {const}*/({
     STONE: { kind: "STONE", categories: ["ROCK"], mining_level: 0 },
     COPPER: { kind: "COPPER", categories: ["METAL"], mining_level: 1 },
@@ -22,12 +34,12 @@ export const MATERIAL = Object.freeze(/**@type {const}*/({
     BRONZE: { kind: "BRONZE", categories: ["METAL"], mining_level: 4 },
     STEEL: { kind: "STEEL", categories: ["METAL"], mining_level: 5 },
 }));
-/**
- * @typedef {EnumKey<typeof MATERIAL>} Material
- */
+// /**
+//  * @typedef {EnumKey<typeof MATERIAL>} Material
+//  */
 
 /**
- * @param {Material[]} materials
+ * @param {MaterialKind[]} materials
  * @returns {number}
  */
 export function material_lowest_mining_level(materials) {
@@ -46,7 +58,7 @@ export function material_lowest_mining_level(materials) {
 /**
  * @template {MaterialCategory} C
  * @typedef {{
- *   [K in Material]:
+ *   [K in MaterialKind]:
  *     C extends (typeof MATERIAL)[K]["categories"][number] ? K : never
- * }[Material]} MaterialsOfCategory
+ * }[MaterialKind]} MaterialsOfCategory
  */
