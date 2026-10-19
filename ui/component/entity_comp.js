@@ -67,13 +67,16 @@ export function entitycomp_mount(container, entity_id) {
     return comp_create_comp_with_sub_comps(container, "entity-comp", (el, sub_comp_manager, add_cleanup) => {
         el.innerHTML = __entitycomp_render();
 
+        const s = store_get();
+        const entity = undefined_unwrap(repository_get(s.world.entity_repo, entity_id));
+
         // subcomps
         const inventory_container = /**@type {HTMLElement}*/(el.querySelector(".inventory"));
         if (!inventory_container) throw new Error();
         subcompmanager_add(
             sub_comp_manager,
             __INVENTORY_KEY,
-            inventorycomp_mount(inventory_container, entity_id));
+            inventorycomp_mount(inventory_container, entity.inventory_id));
 
         add_cleanup(comp_delegate_click_with_enum(el, __ACTIONS, (action, event, btn) => {
             __entitycomp_handle_action(action, btn, sub_comp_manager, entity_id);

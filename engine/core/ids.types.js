@@ -9,6 +9,8 @@
  * @typedef {number & {readonly __brand:"RegionID"}} RegionID
  * @typedef {number & {readonly __brand:"StarSystemID"}} StarSystemID
  * @typedef {number & {readonly __brand:"RoomID"}} RoomID
+ * 
+ * @typedef {number & {readonly __brand:"InventoryID"}} InventoryID
  */
 
 export { };

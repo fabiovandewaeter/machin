@@ -160,7 +160,15 @@ function __roomcomp_handle_action(action, btn) {
         }
         case __ACTIONS.EXTRACT: {
             const selected_entity_opt = undefined_unwrap(__roomcomp_get_selected_entity());
-            const material_item_stack = room_mine(s.world.galaxy.room_repo, selected_entity_opt.room_id, utils_string_to_rkind(btn.dataset.internalId), undefined_unwrap(selected_entity_opt.tool));
+            const material_item_stack_res = room_mine(
+                s.world.galaxy.room_repo,
+                selected_entity_opt.room_id,
+                utils_string_to_rkind(btn.dataset.internalId),
+                undefined_unwrap(selected_entity_opt.tool),
+                s.world.entity_repo,
+                selected_entity_opt.id,
+                s.world.inventory_repo,
+            );
             break;
         }
         default: {

@@ -25,6 +25,7 @@ export function world_create() {
         timeline_scheduler: timelinescheduler_create(),
         galaxy: galaxy_create(),
         entity_repo: repository_create(),
+        inventory_repo: repository_create(),
     };
 }
 
@@ -65,9 +66,10 @@ export function world_init(world) {
     const robot_1 = entity_spawn(world.entity_repo, {
         name: "robot 1",
         room_id: GALAXY_DEFAULT_ROOM_ID,
+        inventory_repo: world.inventory_repo,
         tool: robot_1_pickaxe,
     });
-    entity_add_item(world.entity_repo, robot_1.id, robot_1_item);
+    entity_add_item(world.entity_repo, robot_1.id, world.inventory_repo, robot_1_item);
     const second_entity_pickaxe = result_unwrap(pickaxe_craft({
         parts: {
             ROD: materialitem_create({
@@ -85,6 +87,7 @@ export function world_init(world) {
     const second_entity = entity_spawn(world.entity_repo, {
         name: "entity 2",
         room_id: GALAXY_DEFAULT_ROOM_ID,
+        inventory_repo: world.inventory_repo,
         tool: second_entity_pickaxe,
     });
     const default_room = undefined_expect(repository_get(world.galaxy.room_repo, GALAXY_DEFAULT_ROOM_ID), "Room of id DEFAULT_ROOM_ID shoud exist");

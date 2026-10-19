@@ -5,20 +5,16 @@
  * @typedef {import("../../engine/core/ids.types.js").RoomID} RoomID
  * @typedef {import("../../engine/core/ids.types.js").EntityID} EntityID
  * @typedef {import("../../engine/entity/entity.types.js").Entity} Entity
+ * @typedef {import("../../engine/core/ids.types.js").InventoryID} InventoryID
  * @typedef {import("../../engine/inventory.js").Inventory} Inventory
  */
 /** @template {Record<string, unknown>} T @typedef {import("../../utils/enum.js").EnumKey<T>} EnumKey */
 import { enginesignal_on } from "../../engine/core/signal/signal.js";
-import { world_move_entity } from "../../engine/core/world/world.js";
-import { room_mine } from "../../engine/map/room/room.js";
 import { enum_create } from "../../utils/enum.js";
 import { repository_get } from "../../utils/repository.js";
 import { undefined_unwrap } from "../../utils/undefined.js";
-import { utils_string_to_rkind, utils_assert_unreachable } from "../../utils/utils.js";
-import { uisignal_emit } from "../core/signal/signal.js";
-import { UI_SIGNAL } from "../core/signal/signal.types.js";
 import { store_get } from "../core/store.js";
-import { comp_create_comp, comp_delegate_click_with_enum } from "./core/comp.js";
+import { comp_create_comp } from "./core/comp.js";
 
 const __ACTIONS = enum_create(/**@type {const}*/([
 ]));
@@ -36,15 +32,15 @@ items: <div class="items"></div>
 
 /**
  * @param {HTMLElement} el
- * @param {EntityID} entity_id
+ * @param {InventoryID} inventory_id
  */
-function __inventorycomp_update(el, entity_id) {
+function __inventorycomp_update(el, inventory_id) {
     const s = store_get();
-    const entity = undefined_unwrap(repository_get(s.world.entity_repo, entity_id));
+    const inventory = undefined_unwrap(repository_get(s.world.inventory_repo, inventory_id));
 
     const items_div = el.querySelector(".items");
     if (!items_div) throw new Error();
-    const items = entity.inventory.item_stack;
+    const items = inventory.item_stack;
     items_div.innerHTML = items.map(({ id, item }) => (
         `<button data-action="" data-item-id="${id}">
             ${item.kind}
@@ -54,10 +50,10 @@ function __inventorycomp_update(el, entity_id) {
 
 /**
  * @param {HTMLElement} container 
- * @param {EntityID} entity_id
+ * @param {InventoryID} inventory_id
  * @returns {{element: HTMLElement, destroy: DestroyFunction }}
  */
-export function inventorycomp_mount(container, entity_id) {
+export function inventorycomp_mount(container, inventory_id) {
     return comp_create_comp(container, "inventory-comp", (el, add_cleanup) => {
         el.innerHTML = __inventorycomp_render();
 
@@ -67,17 +63,19 @@ export function inventorycomp_mount(container, entity_id) {
 
         // signals
         add_cleanup(enginesignal_on("inventory.item_stack.added", (payload) => {
-            if (payload.entity_id == entity_id) {
-                __inventorycomp_update(el, entity_id);
+            console.log("test1");
+            if (payload.inventory_id == inventory_id) {
+                __inventorycomp_update(el, inventory_id);
             }
         }));
         add_cleanup(enginesignal_on("inventory.item_stack.removed", (payload) => {
-            if (payload.entity_id == entity_id) {
-                __inventorycomp_update(el, entity_id);
+            console.log("test2");
+            if (payload.inventory_id == inventory_id) {
+                __inventorycomp_update(el, inventory_id);
             }
         }));
 
-        __inventorycomp_update(el, entity_id);
+        __inventorycomp_update(el, inventory_id);
     });
 }
 

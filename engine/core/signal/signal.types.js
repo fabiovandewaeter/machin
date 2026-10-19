@@ -6,6 +6,7 @@
  * @typedef {import("../ids.types.js").RoomID} RoomID
  * @typedef {import("../../map/room/room.types.js").Room} Room
  * @typedef {import("../../extraction/ore.js").InternalOreID} InternalOreID
+ * @typedef {import("../ids.types.js").InventoryID} InventoryID
  * @typedef {import("../../inventory.js").InternalItemID} InternalItemID
  * @typedef {import("../../inventory.js").Inventory} Inventory
  */
@@ -55,8 +56,8 @@ export const ENGINE_SIGNAL = Object.freeze(/**@type {const}*/({
  *       "room.content.removed": [{ room_id: RoomID, removed: InternalOreID }],
  *      }
  *      & {
- *       "inventory.item_stack.added": [{ entity_id: EntityID, added: InternalItemID }],
- *       "inventory.item_stack.removed": [{ entity_id: EntityID, removed: InternalItemID }],
+ *       "inventory.item_stack.added": [{ inventory_id: InventoryID, added: InternalItemID }],
+ *       "inventory.item_stack.removed": [{ inventory_id: InventoryID, removed: InternalItemID }],
  *      }
  * } EngineSignalPayload
  */

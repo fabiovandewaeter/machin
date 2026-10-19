@@ -1,41 +1,55 @@
 // engine/inventory.js
 
-/**
- * @typedef {import("./item/item.types").Item} Item
- */
+import { repository_get, repository_spawn_element } from "../utils/repository.js";
+import { undefined_unwrap } from "../utils/undefined.js";
+import { enginesignal_emit } from "./core/signal/signal.js";
 
 /**
- * @typedef {number & {readonly __brand:"InternalItemID"}} InternalItemID
+ * @typedef {import("./item/item.types.js").Item} Item
+ * @typedef {import("./core/ids.types.js").InventoryID} InventoryID
  */
+
 /**
  * @typedef {Object} ItemStack
  * @property {InternalItemID} id
  * @property {Item} item
+ * 
+ * @typedef {number & {readonly __brand:"InternalItemID"}} InternalItemID
  */
 
 /**
  * @typedef {Object} Inventory
- * @property {InternalItemID} __curent_id
+ * @property {InventoryID} id
+ * @property {InternalItemID} __current_intenal_item_id
  * @property {ItemStack[]} item_stack
+ * 
+ * @typedef {import("../utils/repository.js").Repo<InventoryID, Inventory>} InventoryRepo
  */
 
 /**
+ * @param {InventoryRepo} repo 
  * @returns {Inventory}
  */
-export function inventory_create() {
-    return {
-        __curent_id: /**@type {InternalItemID}*/(0),
-        item_stack: []
-    };
+export function inventory_spawn(repo) {
+    return repository_spawn_element(repo, {
+        __current_intenal_item_id: /**@type {InternalItemID}*/(0),
+        item_stack: [],
+    });
 }
 
 /**
- * @param {Inventory} inventory 
+ * @param {InventoryRepo} repo
+ * @param {InventoryID} id
  * @param {Item} item 
  * @returns {InternalItemID}
  */
-export function inventory_add_item(inventory, item) {
-    const id = /**@type {InternalItemID} */ (inventory.__curent_id++);
-    inventory.item_stack.push({ id, item });
-    return id;
+export function inventory_add_item(repo, id, item) {
+    const inventory = undefined_unwrap(repository_get(repo, id));
+    const internal_id = /**@type {InternalItemID} */ (inventory.__current_intenal_item_id++);
+    inventory.item_stack.push({ id: internal_id, item });
+    enginesignal_emit("inventory.item_stack.added", {
+        inventory_id: id,
+        added: internal_id,
+    });
+    return internal_id;
 }

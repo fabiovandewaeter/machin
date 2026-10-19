@@ -5,6 +5,7 @@
  * @typedef {import("../core/ids.types.js").EntityID} EntityID
  * @typedef {import("../item/tool/tool.js").Tool} Tool
  * @typedef {import("../item/item.types.js").Item} Item
+ * @typedef {import("../core/ids.types.js").InventoryID} InventoryID
  * @typedef {import("../inventory.js").Inventory} Inventory
  */
 
@@ -14,7 +15,7 @@
  * @property {string} name
  * @property {RoomID} room_id
  * @property {Tool|undefined} tool
- * @property {Inventory} inventory
+ * @property {InventoryID} inventory_id
  *
  * @typedef {import("../../utils/repository.js").Repo<EntityID, Entity>} EntityRepo
  */
