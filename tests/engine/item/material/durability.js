@@ -9,7 +9,8 @@ import { MATERIAL } from "../../../../engine/item/material/material.js";
 import { materialitem_create } from "../../../../engine/item/material/material_item.js";
 import { pickaxe_craft } from "../../../../engine/item/tool/pickaxe.js";
 import { result_unwrap } from "../../../../utils/result.js";
-import { assert, assert_equal, test } from "../../../test.js";
+import { assert, assert_equal } from "../../../../utils/assert.js";
+import { test } from "../../../test.js";
 
 test("descrease_durability(): retire BASE_COST de durability quand meme mining_level", () => {
     const SAME_MATERIAL = "STONE";

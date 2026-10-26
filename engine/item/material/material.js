@@ -4,7 +4,7 @@
  * @typedef {import("./category.types.js").MaterialCategory} MaterialCategory
  */
 /** @template {Record<string, unknown>} T @typedef {import("../../../utils/enum.js").EnumKey<T>} EnumKey */
-import { assert } from "../../../tests/test.js";
+import { assert } from "../../../utils/assert.js";
 import { enum_create } from "../../../utils/enum.js";
 
 export const MATERIAL_KIND = enum_create(/**@type {const} */([

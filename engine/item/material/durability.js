@@ -1,6 +1,6 @@
 // engine/item/material/durability.js
 
-import { assert } from "../../../tests/test.js";
+import { assert } from "../../../utils/assert.js";
 import { BASE_COST } from "./durability.types.js";
 import { MATERIAL } from "./material.js";
 

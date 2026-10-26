@@ -4,7 +4,7 @@
  * @typedef {import("../material/material_item.js").MaterialItem} MaterialItem
  * @typedef {import("../material/material.js").MaterialKind} MaterialKind
  */
-import { assert } from "../../../tests/test.js";
+import { assert } from "../../../utils/assert.js";
 import { MATERIAL } from "../material/material.js";
 
 export const BASE_STEP_AMOUNT = 3;

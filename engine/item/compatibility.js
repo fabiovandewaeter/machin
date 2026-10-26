@@ -6,7 +6,7 @@
  * @typedef {import("./material/material_item.js").MaterialItemKind} MaterialItemKind
  */
 /** @template T, E @typedef {import("../../utils/result.js").Res<T, E>} Res */
-import { assert } from "../../tests/test.js";
+import { assert } from "../../utils/assert.js";
 import { err, ok } from "../../utils/result.js";
 
 /**

@@ -1,7 +1,7 @@
 // engine/item/quality.js
 
 /** @template {Record<string, unknown>} T @typedef {import("../../utils/enum.js").EnumKey<T>} EnumKey */
-import { assert } from "../../tests/test.js";
+import { assert } from "../../utils/assert.js";
 
 export const QUALITY = Object.freeze(/**@type {const}*/({
     POOR: { kind: "POOR", id: 0, multiplier: 0.8 },

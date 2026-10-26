@@ -6,7 +6,8 @@
 import { materialitem_create } from "../../../../engine/item/material/material_item.js";
 import { pickaxe_craft } from "../../../../engine/item/tool/pickaxe.js";
 import { result_assert_ok, result_is_err } from "../../../../utils/result.js";
-import { assert, test } from "../../../test.js";
+import { assert } from "../../../../utils/assert.js";
+import { test } from "../../../test.js";
 
 test("craft(): craft bon", () => {
     const parts = {

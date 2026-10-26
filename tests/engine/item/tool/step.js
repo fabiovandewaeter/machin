@@ -6,7 +6,8 @@
 import { MATERIAL } from "../../../../engine/item/material/material.js";
 import { materialitem_create } from "../../../../engine/item/material/material_item.js";
 import { step_how_many_steps, BASE_STEP_AMOUNT } from "../../../../engine/item/tool/step.js";
-import { assert, assert_equal, test } from "../../../test.js";
+import { assert, assert_equal } from "../../../../utils/assert.js";
+import { test } from "../../../test.js";
 
 test("how_many_steps(): retourne BASE_STEP_AMOUNT quand meme mining_level", () => {
     const SAME_MATERIAL = "STONE";
