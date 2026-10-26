@@ -9,7 +9,7 @@
  * @typedef {import("../../core/ids.types.js").RoomID} RoomID
  * @typedef {import("./room.types.js").RoomExit} RoomExit
  * @typedef {import("../../extraction/ore.js").Ore} Ore
- * @typedef {import("../../extraction/ore.js").InternalOreID} InternalOreID
+ * @typedef {import("../../extraction/ore.js").__InternalOreID} __InternalOreID
  * @typedef {import("../../item/tool/tool.js").Tool} Tool
  * @typedef {import("../../extraction/ore.js").MaterialItemStack} MaterialItemStack
  * @typedef {import("../../entity/entity.types.js").EntityRepo} EntityRepo
@@ -93,7 +93,7 @@ export function room_remove_entity(repo, id, entity_id) {
 /**
  * @param {RoomRepo} repo 
  * @param {RoomID} id 
- * @param {InternalOreID} ore_id 
+ * @param {__InternalOreID} ore_id 
  * @param {Tool} tool
  * @param {EntityRepo} entity_repo
  * @param {EntityID} entity_id

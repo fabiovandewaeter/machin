@@ -7,7 +7,7 @@
  * @typedef {import("../core/ids.types.js").EntityID} EntityID
  * @typedef {import("../item/tool/tool.js").Tool} Tool
  * @typedef {import("../item/item.types.js").Item} Item
- * @typedef {import("../inventory.js").InternalItemID} InternalItemID
+ * @typedef {import("../inventory.js").__InternalItemID} __InternalItemID
  * @typedef {import("../inventory.js").InventoryRepo} InventoryRepo
  */
 import { repository_get, repository_spawn_element } from "../../utils/repository.js";
@@ -57,7 +57,7 @@ export function entity_move(repo, entity_id, target_id) {
  * @param {EntityID} id 
  * @param {InventoryRepo} inventory_repo 
  * @param {Item} item 
- * @returns {InternalItemID}
+ * @returns {__InternalItemID}
  */
 export function entity_add_item(repo, id, inventory_repo, item) {
     const entity = undefined_unwrap(repository_get(repo, id));

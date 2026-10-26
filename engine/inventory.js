@@ -11,16 +11,16 @@ import { enginesignal_emit } from "./core/signal/signal.js";
 
 /**
  * @typedef {Object} ItemStack
- * @property {InternalItemID} id
+ * @property {__InternalItemID} id
  * @property {Item} item
  * 
- * @typedef {number & {readonly __brand:"InternalItemID"}} InternalItemID
+ * @typedef {number & {readonly __brand:"__InternalItemID"}} __InternalItemID
  */
 
 /**
  * @typedef {Object} Inventory
  * @property {InventoryID} id
- * @property {InternalItemID} __current_intenal_item_id
+ * @property {__InternalItemID} __current_intenal_item_id
  * @property {ItemStack[]} item_stack
  * 
  * @typedef {import("../utils/repository.js").Repo<InventoryID, Inventory>} InventoryRepo
@@ -32,7 +32,7 @@ import { enginesignal_emit } from "./core/signal/signal.js";
  */
 export function inventory_spawn(repo) {
     return repository_spawn_element(repo, {
-        __current_intenal_item_id: /**@type {InternalItemID}*/(0),
+        __current_intenal_item_id: /**@type {__InternalItemID}*/(0),
         item_stack: [],
     });
 }
@@ -41,11 +41,11 @@ export function inventory_spawn(repo) {
  * @param {InventoryRepo} repo
  * @param {InventoryID} id
  * @param {Item} item 
- * @returns {InternalItemID}
+ * @returns {__InternalItemID}
  */
 export function inventory_add_item(repo, id, item) {
     const inventory = undefined_unwrap(repository_get(repo, id));
-    const internal_id = /**@type {InternalItemID} */ (inventory.__current_intenal_item_id++);
+    const internal_id = /**@type {__InternalItemID} */ (inventory.__current_intenal_item_id++);
     inventory.item_stack.push({ id: internal_id, item });
     enginesignal_emit("inventory.item_stack.added", {
         inventory_id: id,

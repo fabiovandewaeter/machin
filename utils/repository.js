@@ -42,7 +42,7 @@ export function repository_spawn_element(repo, args) {
     const next = repository_next_id(repo);
 
     const new_element = /** @type {T} */ (
-    /** @type {unknown} */ ({ id, ...args })
+    /** @type {unknown} */ ({ ...args, id })
     );
     const index = repo.elements.length;
 

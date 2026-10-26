@@ -13,12 +13,12 @@ import { MATERIAL_ITEM_KIND, materialitem_create, materialitem_create_stack } fr
  */
 
 /**
- * @typedef {number & {readonly __brand:"InternalOreID"}} InternalOreID
+ * @typedef {number & {readonly __brand:"__InternalOreID"}} __InternalOreID
  */
 
 /**
  * @typedef {Object} Ore
- * @property {InternalOreID} internal_id
+ * @property {__InternalOreID} internal_id
  * @property {MaterialItemStack[]} composition
  * @property {number} required_mining_level
  * @property {ToolKind} tool_kind
@@ -26,7 +26,7 @@ import { MATERIAL_ITEM_KIND, materialitem_create, materialitem_create_stack } fr
 
 /**
  * @param {Object} options
- * @param {InternalOreID} options.internal_id
+ * @param {__InternalOreID} options.internal_id
  * @param {MaterialItemStack[]} options.composition
  * @returns {Ore}
  */
@@ -80,7 +80,7 @@ export function random(amount) {
         });
         const stack = materialitem_create_stack(mi, random_amount);
         ores.push(ore_create({
-            internal_id: /**@type {InternalOreID} */(i),
+            internal_id: /**@type {__InternalOreID} */(i),
             composition: [stack],
         }));
     }

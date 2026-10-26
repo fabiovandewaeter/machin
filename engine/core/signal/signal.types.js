@@ -5,9 +5,9 @@
  * @typedef {import("../../entity/entity.types.js").Entity} Entity
  * @typedef {import("../ids.types.js").RoomID} RoomID
  * @typedef {import("../../map/room/room.types.js").Room} Room
- * @typedef {import("../../extraction/ore.js").InternalOreID} InternalOreID
+ * @typedef {import("../../extraction/ore.js").__InternalOreID} __InternalOreID
  * @typedef {import("../ids.types.js").InventoryID} InventoryID
- * @typedef {import("../../inventory.js").InternalItemID} InternalItemID
+ * @typedef {import("../../inventory.js").__InternalItemID} __InternalItemID
  * @typedef {import("../../inventory.js").Inventory} Inventory
  */
 /** @template {Record<string, unknown>} T @typedef {import("../../../utils/enum.js").EnumKey<T>} EnumKey */
@@ -52,12 +52,12 @@ export const ENGINE_SIGNAL = Object.freeze(/**@type {const}*/({
  *      }
  *      & ChangedSignals<"room", RoomID, Room>
  *      & {
- *       "room.content.added": [{ room_id: RoomID, added: InternalOreID }],
- *       "room.content.removed": [{ room_id: RoomID, removed: InternalOreID }],
+ *       "room.content.added": [{ room_id: RoomID, added: __InternalOreID }],
+ *       "room.content.removed": [{ room_id: RoomID, removed: __InternalOreID }],
  *      }
  *      & {
- *       "inventory.item_stack.added": [{ inventory_id: InventoryID, added: InternalItemID }],
- *       "inventory.item_stack.removed": [{ inventory_id: InventoryID, removed: InternalItemID }],
+ *       "inventory.item_stack.added": [{ inventory_id: InventoryID, added: __InternalItemID }],
+ *       "inventory.item_stack.removed": [{ inventory_id: InventoryID, removed: __InternalItemID }],
  *      }
  * } EngineSignalPayload
  */
