@@ -4,17 +4,36 @@ import { timeline_advance_to, timeline_init } from "../../engine/core/timeline/t
 import { world_create, world_init } from "../../engine/core/world/world.js";
 import { save_load, save_save } from "../../utils/save.js";
 import { scene_init, scene_render_current_scene } from "../scene/scene.js";
-import { uisignals_init } from "./signal/signal.js";
+import { uisignals_clear_handlers, uisignals_init } from "./signal/signal.js";
 import { store_set_world, store_set_ui_state, store_get } from "./store.js";
-import { uistate_create } from "./ui_state/ui_state.js";
+import { uistate_create, uistate_stop_tick } from "./ui_state/ui_state.js";
+import { enginesignals_clear_handlers } from "../../engine/core/signal/signal.js";
 
 /**
  * @typedef {import("../../engine/core/world/world.js").World} World
  */
 
+let __stopped = false;
+
+window.addEventListener("error", __runtime_crash);
+window.addEventListener("unhandledrejection", __runtime_crash);
+
 runtime_init();
 
+function __runtime_crash() {
+    if (__stopped) return;
+    __stopped = true;
+    const store = store_get();
+    store.should_save = false;
+    uistate_stop_tick(store.ui_state);
+    enginesignals_clear_handlers();
+    uisignals_clear_handlers();
+    const app = document.getElementById("app");
+    if (app) app.textContent = "Erreur fatale. Rechargez la page pour redémarrer.";
+}
+
 export function runtime_init() {
+    if (__stopped) return;
 
     timeline_init();
     uisignals_init();

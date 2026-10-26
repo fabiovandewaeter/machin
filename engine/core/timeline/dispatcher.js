@@ -1,5 +1,7 @@
 // engine/core/timeline/dispatcher.js
 
+import { enginesignals_batch } from "../signal/signal.js";
+
 /**
  * @typedef {import("../world/world.types.js").World} World
  */
@@ -25,9 +27,11 @@ export function timelinedispatcher_register(kind, handler) { __HANDLERS[kind] = 
  * @param {TimelineEvent} event 
  */
 export function timelinedispatcher_dispatch(world, event) {
-    const handler = __HANDLERS[event.kind];
-    if (!handler) {
-        throw new Error(`Aucun handler enregistré pour l'event kind: ${event.kind}`);
-    }
-    handler(world, event);
+    enginesignals_batch(() => {
+        const handler = __HANDLERS[event.kind];
+        if (!handler) {
+            throw new Error(`Aucun handler enregistré pour l'event kind: ${event.kind}`);
+        }
+        handler(world, event);
+    });
 }

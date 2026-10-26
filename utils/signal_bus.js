@@ -142,7 +142,7 @@
 
 /** @template {string} SType @template {Record<SType, unknown[]>} M
  *  @returns {SignalBus<SType, M>} */
-export function signalbus_create() { return { listeners: {} }; }
+export function signalbus_create() { return { listeners: Object.create(null) }; }
 
 /** @template {string} SType @template {Record<SType, unknown[]>} M @template {SType} K
  *  @param {SignalBus<SType, M>} bus
@@ -150,9 +150,9 @@ export function signalbus_create() { return { listeners: {} }; }
  *  @param {(...args: M[K]) => void} callback
  *  @returns {() => void} */
 export function signalbus_on(bus, signal_kind, callback) {
-    const handlers = (bus.listeners[signal_kind] ??= []);
+    const handlers = bus.listeners[signal_kind] ?? [];
     if (handlers.includes(callback)) throw new Error(`duplicate: ${String(signal_kind)}`);
-    handlers.push(callback);
+    bus.listeners[signal_kind] = [...handlers, callback];
     return () => signalbus_off(bus, signal_kind, callback);
 }
 
@@ -168,7 +168,6 @@ export function signalbus_off(bus, signal_kind, callback) {
     else bus.listeners[signal_kind] = next;
 }
 
-// TODO: CLAUDE DIT emit fait un slice() à chaque émission. Comme off est déjà copy-on-write, fais pareil dans on ([...handlers, cb]) et supprime le slice().
 /** @template {string} SType @template {Record<SType, unknown[]>} M @template {SType} K
  *  @param {SignalBus<SType, M>} bus
  *  @param {K} signal_kind
@@ -176,9 +175,11 @@ export function signalbus_off(bus, signal_kind, callback) {
 export function signalbus_emit(bus, signal_kind, ...args) {
     const handlers = bus.listeners[signal_kind];
     if (!handlers?.length) return;
-    for (const cb of handlers.slice()) cb(...args);
+    for (const callback of handlers) callback(...args);
 }
 
 /** @template {string} SType @template {Record<SType, unknown[]>} M
  *  @param {SignalBus<SType, M>} bus */
-export function signalbus_clear(bus) { bus.listeners = {}; }
+export function signalbus_clear(bus) {
+    bus.listeners = Object.create(null);
+}

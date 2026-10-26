@@ -21,7 +21,7 @@ import { repository_get, repository_spawn_element } from "../../../utils/reposit
 import { err, result_is_err } from "../../../utils/result.js";
 import { undefined_unwrap } from "../../../utils/undefined.js";
 import { mining_mine } from "../../action/mining.js";
-import { enginesignal_emit } from "../../core/signal/signal.js";
+import { enginesignal_emit, enginesignals_batch } from "../../core/signal/signal.js";
 
 /**
  * @param {RoomRepo} repo
@@ -101,22 +101,24 @@ export function room_remove_entity(repo, id, entity_id) {
  * @returns {Res<MaterialItemStack[], string>}
  */
 export function room_mine(repo, id, ore_id, tool, entity_repo, entity_id, inventory_repo) {
-    const room = undefined_unwrap(repository_get(repo, id));
-    const ore_index = room.content.findIndex((ore) => ore.internal_id === ore_id);
-    if (ore_index === -1) {
-        return err(`ore_id n'est pas dans room: ${ore_id} ${id}`);
-    }
-    const ore = undefined_unwrap(room.content[ore_index]);
-    const loot_res = mining_mine(ore, tool, entity_repo, entity_id, inventory_repo);
-    if (result_is_err(loot_res)) {
+    return enginesignals_batch(() => {
+        const room = undefined_unwrap(repository_get(repo, id));
+        const ore_index = room.content.findIndex((ore) => ore.internal_id === ore_id);
+        if (ore_index === -1) {
+            return err(`ore_id n'est pas dans room: ${ore_id} ${id}`);
+        }
+        const ore = undefined_unwrap(room.content[ore_index]);
+        const loot_res = mining_mine(ore, tool, entity_repo, entity_id, inventory_repo);
+        if (result_is_err(loot_res)) {
+            return loot_res;
+        }
+
+        room.content.splice(ore_index, 1);
+        enginesignal_emit("room.content.removed", {
+            room_id: id,
+            removed: ore_id,
+        });
+
         return loot_res;
-    }
-
-    room.content.splice(ore_index, 1);
-    enginesignal_emit("room.content.removed", {
-        room_id: id,
-        removed: ore_id,
     });
-
-    return loot_res;
 }

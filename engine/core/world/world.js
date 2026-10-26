@@ -14,6 +14,7 @@ import { pickaxe_craft } from "../../item/tool/pickaxe.js";
 import { galaxy_create, GALAXY_DEFAULT_ROOM_ID, galaxy_init } from "../../map/galaxy.js";
 import { room_add_entity, room_remove_entity } from "../../map/room/room.js";
 import { clock_create } from "../clock.js";
+import { enginesignals_batch } from "../signal/signal.js";
 import { timelinescheduler_create, timelinescheduler_peek } from "../timeline/scheduler.js";
 
 /**
@@ -33,66 +34,68 @@ export function world_create() {
  * @param {World} world 
  */
 export function world_init(world) {
-    galaxy_init(world.galaxy);
-    // TODO: système pour ajouter les entity directement dans leur room au spawn
-    const robot_1_pickaxe = result_unwrap(pickaxe_craft({
-        parts: {
-            ROD: materialitem_create({
-                kind: "ROD",
-                material: "STONE",
-                quality: "POOR",
-            }),
-            HEAD: materialitem_create({
-                kind: "HEAD",
-                material: "STONE",
-                quality: "POOR",
-            }),
-        }
-    }));
-    const robot_1_item = result_unwrap(pickaxe_craft({
-        parts: {
-            ROD: materialitem_create({
-                kind: "ROD",
-                material: "IRON",
-                quality: "PERFECT",
-            }),
-            HEAD: materialitem_create({
-                kind: "HEAD",
-                material: "IRON",
-                quality: "PERFECT",
-            }),
-        }
-    }));
-    const robot_1 = entity_spawn(world.entity_repo, {
-        name: "robot 1",
-        room_id: GALAXY_DEFAULT_ROOM_ID,
-        inventory_repo: world.inventory_repo,
-        tool: robot_1_pickaxe,
+    return enginesignals_batch(() => {
+        galaxy_init(world.galaxy);
+        // TODO: système pour ajouter les entity directement dans leur room au spawn
+        const robot_1_pickaxe = result_unwrap(pickaxe_craft({
+            parts: {
+                ROD: materialitem_create({
+                    kind: "ROD",
+                    material: "STONE",
+                    quality: "POOR",
+                }),
+                HEAD: materialitem_create({
+                    kind: "HEAD",
+                    material: "STONE",
+                    quality: "POOR",
+                }),
+            }
+        }));
+        const robot_1_item = result_unwrap(pickaxe_craft({
+            parts: {
+                ROD: materialitem_create({
+                    kind: "ROD",
+                    material: "IRON",
+                    quality: "PERFECT",
+                }),
+                HEAD: materialitem_create({
+                    kind: "HEAD",
+                    material: "IRON",
+                    quality: "PERFECT",
+                }),
+            }
+        }));
+        const robot_1 = entity_spawn(world.entity_repo, {
+            name: "robot 1",
+            room_id: GALAXY_DEFAULT_ROOM_ID,
+            inventory_repo: world.inventory_repo,
+            tool: robot_1_pickaxe,
+        });
+        entity_add_item(world.entity_repo, robot_1.id, world.inventory_repo, robot_1_item);
+        const second_entity_pickaxe = result_unwrap(pickaxe_craft({
+            parts: {
+                ROD: materialitem_create({
+                    kind: "ROD",
+                    material: "STONE",
+                    quality: "POOR",
+                }),
+                HEAD: materialitem_create({
+                    kind: "HEAD",
+                    material: "STONE",
+                    quality: "POOR",
+                }),
+            }
+        }));
+        const second_entity = entity_spawn(world.entity_repo, {
+            name: "entity 2",
+            room_id: GALAXY_DEFAULT_ROOM_ID,
+            inventory_repo: world.inventory_repo,
+            tool: second_entity_pickaxe,
+        });
+        const default_room = undefined_expect(repository_get(world.galaxy.room_repo, GALAXY_DEFAULT_ROOM_ID), "Room of id DEFAULT_ROOM_ID shoud exist");
+        room_add_entity(world.galaxy.room_repo, default_room.id, robot_1.id);
+        room_add_entity(world.galaxy.room_repo, default_room.id, second_entity.id);
     });
-    entity_add_item(world.entity_repo, robot_1.id, world.inventory_repo, robot_1_item);
-    const second_entity_pickaxe = result_unwrap(pickaxe_craft({
-        parts: {
-            ROD: materialitem_create({
-                kind: "ROD",
-                material: "STONE",
-                quality: "POOR",
-            }),
-            HEAD: materialitem_create({
-                kind: "HEAD",
-                material: "STONE",
-                quality: "POOR",
-            }),
-        }
-    }));
-    const second_entity = entity_spawn(world.entity_repo, {
-        name: "entity 2",
-        room_id: GALAXY_DEFAULT_ROOM_ID,
-        inventory_repo: world.inventory_repo,
-        tool: second_entity_pickaxe,
-    });
-    const default_room = undefined_expect(repository_get(world.galaxy.room_repo, GALAXY_DEFAULT_ROOM_ID), "Room of id DEFAULT_ROOM_ID shoud exist");
-    room_add_entity(world.galaxy.room_repo, default_room.id, robot_1.id);
-    room_add_entity(world.galaxy.room_repo, default_room.id, second_entity.id);
 }
 
 /**
@@ -110,15 +113,17 @@ export function world_next_event_at(world) {
  * @param {RoomID} target_id 
  */
 export function world_move_entity(world, entity_id, target_id) {
-    undefined_expect(repository_get(world.entity_repo, entity_id), `entity should exist: ${entity_id}`);
-    undefined_expect(repository_get(world.galaxy.room_repo, target_id), `targeted room should exist: ${target_id}`);
-    /**
-     * TODO: faire en sorte que move_entity vérifie si l'exit choisie existe dans la room de l'entity
-     * et si les conditions sont bonnes etc.
-     */
-    const previous_room_id = entity_move(world.entity_repo, entity_id, target_id);
-    room_remove_entity(world.galaxy.room_repo, previous_room_id, entity_id);
-    room_add_entity(world.galaxy.room_repo, target_id, entity_id);
+    return enginesignals_batch(() => {
+        undefined_expect(repository_get(world.entity_repo, entity_id), `entity should exist: ${entity_id}`);
+        undefined_expect(repository_get(world.galaxy.room_repo, target_id), `targeted room should exist: ${target_id}`);
+        /**
+         * TODO: faire en sorte que move_entity vérifie si l'exit choisie existe dans la room de l'entity
+         * et si les conditions sont bonnes etc.
+         */
+        const previous_room_id = entity_move(world.entity_repo, entity_id, target_id);
+        room_remove_entity(world.galaxy.room_repo, previous_room_id, entity_id);
+        room_add_entity(world.galaxy.room_repo, target_id, entity_id);
+    });
 }
 
 // /**

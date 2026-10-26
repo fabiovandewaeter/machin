@@ -28,10 +28,9 @@ export function scene_init() {
  * @param {HTMLElement} app
  */
 export function scene_render_current_scene(app) {
-    if (__CURRENT_SCENE_DESTROY_FUNCTION !== undefined) {
-        __CURRENT_SCENE_DESTROY_FUNCTION;
-        __CURRENT_SCENE_DESTROY_FUNCTION = undefined;
-    }
+    const destroy_previous_scene = __CURRENT_SCENE_DESTROY_FUNCTION;
+    __CURRENT_SCENE_DESTROY_FUNCTION = undefined;
+    destroy_previous_scene?.();
     app.innerHTML = "";
     const store = store_get();
     switch (store.ui_state.scene) {

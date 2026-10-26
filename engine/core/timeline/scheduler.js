@@ -7,7 +7,7 @@
  * @typedef {import("../ids.types.js").TimelineEventID} TimelineEventID
  * @typedef {import("./event.js").TimelineEventRepo} TimelineEventRepo
  */
-import { repository_all, repository_create, repository_remove_element, repository_spawn_element } from "../../../utils/repository.js";
+import { repository_all, repository_create, repository_get, repository_remove_element, repository_spawn_element } from "../../../utils/repository.js";
 
 import { heap_pop, heap_push } from "./heap.js";
 
@@ -43,7 +43,7 @@ export function timelinescheduler_schedule(scheduler, kind, at, payload) {
  * @returns {boolean} true si l'event existait et a été annulé
  */
 export function timelinescheduler_cancel(scheduler, id) {
-    const existed = id in scheduler.repo.elements;
+    const existed = repository_get(scheduler.repo, id) !== undefined;
     if (existed) repository_remove_element(scheduler.repo, id);
     return existed;
 }
@@ -55,7 +55,7 @@ export function timelinescheduler_cancel(scheduler, id) {
 export function timelinescheduler_peek(scheduler) {
     __timelinescheduler_purge_stale(scheduler);
     const top = scheduler.heap[0];
-    return top ? scheduler.repo.elements[top.id] : null;
+    return top ? repository_get(scheduler.repo, top.id) ?? null : null;
 }
 
 /**
@@ -70,9 +70,9 @@ export function timelinescheduler_pop_due(scheduler, target_time) {
     const top = scheduler.heap[0];
     if (!top || top.at > target_time) return null;
     heap_pop(scheduler.heap);
-    const event = scheduler.repo.elements[top.id];
+    const event = repository_get(scheduler.repo, top.id);
     repository_remove_element(scheduler.repo, top.id);
-    return event;
+    return event ?? null;
 }
 
 /**
@@ -83,7 +83,7 @@ export function timelinescheduler_all_pending(scheduler) { return repository_all
 
 /** @param {TimelineScheduler} scheduler */
 function __timelinescheduler_purge_stale(scheduler) {
-    while (scheduler.heap.length > 0 && !(scheduler.heap[0].id in scheduler.repo.elements)) {
+    while (scheduler.heap.length > 0 && !repository_get(scheduler.repo, scheduler.heap[0].id)) {
         heap_pop(scheduler.heap);
     }
 }

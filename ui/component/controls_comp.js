@@ -75,7 +75,7 @@ export function controlscomp_mount(container) {
         // TODO: PAS BESOIN de addEventListener ni removeEventListener car on a comp_delegate_click()
         // el.addEventListener("click", handle_click);
         add_cleanup(comp_delegate_click_with_enum(el, __ACTIONS, (action, event, btn) => {
-            __controlscomp_handle_action(action, btn);
+            __controlscomp_handle_action(action, btn, el);
         }));
 
         add_cleanup(uisignal_on(UI_SIGNAL.TICK, () => __controlscomp_update_toggle_button(el)));
@@ -86,8 +86,9 @@ export function controlscomp_mount(container) {
 /**
  * @param {Action} action
  * @param {HTMLElement} btn
+ * @param {HTMLElement} el
  */
-function __controlscomp_handle_action(action, btn) {
+function __controlscomp_handle_action(action, btn, el) {
     const s = store_get();
     switch (action) {
         case __ACTIONS.SKIP_SECONDS: {
@@ -133,6 +134,7 @@ function __controlscomp_handle_action(action, btn) {
         }
         case __ACTIONS.UPLOAD_SAVE: {
             save_upload().then((loaded => {
+                if (!el.isConnected) return;
                 if (loaded && loaded.world) {
                     timeline_advance_to(loaded.world, Date.now());
                     store_set_world(loaded.world);

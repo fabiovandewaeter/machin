@@ -12,7 +12,7 @@
  */
 import { repository_get, repository_spawn_element } from "../../utils/repository.js";
 import { undefined_unwrap } from "../../utils/undefined.js";
-import { __ESB, enginesignal_emit } from "../core/signal/signal.js";
+import { enginesignal_emit } from "../core/signal/signal.js";
 import { inventory_add_item, inventory_spawn } from "../inventory.js";
 
 /**

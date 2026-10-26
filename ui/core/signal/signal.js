@@ -7,14 +7,14 @@
 import { signalbus_create, signalbus_clear, signalbus_on, signalbus_emit } from "../../../utils/signal_bus.js";
 
 /**@type {import("../../../utils/signal_bus.js").SignalBus<UISignal, UISignalPayload>} */
-export const __UISB = signalbus_create();
+const __UI_SIGNAL_BUS = signalbus_create();
 
 export function uisignals_init() {
     uisignals_clear_handlers();
 }
 
 export function uisignals_clear_handlers() {
-    signalbus_clear(__UISB);
+    signalbus_clear(__UI_SIGNAL_BUS);
 }
 
 /**
@@ -24,7 +24,7 @@ export function uisignals_clear_handlers() {
  * @returns {() => void}
  */
 export function uisignal_on(signal_kind, callback) {
-    return signalbus_on(__UISB, signal_kind, callback);
+    return signalbus_on(__UI_SIGNAL_BUS, signal_kind, callback);
 }
 
 /**
@@ -33,5 +33,5 @@ export function uisignal_on(signal_kind, callback) {
  * @param {UISignalPayload[K]} args
  */
 export function uisignal_emit(signal_kind, ...args) {
-    signalbus_emit(__UISB, signal_kind, ...args);
+    signalbus_emit(__UI_SIGNAL_BUS, signal_kind, ...args);
 }
