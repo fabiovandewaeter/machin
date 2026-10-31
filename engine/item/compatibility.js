@@ -1,4 +1,4 @@
-// engine/item/core/compatibility.js
+// engine/item/compatibility.js
 
 /**
  * @typedef {import("./material/material.js").MaterialKind} MaterialKind

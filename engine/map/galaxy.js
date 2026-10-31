@@ -1,4 +1,4 @@
-// engine/galaxy/galaxy.js
+// engine/map/galaxy.js
 
 /**
  * @typedef {import("../core/ids.types.js").StarSystemID} StarSystemID

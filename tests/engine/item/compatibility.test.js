@@ -1,3 +1,5 @@
+// tests/engine/item/compatibility.test.js
+
 import { compatibility_are_material_items_and_parts_compatibles } from "../../../engine/item/compatibility.js";
 import { materialitem_create } from "../../../engine/item/material/material_item.js";
 import { assert_equal } from "../../../utils/assert.js";

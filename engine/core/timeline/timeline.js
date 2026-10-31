@@ -1,3 +1,5 @@
+// engine/core/timeline/timeline.js
+
 /**
  * @typedef {import("../world/world.types.js").World} World
  */

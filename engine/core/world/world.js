@@ -4,25 +4,28 @@
  * @typedef {import("./world.types.js").World} World
  * @typedef {import("../ids.types.js").EntityID} EntityID
  * @typedef {import("../ids.types.js").RoomID} RoomID
+ * @typedef {import("../../entity/entity.types.js").Entity} Entity
+ * @typedef {import("../../item/tool/tool.js").Tool} Tool
+ * @typedef {import("../../extraction/ore.js").__InternalOreID} __InternalOreID
+ * @typedef {import("../../item/material/material_item.js").MaterialItemStack} MaterialItemStack
  */
-import { repository_create, repository_get } from "../../../utils/repository.js";
-import { result_unwrap } from "../../../utils/result.js";
+/** @template T, E @typedef {import("../../../utils/result.js").Res<T, E>} Res */
+import { repository_create, repository_get, repository_next_id } from "../../../utils/repository.js";
+import { err, ok, result_is_err } from "../../../utils/result.js";
 import { undefined_expect } from "../../../utils/undefined.js";
-import { entity_add_item, entity_move, entity_spawn } from "../../entity/entity.js";
-import { materialitem_create } from "../../item/material/material_item.js";
-import { pickaxe_craft } from "../../item/tool/pickaxe.js";
-import { galaxy_create, GALAXY_DEFAULT_ROOM_ID, galaxy_init } from "../../map/galaxy.js";
-import { room_add_entity, room_remove_entity } from "../../map/room/room.js";
+import { mining_mine } from "../../action/mining.js";
+import { entity_move, entity_spawn } from "../../entity/entity.js";
+import { inventory_add_item, inventory_spawn } from "../../inventory/inventory.js";
+import { galaxy_create } from "../../map/galaxy.js";
+import { room_add_entity, room_remove_entity, room_remove_ore } from "../../map/room/room.js";
 import { clock_create } from "../clock.js";
 import { enginesignals_batch } from "../signal/signal.js";
 import { timelinescheduler_create, timelinescheduler_peek } from "../timeline/scheduler.js";
 
-/**
- * @returns {World}
- */
+/** @returns {World} */
 export function world_create() {
     return {
-        clock: clock_create(null),
+        clock: clock_create(),
         timeline_scheduler: timelinescheduler_create(),
         galaxy: galaxy_create(),
         entity_repo: repository_create(),
@@ -31,104 +34,84 @@ export function world_create() {
 }
 
 /**
- * @param {World} world 
+ * @param {World} world
+ * @param {{name: string, room_id: RoomID, tool?: Tool}} options
+ * @returns {Entity}
  */
-export function world_init(world) {
+export function world_spawn_entity(world, { name, room_id, tool }) {
+    undefined_expect(repository_get(world.galaxy.room_repo, room_id), `Unknown room: ${room_id}`);
+    repository_next_id(world.entity_repo);
+    repository_next_id(world.inventory_repo);
     return enginesignals_batch(() => {
-        galaxy_init(world.galaxy);
-        // TODO: système pour ajouter les entity directement dans leur room au spawn
-        const robot_1_pickaxe = result_unwrap(pickaxe_craft({
-            parts: {
-                ROD: materialitem_create({
-                    kind: "ROD",
-                    material: "STONE",
-                    quality: "POOR",
-                }),
-                HEAD: materialitem_create({
-                    kind: "HEAD",
-                    material: "STONE",
-                    quality: "POOR",
-                }),
-            }
-        }));
-        const robot_1_item = result_unwrap(pickaxe_craft({
-            parts: {
-                ROD: materialitem_create({
-                    kind: "ROD",
-                    material: "IRON",
-                    quality: "PERFECT",
-                }),
-                HEAD: materialitem_create({
-                    kind: "HEAD",
-                    material: "IRON",
-                    quality: "PERFECT",
-                }),
-            }
-        }));
-        const robot_1 = entity_spawn(world.entity_repo, {
-            name: "robot 1",
-            room_id: GALAXY_DEFAULT_ROOM_ID,
-            inventory_repo: world.inventory_repo,
-            tool: robot_1_pickaxe,
-        });
-        entity_add_item(world.entity_repo, robot_1.id, world.inventory_repo, robot_1_item);
-        const second_entity_pickaxe = result_unwrap(pickaxe_craft({
-            parts: {
-                ROD: materialitem_create({
-                    kind: "ROD",
-                    material: "STONE",
-                    quality: "POOR",
-                }),
-                HEAD: materialitem_create({
-                    kind: "HEAD",
-                    material: "STONE",
-                    quality: "POOR",
-                }),
-            }
-        }));
-        const second_entity = entity_spawn(world.entity_repo, {
-            name: "entity 2",
-            room_id: GALAXY_DEFAULT_ROOM_ID,
-            inventory_repo: world.inventory_repo,
-            tool: second_entity_pickaxe,
-        });
-        const default_room = undefined_expect(repository_get(world.galaxy.room_repo, GALAXY_DEFAULT_ROOM_ID), "Room of id DEFAULT_ROOM_ID shoud exist");
-        room_add_entity(world.galaxy.room_repo, default_room.id, robot_1.id);
-        room_add_entity(world.galaxy.room_repo, default_room.id, second_entity.id);
+        const inventory = inventory_spawn(world.inventory_repo);
+        const entity = entity_spawn(world.entity_repo, { name, room_id, tool, inventory_id: inventory.id });
+        room_add_entity(world.galaxy.room_repo, room_id, entity.id);
+        return entity;
     });
 }
 
 /**
  * @param {World} world
- * @returns {number|null} timestamp du prochain event, ou null si rien de planifié
+ * @returns {number|null}
  */
 export function world_next_event_at(world) {
-    const next = timelinescheduler_peek(world.timeline_scheduler);
-    return next ? next.at : null;
+    return timelinescheduler_peek(world.timeline_scheduler)?.at ?? null;
 }
 
 /**
- * @param {World} world 
- * @param {EntityID} entity_id 
- * @param {RoomID} target_id 
+ * @param {World} world
+ * @param {EntityID} entity_id
+ * @param {RoomID} target_id
+ * @returns {Res<void, string>}
  */
 export function world_move_entity(world, entity_id, target_id) {
+    const entity = repository_get(world.entity_repo, entity_id);
+    if (!entity) return err(`Unknown entity: ${entity_id}`);
+    const previous_room = undefined_expect(repository_get(world.galaxy.room_repo, entity.room_id), `Unknown room: ${entity.room_id}`);
+    const target_room = repository_get(world.galaxy.room_repo, target_id);
+    if (!target_room) return err(`Unknown room: ${target_id}`);
+    if (previous_room.id === target_id) return ok(undefined);
+    if (!Object.values(previous_room.exits).some(exit => exit.target_id === target_id)) {
+        return err(`Room ${target_id} is not accessible from room ${previous_room.id}`);
+    }
+    if (!previous_room.entities.includes(entity_id) || target_room.entities.includes(entity_id)) {
+        throw new Error(`Inconsistent room membership: ${entity_id}`);
+    }
     return enginesignals_batch(() => {
-        undefined_expect(repository_get(world.entity_repo, entity_id), `entity should exist: ${entity_id}`);
-        undefined_expect(repository_get(world.galaxy.room_repo, target_id), `targeted room should exist: ${target_id}`);
-        /**
-         * TODO: faire en sorte que move_entity vérifie si l'exit choisie existe dans la room de l'entity
-         * et si les conditions sont bonnes etc.
-         */
-        const previous_room_id = entity_move(world.entity_repo, entity_id, target_id);
-        room_remove_entity(world.galaxy.room_repo, previous_room_id, entity_id);
+        entity_move(world.entity_repo, entity_id, target_id);
+        room_remove_entity(world.galaxy.room_repo, previous_room.id, entity_id);
         room_add_entity(world.galaxy.room_repo, target_id, entity_id);
+        return ok(undefined);
     });
 }
 
-// /**
-//  * @param {World} world
-//  * @param {number} delta_ms
-//  */
-// export function update(world, delta_ms) {
-// }
+/**
+ * @param {World} world
+ * @param {EntityID} entity_id
+ * @param {__InternalOreID} ore_id
+ * @returns {Res<MaterialItemStack[], string>}
+ */
+export function world_mine(world, entity_id, ore_id) {
+    const entity = repository_get(world.entity_repo, entity_id);
+    if (!entity) return err(`Unknown entity: ${entity_id}`);
+    if (!entity.tool) return err("Mining requires a tool");
+    const room = undefined_expect(repository_get(world.galaxy.room_repo, entity.room_id), `Unknown room: ${entity.room_id}`);
+    const ore = room.content.find(candidate => candidate.internal_id === ore_id);
+    if (!ore) return err(`Unknown ore in room ${room.id}: ${ore_id}`);
+    const loot = mining_mine(ore, entity.tool);
+    if (result_is_err(loot)) return loot;
+    const inventory = undefined_expect(repository_get(world.inventory_repo, entity.inventory_id), `Unknown inventory: ${entity.inventory_id}`);
+    const item_count = loot.value.reduce((total, stack) => total + stack.amount, 0);
+    if (!Number.isSafeInteger(inventory.__current_intenal_item_id + item_count)) {
+        return err("Inventory item ID limit reached");
+    }
+    return enginesignals_batch(() => {
+        for (const stack of loot.value) {
+            for (let index = 0; index < stack.amount; index++) {
+                inventory_add_item(world.inventory_repo, entity.inventory_id, stack.material_item);
+            }
+        }
+        room_remove_ore(world.galaxy.room_repo, room.id, ore_id);
+        return loot;
+    });
+}

@@ -1,3 +1,5 @@
+// ui/component/inventory_comp.js
+
 /**
  * @typedef {import("./core/utils.js").DestroyFunction} DestroyFunction
  * @typedef {import("../../engine/core/ids.types.js").InventoryID} InventoryID
@@ -5,7 +7,7 @@
 import { enginesignal_on } from "../../engine/core/signal/signal.js";
 import { repository_get } from "../../utils/repository.js";
 import { undefined_unwrap } from "../../utils/undefined.js";
-import { store_get } from "../core/store.js";
+import { store_get } from "../core/store/store.js";
 import { comp_create_comp } from "./core/comp.js";
 
 /**

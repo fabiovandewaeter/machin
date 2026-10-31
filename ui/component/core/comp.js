@@ -1,3 +1,5 @@
+// ui/component/core/comp.js
+
 /**
  * @typedef {import("./utils.js").DestroyFunction} DestroyFunction
  * @typedef {import("./sub_comp_manager.js").SubCompManager} SubCompManager

@@ -22,6 +22,15 @@ export function timelinescheduler_create() {
     return { repo: repository_create(), heap: [] };
 }
 
+/** @param {TimelineScheduler} scheduler */
+export function timelinescheduler_rebuild_heap(scheduler) {
+    scheduler.heap = [];
+    for (const event of scheduler.repo.elements) {
+        if (!Number.isFinite(event.at) || event.at < 0) throw new RangeError("Invalid timeline event time");
+        heap_push(scheduler.heap, { at: event.at, id: event.id });
+    }
+}
+
 /**
  * Planifie un event et le renvoie (avec son id assigné par le repo).
  * @param {TimelineScheduler} scheduler

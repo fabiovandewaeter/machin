@@ -1,9 +1,11 @@
+// ui/scene/menu_scene.js
+
 /** @typedef {import("../component/core/utils.js").DestroyFunction} DestroyFunction */
 /** @template {Record<string, unknown>} T @typedef {import("../../utils/enum.js").EnumKey<T>} EnumKey */
 import { enum_create } from "../../utils/enum.js";
 import { utils_assert_unreachable } from "../../utils/utils.js";
 import { comp_create_comp, comp_delegate_click_with_enum } from "../component/core/comp.js";
-import { store_get } from "../core/store.js";
+import { store_get } from "../core/store/store.js";
 import { scene_switch } from "./scene.ops.js";
 
 const __ACTIONS = enum_create(/** @type {const} */ (["SWITCH_SCENE"]));

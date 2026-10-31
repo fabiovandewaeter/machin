@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# tools/levels.sh — usage : bash tools/levels.sh [dossier]
+# tools/OLD_cycles.sh
 # Affiche les .js du dossier (récursif) groupés par niveau de dépendance,
 # calculé à partir des directives /// <reference path="..." />.
 # Les cycles et références introuvables sont affichés après les niveaux.

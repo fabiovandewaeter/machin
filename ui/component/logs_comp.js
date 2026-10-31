@@ -1,7 +1,9 @@
+// ui/component/logs_comp.js
+
 /** @typedef {import("./core/utils.js").DestroyFunction} DestroyFunction */
 import { uisignal_on } from "../core/signal/signal.js";
 import { UI_SIGNAL } from "../core/signal/signal.types.js";
-import { store_get } from "../core/store.js";
+import { store_get } from "../core/store/store.js";
 import { comp_create_comp } from "./core/comp.js";
 
 const __MAX_RENDERED_LOGS = 10;

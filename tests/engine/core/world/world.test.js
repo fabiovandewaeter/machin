@@ -1,3 +1,5 @@
+// tests/engine/core/world/world.test.js
+
 import { enginesignal_on } from "../../../../engine/core/signal/signal.js";
 import { world_mine, world_move_entity, world_spawn_entity } from "../../../../engine/core/world/world.js";
 import { materialitem_create } from "../../../../engine/item/material/material_item.js";
@@ -97,7 +99,7 @@ test("un outil insuffisant laisse le minerai et l'inventaire intacts", () => {
 test("un inventaire saturé refuse tout le minage avant mutation", () => {
     const { world, entity, ore } = create_test_world();
     const inventory = undefined_unwrap(repository_get(world.inventory_repo, entity.inventory_id));
-    inventory.__current_intenal_item_id = /** @type {import("../../../../engine/inventory.types.js").__InternalItemID} */ (Number.MAX_SAFE_INTEGER - 1);
+    inventory.__current_intenal_item_id = /** @type {import("../../../../engine/inventory/inventory.types.js").__InternalItemID} */ (Number.MAX_SAFE_INTEGER - 1);
     const before = JSON.stringify(world);
     result_assert_err(world_mine(world, entity.id, ore.internal_id));
     assert_equal(JSON.stringify(world), before);

@@ -1,7 +1,9 @@
+// ui/core/ui_state/ui_state.js
+
 /**
  * @typedef {import("./ui_state.types.js").UIState} UIState
  * @typedef {import("../../../engine/core/ids.types.js").EntityID} EntityID
- * @typedef {import("../save.types.js").SavedUIState} SavedUIState
+ * @typedef {import("../save/save.types.js").SavedUIState} SavedUIState
  */
 import { uisignal_emit } from "../signal/signal.js";
 import { UI_SIGNAL } from "../signal/signal.types.js";

@@ -6,31 +6,28 @@
  * @typedef {import("./entity.types.js").Entity} Entity
  * @typedef {import("../core/ids.types.js").EntityID} EntityID
  * @typedef {import("../item/tool/tool.js").Tool} Tool
- * @typedef {import("../item/item.types.js").Item} Item
- * @typedef {import("../inventory.js").__InternalItemID} __InternalItemID
- * @typedef {import("../inventory.js").InventoryRepo} InventoryRepo
+ * @typedef {import("../core/ids.types.js").InventoryID} InventoryID
  */
 import { repository_get, repository_spawn_element } from "../../utils/repository.js";
 import { undefined_unwrap } from "../../utils/undefined.js";
 import { enginesignal_emit } from "../core/signal/signal.js";
-import { inventory_add_item, inventory_spawn } from "../inventory.js";
+import { item_copy } from "../item/item.js";
 
 /**
  * @param {EntityRepo} repo
  * @param {Object} options
  * @param {string} options.name
  * @param {RoomID} options.room_id
- * @param {InventoryRepo}  options.inventory_repo
+ * @param {InventoryID} options.inventory_id
  * @param {Tool} [options.tool]
  * @returns {Entity}
  */
-export function entity_spawn(repo, { name, room_id, inventory_repo, tool }) {
-    const inventory = inventory_spawn(inventory_repo);
+export function entity_spawn(repo, { name, room_id, inventory_id, tool }) {
     return repository_spawn_element(repo, {
         name,
         room_id,
-        tool,
-        inventory_id: inventory.id,
+        tool: tool === undefined ? undefined : item_copy(tool),
+        inventory_id,
     });
 }
 
@@ -50,16 +47,4 @@ export function entity_move(repo, entity_id, target_id) {
         new_room_id: target_id,
     });
     return previous_room_id;
-}
-
-/**
- * @param {EntityRepo} repo 
- * @param {EntityID} id 
- * @param {InventoryRepo} inventory_repo 
- * @param {Item} item 
- * @returns {__InternalItemID}
- */
-export function entity_add_item(repo, id, inventory_repo, item) {
-    const entity = undefined_unwrap(repository_get(repo, id));
-    return inventory_add_item(inventory_repo, entity.inventory_id, item);
 }

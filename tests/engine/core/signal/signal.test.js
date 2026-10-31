@@ -1,3 +1,5 @@
+// tests/engine/core/signal/signal.test.js
+
 import { assert, assert_equal } from "../../../../utils/assert.js";
 import { signalbus_create, signalbus_emit, signalbus_on } from "../../../../utils/signal_bus.js";
 import { enginesignal_emit, enginesignal_on, enginesignals_batch, enginesignals_clear_handlers } from "../../../../engine/core/signal/signal.js";

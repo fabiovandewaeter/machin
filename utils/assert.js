@@ -1,3 +1,5 @@
+// utils/assert.js
+
 /**
  * @param {boolean} condition
  * @param {string} [message]

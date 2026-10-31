@@ -1,9 +1,11 @@
+// ui/core/runtime.js
+
 /** @typedef {import("../component/core/utils.js").DestroyFunction} DestroyFunction */
 import { enginesignals_clear_handlers } from "../../engine/core/signal/signal.js";
 import { scene_mount } from "../scene/scene.js";
 import { game_init, game_save, game_stop } from "./game.js";
 import { uisignals_clear_handlers, uisignals_init } from "./signal/signal.js";
-import { store_get } from "./store.js";
+import { store_get } from "./store/store.js";
 
 let __initialized = false;
 let __stopped = false;

@@ -1,3 +1,5 @@
+// tests/fixtures.js
+
 import { clock_create } from "../engine/core/clock.js";
 import { world_create, world_spawn_entity } from "../engine/core/world/world.js";
 import { ore_create } from "../engine/extraction/ore.js";

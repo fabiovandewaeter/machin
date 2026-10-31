@@ -5,7 +5,7 @@
  * @typedef {import("../timeline/scheduler.js").TimelineScheduler} TimelineScheduler
  * @typedef {import("../../map/galaxy.js").Galaxy} Galaxy
  * @typedef {import("../../entity/entity.types.js").EntityRepo} EntityRepo
- * @typedef {import("../../inventory.types.js").InventoryRepo} InventoryRepo
+ * @typedef {import("../../inventory/inventory.types.js").InventoryRepo} InventoryRepo
  */
 
 /**

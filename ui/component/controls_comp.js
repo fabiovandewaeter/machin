@@ -1,3 +1,5 @@
+// ui/component/controls_comp.js
+
 /** @typedef {import("./core/utils.js").DestroyFunction} DestroyFunction */
 /** @template {Record<string, unknown>} T @typedef {import("../../utils/enum.js").EnumKey<T>} EnumKey */
 import { SECONDS_PER_DAY, SECONDS_PER_HOUR, SECONDS_PER_MINUTE, SECONDS_PER_WEEK, SECONDS_PER_YEAR } from "../../utils/const.js";
@@ -6,7 +8,7 @@ import { utils_assert_unreachable, utils_string_to_rkind } from "../../utils/uti
 import { game_download_save, game_is_running, game_reset, game_skip_time, game_toggle_tick, game_upload_save } from "../core/game.js";
 import { uisignal_on } from "../core/signal/signal.js";
 import { UI_SIGNAL } from "../core/signal/signal.types.js";
-import { store_get } from "../core/store.js";
+import { store_get } from "../core/store/store.js";
 import { scene_switch } from "../scene/scene.ops.js";
 import { SCENES } from "../scene/scene.types.js";
 import { comp_create_comp, comp_delegate_click_with_enum } from "./core/comp.js";

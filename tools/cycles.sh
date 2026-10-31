@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# tools/levels.sh — dépendances d'un projet en ES Modules (+ imports de types JSDoc)
+# tools/cycles.sh
 #
 # usage : bash tools/levels.sh [--types] [--deps] [dossier]
 #

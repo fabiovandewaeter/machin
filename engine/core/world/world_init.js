@@ -1,10 +1,12 @@
+// engine/core/world/world_init.js
+
 /**
  * @typedef {import("./world.types.js").World} World
  * @typedef {import("../../item/material/material.js").MaterialKind} MaterialKind
  * @typedef {import("../../item/quality.js").Quality} Quality
  */
 import { result_unwrap } from "../../../utils/result.js";
-import { inventory_add_item } from "../../inventory.js";
+import { inventory_add_item } from "../../inventory/inventory.js";
 import { materialitem_create } from "../../item/material/material_item.js";
 import { pickaxe_craft } from "../../item/tool/pickaxe.js";
 import { GALAXY_DEFAULT_ROOM_ID, galaxy_init } from "../../map/galaxy.js";

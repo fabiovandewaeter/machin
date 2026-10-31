@@ -3,6 +3,7 @@
 import { repository_get, repository_spawn_element } from "../../utils/repository.js";
 import { undefined_unwrap } from "../../utils/undefined.js";
 import { enginesignal_emit } from "../core/signal/signal.js";
+import { item_copy } from "../item/item.js";
 
 /**
  * @typedef {import("../item/item.types.js").Item} Item
@@ -34,7 +35,7 @@ export function inventory_add_item(repo, id, item) {
     if (!Number.isSafeInteger(inventory.__current_intenal_item_id) || inventory.__current_intenal_item_id < 0 || inventory.__current_intenal_item_id >= Number.MAX_SAFE_INTEGER) {
         throw new RangeError("Inventory item ID limit reached");
     }
-    const stored_item = structuredClone(item);
+    const stored_item = item_copy(item);
     const internal_id = /**@type {__InternalItemID} */ (inventory.__current_intenal_item_id++);
     inventory.item_stack.push({ id: internal_id, item: stored_item });
     enginesignal_emit("inventory.item_stack.added", {

@@ -1,6 +1,6 @@
 // ui/core/game.js
 
-/** @typedef {import("./save.types.js").GameSave} GameSave */
+/** @typedef {import("./save/save.types.js").GameSave} GameSave */
 import { enginesignals_init } from "../../engine/core/signal/signal.js";
 import { timeline_advance_by, timeline_advance_to_now, timeline_init } from "../../engine/core/timeline/timeline.js";
 import { world_create } from "../../engine/core/world/world.js";
@@ -8,10 +8,10 @@ import { world_init } from "../../engine/core/world/world_init.js";
 import { repository_get } from "../../utils/repository.js";
 import { result_is_err } from "../../utils/result.js";
 import { save_clear, save_download, save_load, save_save, save_upload } from "../../utils/save.js";
-import { gamesave_create, gamesave_parse } from "./save.js";
+import { gamesave_create, gamesave_parse } from "./save/save.js";
 import { uisignal_emit } from "./signal/signal.js";
 import { UI_SIGNAL } from "./signal/signal.types.js";
-import { store_get, store_set } from "./store.js";
+import { store_get, store_set } from "./store/store.js";
 import { uistate_add_log, uistate_create } from "./ui_state/ui_state.js";
 
 const __TICK_DELAY_MS = 1000;

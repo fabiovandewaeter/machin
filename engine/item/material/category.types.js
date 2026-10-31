@@ -1,4 +1,4 @@
-// engine/item/material/category.js
+// engine/item/material/category.types.js
 
 /** @template {Record<string, unknown>} T @typedef {import("../../../utils/enum.js").EnumKey<T>} EnumKey */
 import { enum_create } from "../../../utils/enum.js";

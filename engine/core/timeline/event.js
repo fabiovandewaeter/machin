@@ -1,4 +1,4 @@
-// engine/core/timeline/types.js
+// engine/core/timeline/event.js
 
 /**
  * @typedef {import("../ids.types.js").TimelineEventID} TimelineEventID

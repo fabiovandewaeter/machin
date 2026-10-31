@@ -1,3 +1,5 @@
+// ui/component/room_comp.js
+
 /**
  * @typedef {import("./core/utils.js").DestroyFunction} DestroyFunction
  * @typedef {import("../../engine/core/ids.types.js").RoomID} RoomID
@@ -15,7 +17,7 @@ import { undefined_unwrap } from "../../utils/undefined.js";
 import { utils_string_to_rkind, utils_assert_unreachable } from "../../utils/utils.js";
 import { uisignal_emit, uisignal_on } from "../core/signal/signal.js";
 import { UI_SIGNAL } from "../core/signal/signal.types.js";
-import { store_get } from "../core/store.js";
+import { store_get } from "../core/store/store.js";
 import { uistate_add_log, uistate_select_entity } from "../core/ui_state/ui_state.js";
 import { comp_create_comp, comp_delegate_click_with_enum } from "./core/comp.js";
 

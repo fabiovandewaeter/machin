@@ -1,4 +1,4 @@
-// ui/core/component/entity_comp.js
+// ui/component/entity_comp.js
 
 /**
  * @typedef {import("./core/utils.js").DestroyFunction} DestroyFunction
@@ -12,7 +12,7 @@ import { undefined_unwrap } from "../../utils/undefined.js";
 import { utils_assert_unreachable } from "../../utils/utils.js";
 import { uisignal_emit } from "../core/signal/signal.js";
 import { UI_SIGNAL } from "../core/signal/signal.types.js";
-import { store_get } from "../core/store.js";
+import { store_get } from "../core/store/store.js";
 import { comp_create_comp_with_sub_comps, comp_delegate_click_with_enum } from "./core/comp.js";
 import { subcompmanager_add } from "./core/sub_comp_manager.js";
 import { inventorycomp_mount } from "./inventory_comp.js";

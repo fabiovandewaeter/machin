@@ -1,9 +1,11 @@
+// tests/ui/scene/scene.test.js
+
 import { enginesignal_emit } from "../../../engine/core/signal/signal.js";
 import { world_create, world_spawn_entity } from "../../../engine/core/world/world.js";
 import { roomcomp_mount } from "../../../ui/component/room_comp.js";
 import { uisignal_emit } from "../../../ui/core/signal/signal.js";
 import { UI_SIGNAL } from "../../../ui/core/signal/signal.types.js";
-import { store_set } from "../../../ui/core/store.js";
+import { store_set } from "../../../ui/core/store/store.js";
 import { uistate_create, uistate_select_entity } from "../../../ui/core/ui_state/ui_state.js";
 import { scene_mount } from "../../../ui/scene/scene.js";
 import { assert, assert_equal } from "../../../utils/assert.js";
@@ -38,7 +40,7 @@ test("remplacer une partie détruit les abonnements de ses panneaux avant de cha
         store_set({ world: world_create(), ui_state: uistate_create(), should_save: true });
         enginesignal_emit("inventory.item_stack.added", {
             inventory_id: entity.inventory_id,
-            added: /** @type {import("../../../engine/inventory.types.js").__InternalItemID} */ (0),
+            added: /** @type {import("../../../engine/inventory/inventory.types.js").__InternalItemID} */ (0),
         });
         uisignal_emit(UI_SIGNAL.SCENE_SWITCHED, { new_scene: "MAIN" });
         assert_equal(container.querySelectorAll(".scene-main").length, 1);

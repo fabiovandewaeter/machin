@@ -1,13 +1,13 @@
-// ui/core/component/time_comp.js
+// ui/component/time_comp.js
 
 
 /**
  * @typedef {import("./core/utils.js").DestroyFunction} DestroyFunction
- * @typedef {import("../core/store.types.js").GameStore} GameStore
+ * @typedef {import("../core/store/store.types.js").GameStore} GameStore
  */
 
 import { SECONDS_PER_DAY, SECONDS_PER_HOUR, SECONDS_PER_MINUTE, SECONDS_PER_WEEK, SECONDS_PER_YEAR } from "../../utils/const.js";
-import { store_get } from "../core/store.js";
+import { store_get } from "../core/store/store.js";
 import { comp_create_comp } from "./core/comp.js";
 import { clock_get_elapsed_ms } from "../../engine/core/clock.js";
 import { enginesignal_on } from "../../engine/core/signal/signal.js";

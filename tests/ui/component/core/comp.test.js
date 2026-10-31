@@ -1,3 +1,5 @@
+// tests/ui/component/core/comp.test.js
+
 import { comp_create_comp, comp_create_comp_with_sub_comps, comp_delegate_click } from "../../../../ui/component/core/comp.js";
 import { subcompmanager_add, subcompmanager_create, subcompmanager_destroy_all, subcompmanager_remove } from "../../../../ui/component/core/sub_comp_manager.js";
 import { assert_equal, assert_throws } from "../../../../utils/assert.js";

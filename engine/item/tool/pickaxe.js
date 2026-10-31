@@ -7,8 +7,7 @@
  * @typedef {import("../../action/action.js").ActionKind} ActionKind
  */
 /** @template T, E @typedef {import("../../../utils/result.js").Res<T, E>} Res */
-import "../../../utils/result.js";
-import { err, ok, result_is_err } from "../../../utils/result.js";
+import { ok, result_is_err } from "../../../utils/result.js";
 import { compatibility_are_all_same_material } from "../compatibility.js";
 import { material_lowest_mining_level } from "../material/material.js";
 
@@ -42,7 +41,7 @@ export function pickaxe_craft({ parts }) {
 
     return ok({
         kind: "PICKAXE",
-        parts,
+        parts: { ROD: { ...parts.ROD }, HEAD: { ...parts.HEAD } },
         mining_level: material_lowest_mining_level(material_items.map(mi => mi.material)),
         compatible_actions: ["MINING"],
     });

@@ -1,7 +1,9 @@
-/** @typedef {import("../../../ui/core/save.types.js").GameSave} GameSave */
+// tests/ui/core/save.test.js
+
+/** @typedef {import("../../../ui/core/save/save.types.js").GameSave} GameSave */
 import { timelinescheduler_peek, timelinescheduler_schedule } from "../../../engine/core/timeline/scheduler.js";
 import { world_mine } from "../../../engine/core/world/world.js";
-import { gamesave_create, gamesave_parse } from "../../../ui/core/save.js";
+import { gamesave_create, gamesave_parse } from "../../../ui/core/save/save.js";
 import { uistate_create } from "../../../ui/core/ui_state/ui_state.js";
 import { assert, assert_equal } from "../../../utils/assert.js";
 import { repository_get } from "../../../utils/repository.js";
@@ -41,7 +43,7 @@ test("les anciens timers et journaux ne sont pas restaurés", () => {
 test("le chargement reconstruit les index, les appartenances et le tas depuis les données", () => {
     const { world, entity, source, destination } = create_test_world();
     const event = timelinescheduler_schedule(world.timeline_scheduler, "craft_complete", 20, {});
-    const save = structuredClone(gamesave_create({ world, ui_state: uistate_create(), should_save: true }));
+    const save = gamesave_create({ world, ui_state: uistate_create(), should_save: true });
     save.world.entity_repo.indices[entity.id] = 999;
     save.world.inventory_repo.indices[entity.inventory_id] = 999;
     save.world.timeline_scheduler.repo.indices[event.id] = 999;
@@ -81,7 +83,7 @@ test("les références cassées, les identifiants dupliqués et les compteurs in
         save => { save.world.entity_repo.elements.push(save.world.entity_repo.elements[0]); },
         save => { save.world.entity_repo.current_id = /** @type {import("../../../engine/core/ids.types.js").EntityID} */ (0); },
         save => { save.world.entity_repo.elements[0].room_id = /** @type {import("../../../engine/core/ids.types.js").RoomID} */ (999); },
-        save => { save.world.inventory_repo.elements[0].__current_intenal_item_id = /** @type {import("../../../engine/inventory.types.js").__InternalItemID} */ (-1); },
+        save => { save.world.inventory_repo.elements[0].__current_intenal_item_id = /** @type {import("../../../engine/inventory/inventory.types.js").__InternalItemID} */ (-1); },
         save => { save.world.galaxy.room_repo.elements[0].content[0].composition[0].amount = -1; },
     ];
     for (const corrupt of corruptions) {

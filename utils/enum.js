@@ -29,7 +29,7 @@ export function enum_create(keys) {
  * @template {Record<string, unknown>} T
  * @param {T} enum_obj
  * @param {string} value 
- * @returns {value is T[keyof T]}
+ * @returns {value is T[keyof T] & string}
  */
 export function enum_is_enum_value(enum_obj, value) { return Object.values(enum_obj).includes(/** @type {T[keyof T]} */(value)); }
 /**

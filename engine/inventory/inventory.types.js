@@ -1,3 +1,5 @@
+// engine/inventory/inventory.types.js
+
 /**
  * @typedef {import("../item/item.types.js").Item} Item
  * @typedef {import("../core/ids.types.js").InventoryID} InventoryID

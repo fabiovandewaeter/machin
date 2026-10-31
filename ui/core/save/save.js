@@ -1,9 +1,11 @@
+// ui/core/save/save.js
+
 /**
  * @typedef {import("./save.types.js").GameSave} GameSave
- * @typedef {import("./store.types.js").GameStore} GameStore
+ * @typedef {import("../store/store.types.js").GameStore} GameStore
  */
-import { world_restore } from "../../engine/core/world/world_restore.js";
-import { SCENES } from "../scene/scene.types.js";
+import { world_restore } from "../../../engine/core/world/world_restore.js";
+import { SCENES } from "../../scene/scene.types.js";
 
 const __SAVE_VERSION = 0;
 
