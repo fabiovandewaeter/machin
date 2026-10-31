@@ -39,9 +39,9 @@ test("descrease_durability(): retire BASE_COST de durability quand meme mining_l
     assert_equal(pickaxe.parts.ROD.durability, BASE_DURABILITY - BASE_COST);
 });
 
-test("descrease_durability(): retire BASE_COST * diff de mining_level de durability", () => {
-    const PARTS_MATERIAL = "STONE";
-    const TARGET_MATERIAL = "IRON";
+test("descrease_durability(): réduit le coût quand le matériau est plus résistant", () => {
+    const PARTS_MATERIAL = "IRON";
+    const TARGET_MATERIAL = "STONE";
     const pickaxe_res = pickaxe_craft({
         parts: {
             ROD: materialitem_create({
@@ -66,6 +66,6 @@ test("descrease_durability(): retire BASE_COST * diff de mining_level de durabil
     assert(diff >= 1);
     const diff_cost_multiplier = diff + 1;
 
-    assert_equal(pickaxe.parts.HEAD.durability, BASE_DURABILITY - (BASE_COST * diff_cost_multiplier));
-    assert_equal(pickaxe.parts.ROD.durability, BASE_DURABILITY - (BASE_COST * diff_cost_multiplier));
+    assert_equal(pickaxe.parts.HEAD.durability, BASE_DURABILITY - (BASE_COST / diff_cost_multiplier));
+    assert_equal(pickaxe.parts.ROD.durability, BASE_DURABILITY - (BASE_COST / diff_cost_multiplier));
 });

@@ -6,22 +6,24 @@
  * @property {number} sim_time
  */
 
-// Note : quand on recharge une sauvegarde, runtime.js n'appelle pas clock_create — il récupère l'objet world.clock déjà désérialisé du JSON tel quel, created_at compris. clock_create ne sert que pour une partie neuve.
 /**
- * @param {number|null} saved_timestamp
+ * @param {number} [timestamp]
  * @returns {Clock}
  */
-export function clock_create(saved_timestamp) {
-    // return { last_tick_timestamp: saved_timestamp ?? Date.now(), accumulated_time: 0 };
-    const now = saved_timestamp ?? Date.now();
-    return { created_at: now, sim_time: now };
+export function clock_create(timestamp = Date.now()) {
+    if (!Number.isFinite(timestamp) || timestamp < 0) throw new RangeError("Invalid clock timestamp");
+    return { created_at: timestamp, sim_time: timestamp };
 }
 
 /**
  * @param {Clock} clock
  * @param {number} ms
  */
-export function clock_advance_by(clock, ms) { clock.sim_time += ms; }
+export function clock_advance_by(clock, ms) {
+    const target_time = clock.sim_time + ms;
+    if (!Number.isFinite(ms) || ms < 0 || !Number.isFinite(target_time)) throw new RangeError("Invalid clock advance");
+    clock.sim_time = target_time;
+}
 
 /**
  * Temps réel (ms) écoulé depuis la dernière simulation — indique s'il y a
@@ -30,7 +32,7 @@ export function clock_advance_by(clock, ms) { clock.sim_time += ms; }
  * @returns {number}
  */
 export function clock_real_time_elapsed_since(clock) {
-    return Date.now() - clock.sim_time;
+    return Math.max(0, Date.now() - clock.sim_time);
 }
 
 /**

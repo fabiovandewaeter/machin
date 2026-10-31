@@ -7,8 +7,7 @@
  * @typedef {import("../../map/room/room.types.js").Room} Room
  * @typedef {import("../../extraction/ore.js").__InternalOreID} __InternalOreID
  * @typedef {import("../ids.types.js").InventoryID} InventoryID
- * @typedef {import("../../inventory.js").__InternalItemID} __InternalItemID
- * @typedef {import("../../inventory.js").Inventory} Inventory
+ * @typedef {import("../../inventory.types.js").__InternalItemID} __InternalItemID
  */
 /** @template {Record<string, unknown>} T @typedef {import("../../../utils/enum.js").EnumKey<T>} EnumKey */
 /** @template {string} Base @template Id @template {Record<string, unknown>} T @typedef {import("../../../utils/signal_bus.js").ChangedSignals<Base, Id, T>} ChangedSignals*/

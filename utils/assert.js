@@ -1,6 +1,7 @@
 /**
  * @param {boolean} condition
  * @param {string} [message]
+ * @returns {asserts condition}
  */
 export function assert(condition, message = "Assertion failed") {
     if (!condition) {
@@ -23,4 +24,17 @@ export function assert_equal(actual, expected, message = "Values are not equal")
             `${message}\nExpected: ${expected}\nActual: ${actual}`
         );
     }
+}
+
+/**
+ * @param {() => void} operation
+ * @returns {unknown}
+ */
+export function assert_throws(operation) {
+    try {
+        operation();
+    } catch (error) {
+        return error;
+    }
+    throw new Error("Expected an exception");
 }

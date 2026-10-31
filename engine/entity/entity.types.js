@@ -4,9 +4,7 @@
  * @typedef {import("../core/ids.types.js").RoomID} RoomID
  * @typedef {import("../core/ids.types.js").EntityID} EntityID
  * @typedef {import("../item/tool/tool.js").Tool} Tool
- * @typedef {import("../item/item.types.js").Item} Item
  * @typedef {import("../core/ids.types.js").InventoryID} InventoryID
- * @typedef {import("../inventory.js").Inventory} Inventory
  */
 
 /**

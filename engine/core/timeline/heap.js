@@ -1,7 +1,7 @@
 // engine/core/timeline/heap.js
 
 /**
- * @typedef {import("../ids.types").TimelineEventID} TimelineEventID
+ * @typedef {import("../ids.types.js").TimelineEventID} TimelineEventID
  */
 
 

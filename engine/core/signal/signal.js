@@ -21,6 +21,7 @@ export function enginesignals_init() {
 
 export function enginesignals_clear_handlers() {
     signalbus_clear(__ENGINE_SIGNAL_BUS);
+    __PENDING_SIGNALS.length = 0;
 }
 
 /**

@@ -10,8 +10,8 @@
 import { enum_create } from "../../../utils/enum.js";
 
 const __OTHER_SIGNAL = enum_create(/**@type {const} */([
-    "TICK",
     "LOGS",
+    "GAME_REPLACING",
     "SCENE_SWITCHED",
     "TOGGLE_TICK",
     "TOGGLE_LOGS",
@@ -19,8 +19,8 @@ const __OTHER_SIGNAL = enum_create(/**@type {const} */([
 /**
  * @typedef {EnumKey<typeof __OTHER_SIGNAL>} OtherUISignal
  * @typedef {{
- * TICK: [],
  * LOGS:[{log: string}],
+ * GAME_REPLACING: [],
  * SCENE_SWITCHED: [{new_scene: Scene}]
  * TOGGLE_TICK:[],
  * TOGGLE_LOGS: [],

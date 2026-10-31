@@ -15,8 +15,8 @@ import { ok, err } from "./result.js";
 const __MAX_SAFE_ID = Number.MAX_SAFE_INTEGER;
 
 /**
- * @template T
  * @template {number} TID
+ * @template {{ id: TID }} T
  * @returns {Repo<TID, T>}
  */
 export function repository_create() {
@@ -61,6 +61,7 @@ export function repository_spawn_element(repo, args) {
  * @returns {T|undefined} pas Opt<T> pour ne pas allouer un some à chaque fois
  */
 export function repository_get(repo, id) {
+    if (!Number.isSafeInteger(id) || id < 0) return undefined;
     const index = repo.indices[id];
 
     if (index === undefined) {
@@ -77,7 +78,7 @@ export function repository_get(repo, id) {
  * @returns {TID}
  */
 export function repository_next_id(repo) {
-    if (repo.current_id >= __MAX_SAFE_ID) {
+    if (!Number.isSafeInteger(repo.current_id) || repo.current_id < 0 || repo.current_id >= __MAX_SAFE_ID) {
         throw new Error(
             `Repository ID limit reached: ${__MAX_SAFE_ID}`
         );
@@ -136,4 +137,24 @@ export function repository_all_ids(repo) {
  */
 export function repository_all(repo) {
     return repo.elements.slice();
+}
+
+/**
+ * @template {number} TID
+ * @template {{ id: TID }} T
+ * @param {Repo<TID, T>} repo
+ */
+export function repository_reindex(repo) {
+    if (!repo || !Array.isArray(repo.elements) || !Number.isSafeInteger(repo.current_id) || repo.current_id < 0) {
+        throw new Error("Invalid repository");
+    }
+    const indices = /** @type {Record<TID, number>} */ (Object.create(null));
+    for (let index = 0; index < repo.elements.length; index++) {
+        const element = repo.elements[index];
+        if (!element || !Number.isSafeInteger(element.id) || element.id < 0 || element.id >= repo.current_id || Object.hasOwn(indices, element.id)) {
+            throw new Error("Invalid repository element ID");
+        }
+        indices[element.id] = index;
+    }
+    repo.indices = indices;
 }

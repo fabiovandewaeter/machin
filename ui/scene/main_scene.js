@@ -1,11 +1,9 @@
 // ui/scene/main_scene.js
 
 /**
- * @typedef {import("../component/core/comp.js").DestroyFunction} DestroyFunction
+ * @typedef {import("../component/core/utils.js").DestroyFunction} DestroyFunction
  * @typedef {import("../component/core/sub_comp_manager.js").SubCompKey} SubCompKey
- * @typedef {import("../../engine/core/ids.types.js").EntityID} EntityID
  */
-import { signalbus_on } from "../../utils/signal_bus.js";
 
 import { controlscomp_mount } from "../component/controls_comp.js";
 import { comp_create_comp_with_sub_comps } from "../component/core/comp.js";
@@ -50,7 +48,7 @@ export function mainscene_mount(container) {
 
         add_cleanup(uisignal_on(UI_SIGNAL.OPEN_ENTITY_PANEL,
             (payload) => {
-                subcompmanager_remove(sub_comps, __ENTITY_PANEL_KEY); // no-op si absent
+                subcompmanager_remove(sub_comps, __ENTITY_PANEL_KEY);
                 subcompmanager_add(sub_comps, __ENTITY_PANEL_KEY, entitycomp_mount(right, payload.entity_id));
             }));
 

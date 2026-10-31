@@ -1,169 +1,48 @@
-// ui/core/runtime.js
-
-import { timeline_advance_to, timeline_init } from "../../engine/core/timeline/timeline.js";
-import { world_create, world_init } from "../../engine/core/world/world.js";
-import { save_load, save_save } from "../../utils/save.js";
-import { scene_init, scene_render_current_scene } from "../scene/scene.js";
-import { uisignals_clear_handlers, uisignals_init } from "./signal/signal.js";
-import { store_set_world, store_set_ui_state, store_get } from "./store.js";
-import { uistate_create, uistate_stop_tick } from "./ui_state/ui_state.js";
+/** @typedef {import("../component/core/utils.js").DestroyFunction} DestroyFunction */
 import { enginesignals_clear_handlers } from "../../engine/core/signal/signal.js";
+import { scene_mount } from "../scene/scene.js";
+import { game_init, game_save, game_stop } from "./game.js";
+import { uisignals_clear_handlers, uisignals_init } from "./signal/signal.js";
+import { store_get } from "./store.js";
 
-/**
- * @typedef {import("../../engine/core/world/world.js").World} World
- */
-
+let __initialized = false;
 let __stopped = false;
+/** @type {DestroyFunction|undefined} */
+let __destroy_scene;
 
-window.addEventListener("error", __runtime_crash);
-window.addEventListener("unhandledrejection", __runtime_crash);
-
-runtime_init();
+function __runtime_save() {
+    if (__initialized && !__stopped) game_save();
+}
 
 function __runtime_crash() {
     if (__stopped) return;
     __stopped = true;
-    const store = store_get();
-    store.should_save = false;
-    uistate_stop_tick(store.ui_state);
-    enginesignals_clear_handlers();
-    uisignals_clear_handlers();
-    const app = document.getElementById("app");
-    if (app) app.textContent = "Erreur fatale. Rechargez la page pour redémarrer.";
+    if (__initialized) store_get().should_save = false;
+    try {
+        game_stop();
+        __destroy_scene?.();
+    } finally {
+        enginesignals_clear_handlers();
+        uisignals_clear_handlers();
+        const app = document.getElementById("app");
+        if (app) app.textContent = "Erreur fatale. Rechargez la page pour redémarrer.";
+    }
 }
 
 export function runtime_init() {
-    if (__stopped) return;
-
-    timeline_init();
+    if (__initialized || __stopped) return;
+    const app = document.getElementById("app");
+    if (!app) throw new Error("Missing application container");
     uisignals_init();
-
-    scene_init();
-
-    const app = /**@type {HTMLElement}*/(document.getElementById("app"));
-    app.tabIndex = -1
+    game_init();
+    __initialized = true;
+    __destroy_scene = scene_mount(app);
+    app.tabIndex = -1;
     app.focus();
-
-    const saved_opt = save_load();
-    if (saved_opt != undefined) {
-        let { world, ui_state } = saved_opt;
-        if (world) {
-            __runtime_load_world(world);
-            store_set_world(world);
-        } else {
-            const new_world = world_create();
-            world_init(new_world);
-            store_set_world(new_world);
-        }
-        store_set_ui_state(ui_state || uistate_create());
-    } else {
-        const new_world = world_create();
-        world_init(new_world);
-        store_set_world(new_world);
-        store_set_ui_state(uistate_create());
-    }
-
-    // TODO: virer ça
-    const s = store_get();
-    if (s.ui_state.selected_entity_id == undefined) {
-        s.ui_state.selected_entity_id = 0;
-    }
-
-    // attache les events listeners au app pour qu'ils ne soient jamais détruit par un innerHTML
-    // add_event_listener_click(app);
-    // add_event_listener_keydown(app);
-
-    scene_render_current_scene(app);
-
-    window.addEventListener("beforeunload", () => {
-        const store = store_get();
-        if (store.should_save) save_save(store.world, store.ui_state);
-    })
-    window.addEventListener("pagehide", () => {
-        const store = store_get();
-        if (store.should_save) save_save(store.world, store.ui_state);
-    })
+    window.addEventListener("beforeunload", __runtime_save);
+    window.addEventListener("pagehide", __runtime_save);
 }
 
-/**
- * @param {World} world
- */
-function __runtime_load_world(world) { timeline_advance_to(world, Date.now()); }
-
-// /**
-//  * @param {HTMLElement} app 
-//  */
-// function add_event_listener_click(app) {
-//     app.addEventListener("click", (event) => {
-//         const target = event.target instanceof Element ? event.target : null;
-//         if (!target) return;
-//         const action_el = target.closest("[data-action]");
-//         if (!action_el) return;
-//         const action_name = action_el.getAttribute("data-action");
-//         if (!action_name) return;
-
-//         // @ts-ignore
-//         // const handler = Action.get(action_name);
-//         // if (option_is_some(handler)) {
-//         //     handler.value({ element: action_el, event });
-//         // }
-
-//         // // const target = /** @type {HTMLElement | null} */ (el?.closest("[data-action]"));
-//         // if (!target) return;
-
-//         // const msg_kind = target.dataset.msgKind;
-//         // switch (msg_kind) {
-//         //     case "start_stop_tick_interval":
-//         //     case "start_main":
-//         //     case "stop_main":
-//         //     case "download_save":
-//         //     case "upload_save":
-//         //     case "clear_save":
-//         //         dispatch({ kind: msg_kind }); break;
-//         //     case "skip_seconds': dispatch({ kind: msg_kind, amount: parseInt(target.dataset.amount ?? '", 10) }); break;
-//         //     default: throw new Error(`unknown msg_kind: ${msg_kind}`);
-//         // }
-//     });
-// }
-
-// TODO: ajouter commandes clavier, peut-être pas ici mais dans components ? ou voir s'il y as déjà des actions en HTML normal
-// /**
-//  * @param {HTMLElement} app 
-//  */
-// function add_event_listener_keydown(app) {
-//     app.addEventListener("keydown", (event) => {
-//         // const delta = key_to_delta(event.key);
-//         // if (option_is_some(delta)) {
-//         //     event.preventDefault(); // empêche scroll avec flèches
-//         //     dispatch({ kind: "movement", delta: delta.value });
-//         // }
-//     });
-// }
-
-// function init_test() {
-//     TimelineDispatcher.register("craft_complete", (world, event, schedule) => {
-//         console.log(
-//             `✅ Event déclenché : ${event.kind} à t=${event.at} (sim_time=${world.clock.sim_time})`,
-//             event.payload
-//         );
-//     });
-
-//     const world = world_create();
-//     world_init(world);
-
-//     const now = Date.now();
-//     console.log("⏳ Temps actuel (now)          :", now);
-//     console.log("🕒 sim_time initial            :", world.clock.sim_time);
-
-//     // 3. Planifier un craft qui se termine dans 2 secondes
-//     TimelineScheduler.schedule(world.events, "craft_complete', now + 2000, { item: 'épée en bois" });
-//     TimelineScheduler.schedule(world.events, "craft_complete', now + 2000, { item: 'épée en bois" });
-
-//     console.log("📅 Prochain event à            :", world_next_event_at(world));
-
-//     // 4. Avancer la simulation de 3 secondes (dépasse la date de l’event)
-//     world_advance_by(world, 3000);
-
-//     console.log("🕒 sim_time après avance       :", world.clock.sim_time);
-//     console.log("📅 Prochain event (doit être null) :", world_next_event_at(world));
-// }
+window.addEventListener("error", __runtime_crash);
+window.addEventListener("unhandledrejection", __runtime_crash);
+runtime_init();

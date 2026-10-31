@@ -15,11 +15,11 @@ import { err, ok } from "../../utils/result.js";
  * @returns {Res<void, string>}
  */
 export function compatibility_are_material_items_and_parts_compatibles(material_items, parts) {
-    const sorted_material_items = material_items.sort();
-    const sorted_template_parts = parts.sort()
+    const sorted_material_items = material_items.map(item => item.kind).sort();
+    const sorted_template_parts = [...parts].sort();
     if (sorted_material_items.length !== parts.length) return err(`Mauvais nombre de parts: ${sorted_material_items.length} au lieu de ${parts.length}`);
     for (let i = 0; i < sorted_material_items.length; i++) {
-        if (sorted_material_items[i].kind !== sorted_template_parts[i]) return err(`Parts différents: ${sorted_material_items[i].kind} au lieu de ${sorted_template_parts[i]}`);
+        if (sorted_material_items[i] !== sorted_template_parts[i]) return err(`Parts différents: ${sorted_material_items[i]} au lieu de ${sorted_template_parts[i]}`);
     }
 
     return ok(undefined);

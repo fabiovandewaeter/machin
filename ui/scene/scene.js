@@ -1,5 +1,4 @@
-// ui/scene/scene.js
-
+/** @typedef {import("../component/core/utils.js").DestroyFunction} DestroyFunction */
 import { utils_assert_unreachable } from "../../utils/utils.js";
 import { uisignal_on } from "../core/signal/signal.js";
 import { UI_SIGNAL } from "../core/signal/signal.types.js";
@@ -9,39 +8,50 @@ import { menuscene_mount } from "./menu_scene.js";
 import { SCENES } from "./scene.types.js";
 
 /**
- * @typedef {import("../component/core/comp.js").DestroyFunction} DestroyFunction
+ * @param {HTMLElement} app
+ * @returns {DestroyFunction}
  */
-
-// TODO: voir si on garde ça en global
-/** @type {DestroyFunction|undefined} */
-let __CURRENT_SCENE_DESTROY_FUNCTION = undefined;
-
-export function scene_init() {
-    uisignal_on(UI_SIGNAL.SCENE_SWITCHED, (payload) => {
-        // TODO: VOIR SI CA SWITCH
-        const app = document.getElementById("app");
-        if (app) scene_render_current_scene(app);
-    });
+export function scene_mount(app) {
+    /** @type {DestroyFunction|undefined} */
+    let destroy_current_scene;
+    const unmount = () => {
+        const destroy = destroy_current_scene;
+        destroy_current_scene = undefined;
+        destroy?.();
+        app.replaceChildren();
+    };
+    const render = () => {
+        unmount();
+        destroy_current_scene = __scene_mount_current(app);
+    };
+    const off_scene_switched = uisignal_on(UI_SIGNAL.SCENE_SWITCHED, render);
+    const off_game_replacing = uisignal_on(UI_SIGNAL.GAME_REPLACING, unmount);
+    const destroy = () => {
+        off_scene_switched();
+        off_game_replacing();
+        unmount();
+    };
+    try {
+        render();
+    } catch (error) {
+        destroy();
+        throw error;
+    }
+    return destroy;
 }
 
 /**
  * @param {HTMLElement} app
+ * @returns {DestroyFunction}
  */
-export function scene_render_current_scene(app) {
-    const destroy_previous_scene = __CURRENT_SCENE_DESTROY_FUNCTION;
-    __CURRENT_SCENE_DESTROY_FUNCTION = undefined;
-    destroy_previous_scene?.();
-    app.innerHTML = "";
-    const store = store_get();
-    switch (store.ui_state.scene) {
+function __scene_mount_current(app) {
+    const scene = store_get().ui_state.scene;
+    switch (scene) {
         case SCENES.MAIN:
-            __CURRENT_SCENE_DESTROY_FUNCTION = mainscene_mount(app).destroy;
-            break;
+            return mainscene_mount(app).destroy;
         case SCENES.MENU:
-            __CURRENT_SCENE_DESTROY_FUNCTION = menuscene_mount(app).destroy;
-            break;
-        default: {
-            utils_assert_unreachable(store.ui_state.scene);
-        }
+            return menuscene_mount(app).destroy;
+        default:
+            return utils_assert_unreachable(scene);
     }
 }

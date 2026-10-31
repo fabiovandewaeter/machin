@@ -1,7 +1,7 @@
 // engine/action/action.js
 
 /** @template {Record<string, unknown>} T @typedef {import("../../utils/enum.js").EnumKey<T>} EnumKey */
-import { enum_create } from "../../utils/enum";
+import { enum_create } from "../../utils/enum.js";
 
 // TODO:
 // miner avec des steps, déplacement etc.
@@ -16,6 +16,7 @@ export const ACTION_KIND = enum_create(/**@type {const}*/([
 ]));
 /**
  * @typedef {EnumKey<typeof ACTION_KIND>} ActionKind
+ */
 
 /**
  * @typedef {Object} Action

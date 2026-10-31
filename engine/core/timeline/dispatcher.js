@@ -14,7 +14,11 @@ import { enginesignals_batch } from "../signal/signal.js";
  */
 
 /** @type {Partial<Record<TimelineEventKind, TimelineEventHandler>>} */
-const __HANDLERS = {};
+let __HANDLERS = Object.create(null);
+
+export function timelinedispatcher_clear_handlers() {
+    __HANDLERS = Object.create(null);
+}
 
 /**
  * @param {TimelineEventKind} kind

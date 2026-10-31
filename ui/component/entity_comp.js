@@ -1,9 +1,8 @@
 // ui/core/component/entity_comp.js
 
 /**
- * @typedef {import("./core/comp.js").DestroyFunction} DestroyFunction
+ * @typedef {import("./core/utils.js").DestroyFunction} DestroyFunction
  * @typedef {import("../../engine/core/ids.types.js").EntityID} EntityID
- * @typedef {import("./menu_comp.js").SubCompManager} SubCompManager
  */
 /** @template {Record<string, unknown>} T @typedef {import("../../utils/enum.js").EnumKey<T>} EnumKey */
 import { enginesignal_on } from "../../engine/core/signal/signal.js";
@@ -14,7 +13,7 @@ import { utils_assert_unreachable } from "../../utils/utils.js";
 import { uisignal_emit } from "../core/signal/signal.js";
 import { UI_SIGNAL } from "../core/signal/signal.types.js";
 import { store_get } from "../core/store.js";
-import { comp_create_comp, comp_create_comp_with_sub_comps, comp_delegate_click_with_enum } from "./core/comp.js";
+import { comp_create_comp_with_sub_comps, comp_delegate_click_with_enum } from "./core/comp.js";
 import { subcompmanager_add } from "./core/sub_comp_manager.js";
 import { inventorycomp_mount } from "./inventory_comp.js";
 
@@ -70,7 +69,6 @@ export function entitycomp_mount(container, entity_id) {
         const s = store_get();
         const entity = undefined_unwrap(repository_get(s.world.entity_repo, entity_id));
 
-        // subcomps
         const inventory_container = /**@type {HTMLElement}*/(el.querySelector(".inventory"));
         if (!inventory_container) throw new Error();
         subcompmanager_add(
@@ -79,10 +77,9 @@ export function entitycomp_mount(container, entity_id) {
             inventorycomp_mount(inventory_container, entity.inventory_id));
 
         add_cleanup(comp_delegate_click_with_enum(el, __ACTIONS, (action, event, btn) => {
-            __entitycomp_handle_action(action, btn, sub_comp_manager, entity_id);
+            __entitycomp_handle_action(action);
         }));
 
-        // signaux
         add_cleanup(enginesignal_on("entity.name.changed", (payload) => {
             if (payload.entity_id === entity_id) __entitycomp_update(el, entity_id);
         }));
@@ -96,12 +93,8 @@ export function entitycomp_mount(container, entity_id) {
 
 /**
  * @param {Action} action
- * @param {HTMLElement} btn
- * @param {SubCompManager} sub_comp_manager
- * @param {EntityID} entity_id
  */
-function __entitycomp_handle_action(action, btn, sub_comp_manager, entity_id) {
-    const s = store_get();
+function __entitycomp_handle_action(action) {
     switch (action) {
         case __ACTIONS.CLOSE_PANEL: {
             uisignal_emit(UI_SIGNAL.CLOSE_ENTITY_PANEL);

@@ -4,7 +4,6 @@
  * @typedef {Object} Gauge
  * @property {number} current
  * @property {number} max
- * @property {number} max
  */
 
 /**

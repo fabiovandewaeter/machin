@@ -2,18 +2,15 @@
 
 
 /**
- * @typedef {import("./core/comp.js").DestroyFunction} DestroyFunction
- * @typedef {import("../core/store.js").GameStore} GameStore
+ * @typedef {import("./core/utils.js").DestroyFunction} DestroyFunction
+ * @typedef {import("../core/store.types.js").GameStore} GameStore
  */
 
 import { SECONDS_PER_DAY, SECONDS_PER_HOUR, SECONDS_PER_MINUTE, SECONDS_PER_WEEK, SECONDS_PER_YEAR } from "../../utils/const.js";
-import { signalbus_on } from "../../utils/signal_bus.js";
 import { store_get } from "../core/store.js";
 import { comp_create_comp } from "./core/comp.js";
 import { clock_get_elapsed_ms } from "../../engine/core/clock.js";
-import { ENGINE_SIGNAL } from "../../engine/core/signal/signal.types.js";
-import { UI_SIGNAL } from "../core/signal/signal.types.js";
-import { uisignal_on } from "../core/signal/signal.js";
+import { enginesignal_on } from "../../engine/core/signal/signal.js";
 
 /**
  * @returns {string}
@@ -40,8 +37,7 @@ function __timecomp_get_accumulated_seconds(store) { return clock_get_elapsed_ms
  * @param {HTMLElement} el
  */
 export function timecomp_update(el) {
-    let s = store_get();
-    const accumulated_seconds = __timecomp_get_accumulated_seconds(s);
+    const accumulated_seconds = __timecomp_get_accumulated_seconds(store_get());
 
     const s_counter = el.querySelector(".time-seconds");
     const m_counter = el.querySelector(".time-minutes");
@@ -68,8 +64,7 @@ export function timecomp_mount(container) {
     return comp_create_comp(container, "time-comp", (el, add_cleanup) => {
         el.innerHTML = timecomp_render();
 
-        // add_cleanup(signalbus_on(ESB, ENGINE_SIGNAL.ENTITY_BROKE, (payload) => timecomp_update(el)));
-        add_cleanup(uisignal_on(UI_SIGNAL.TICK, () => timecomp_update(el)));
+        add_cleanup(enginesignal_on("TICK", () => timecomp_update(el)));
         timecomp_update(el);
     });
 }

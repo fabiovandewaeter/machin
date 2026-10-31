@@ -13,7 +13,7 @@
  * @typedef {import("./room/room.js").RoomRepo} RoomRepo
  */
 import { repository_create } from "../../utils/repository.js";
-import { random } from "../extraction/ore.js";
+import { ore_generate } from "../extraction/ore.js";
 
 import { room_add_exit, room_spawn } from "./room/room.js";
 
@@ -53,7 +53,7 @@ export function galaxy_init(galaxy) {
         kind: "CITY",
         name: "default",
         layer: 0,
-        content: random(5),
+        content: ore_generate(5),
     });
     // TODO: enlever ça faire une système plus propre
     if (default_room.id != GALAXY_DEFAULT_ROOM_ID) throw new Error(`default_room_id different from DEFAULT_ROOM_ID: ${default_room.id} ${GALAXY_DEFAULT_ROOM_ID}`)
@@ -61,7 +61,7 @@ export function galaxy_init(galaxy) {
         kind: "FOREST",
         name: "seconde_room",
         layer: 0,
-        content: random(5),
+        content: ore_generate(5),
     });
     room_add_exit(galaxy.room_repo, default_room.id, "sortie foret", {
         target_id: seconde_room.id

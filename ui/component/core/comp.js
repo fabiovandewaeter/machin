@@ -1,86 +1,83 @@
-// ui/core/component/core/comp.js
-
 /**
  * @typedef {import("./utils.js").DestroyFunction} DestroyFunction
+ * @typedef {import("./sub_comp_manager.js").SubCompManager} SubCompManager
  */
 import { enum_is_enum_key } from "../../../utils/enum.js";
 import { subcompmanager_create, subcompmanager_destroy_all } from "./sub_comp_manager.js";
 
 /**
- * @typedef {import("./sub_comp_manager.js").SubCompManager} SubCompManager
- */
-
-/**
- * Crée un composant avec un cycle de vie standard.
  * @param {HTMLElement} container
  * @param {string} name
- * @param {(root: HTMLElement, add_cleanup: (fn: DestroyFunction) => void) => void | DestroyFunction} setup
- *        - `add_cleanup` : enregistre une fonction de nettoyage (sera appelée au destroy).
- *        - le retour éventuel de `setup` est aussi utilisé comme nettoyage.
- * @returns {{ element: HTMLElement, destroy: DestroyFunction }}
+ * @param {(root: HTMLElement, add_cleanup: (cleanup: DestroyFunction) => void) => void | DestroyFunction} setup
+ * @returns {{element: HTMLElement, destroy: DestroyFunction}}
  */
 export function comp_create_comp(container, name, setup) {
     const root = document.createElement("div");
     root.className = name;
-    /**@type {Function[]} */
+    root.dataset.component = name;
+    /** @type {DestroyFunction[]} */
     const cleanups = [];
-
-    // ajoute les fonctions off des SignalBus.on() à la fonction destroy pour ne pas oublier
-    const add_cleanup = (/** @type {Function} */ fn) => cleanups.push(fn);
-    const internal_destroy = setup(root, add_cleanup);
-
+    let destroyed = false;
+    const add_cleanup = (/** @type {DestroyFunction} */ cleanup) => {
+        if (destroyed) cleanup();
+        else cleanups.push(cleanup);
+    };
     const destroy = () => {
-        // internal_destroy();
-        // d'abord les nettoyages explicites (retour du setup)
-        if (typeof internal_destroy === "function") {
-            internal_destroy();
-        }
-        // puis tous les nettoyages enregistrés (dans l'ordre inverse d'ajout, par sécurité)
-        for (let i = cleanups.length - 1; i >= 0; i--) {
-            cleanups[i]();
+        if (destroyed) return;
+        destroyed = true;
+        /** @type {unknown[]} */
+        const errors = [];
+        for (const cleanup of cleanups.splice(0).reverse()) {
+            try {
+                cleanup();
+            } catch (error) {
+                errors.push(error);
+            }
         }
         root.remove();
+        if (errors.length) throw new AggregateError(errors, `Could not destroy component: ${name}`);
     };
-
-    container.appendChild(root);
+    try {
+        const cleanup = setup(root, add_cleanup);
+        if (cleanup) add_cleanup(cleanup);
+        container.appendChild(root);
+    } catch (error) {
+        try {
+            destroy();
+        } catch (cleanup_error) {
+            throw new AggregateError([error, cleanup_error], `Could not mount component: ${name}`);
+        }
+        throw error;
+    }
     return { element: root, destroy };
 }
 
 /**
- * Version qui gère en plus un SubCompManager.
  * @param {HTMLElement} container
  * @param {string} name
- * @param {(root: HTMLElement, sub_comps: SubCompManager, add_cleanup: (fn: DestroyFunction) => void) => void | DestroyFunction} setup
- * @returns {{ element: HTMLElement, destroy: DestroyFunction }}
+ * @param {(root: HTMLElement, sub_comps: SubCompManager, add_cleanup: (cleanup: DestroyFunction) => void) => void | DestroyFunction} setup
+ * @returns {{element: HTMLElement, destroy: DestroyFunction}}
  */
 export function comp_create_comp_with_sub_comps(container, name, setup) {
     return comp_create_comp(container, name, (root, add_cleanup) => {
         const sub_comps = subcompmanager_create();
-        // On enregistre la destruction des sous-composants comme nettoyage automatique.
         add_cleanup(() => subcompmanager_destroy_all(sub_comps));
-        // On appelle le setup de l'utilisateur avec le manager et addCleanup.
         return setup(root, sub_comps, add_cleanup);
     });
 }
 
 /**
- * Attache un écouteur de clic par délégation sur l'élément racine.
  * @param {HTMLElement} root
  * @param {(action: string, event: Event, target: HTMLElement) => void} handler
  * @returns {DestroyFunction}
  */
 export function comp_delegate_click(root, handler) {
-    /** @type {(event: Event) => void} */
-    const on_click = (event) => {
-        const target = (event.target instanceof Element)
-            ? event.target.closest("[data-action]")
-            : null;
-        if (!target) return; // clic hors bouton donc on ignore
-
-        const action = target.getAttribute("data-action");
-        if (action) {
-            handler(action, event, /** @type {HTMLElement} */(target));
-        }
+    const on_click = (/** @type {Event} */ event) => {
+        if (!(event.target instanceof Element) || event.target.closest("[data-component]") !== root) return;
+        const target = event.target.closest("[data-action]");
+        if (!(target instanceof HTMLElement) || !root.contains(target)) return;
+        const action = target.dataset.action;
+        if (action) handler(action, event, target);
     };
     root.addEventListener("click", on_click);
     return () => root.removeEventListener("click", on_click);
@@ -95,9 +92,7 @@ export function comp_delegate_click(root, handler) {
  */
 export function comp_delegate_click_with_enum(root, action_enum, handler) {
     return comp_delegate_click(root, (action, event, target) => {
-        if (!enum_is_enum_key(action_enum, action)) {
-            throw new Error(`Invalid action: ${action}`);
-        }
+        if (!enum_is_enum_key(action_enum, action)) throw new Error(`Invalid action: ${action}`);
         handler(action, event, target);
     });
 }

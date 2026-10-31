@@ -23,8 +23,8 @@ test("how_many_steps(): retourne BASE_STEP_AMOUNT quand meme mining_level", () =
 });
 
 test("how_many_steps(): retourne BASE_STEP_AMOUNT - (diff_mining_level)", () => {
-    const HEAD_MATERIAL = "STONE";
-    const TARGET_MATERIAL = "IRON";
+    const HEAD_MATERIAL = "IRON";
+    const TARGET_MATERIAL = "STONE";
     const head = materialitem_create({
         kind: "HEAD",
         material: HEAD_MATERIAL,

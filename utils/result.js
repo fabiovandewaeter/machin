@@ -66,11 +66,11 @@ export const result_unwrap_or = (res, fallback) => result_is_ok(res) ? res.value
  * @param {string} [msg]
  * @returns {asserts res is Ok<T, E>}
  */
-export const result_assert_ok = (res, msg) => {
+export function result_assert_ok(res, msg) {
     if (result_is_err(res)) {
         throw new Error(msg ? `${msg}: ${String(res.error)}` : String(res.error));
     }
-};
+}
 
 /**
  * Throw si Ok, narrow `res` en Err après l'appel.
@@ -80,11 +80,11 @@ export const result_assert_ok = (res, msg) => {
  * @param {string} [msg]
  * @returns {asserts res is Err<T, E>}
  */
-export const result_assert_err = (res, msg) => {
+export function result_assert_err(res, msg) {
     if (result_is_ok(res)) {
         throw new Error(msg ?? `Expected Err, got Ok(${String(res.value)})`);
     }
-};
+}
 
 /**
  * @template T, U, E

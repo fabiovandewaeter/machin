@@ -1,129 +1,87 @@
-// utils/save.js
-
-/**
- * @typedef {import("../engine/core/world/world.js").World} World
- * @typedef {import("../ui/core/ui_state/ui_state.js").UIState} UIState
- */
-import { world_create, world_init } from "../engine/core/world/world.js";
-import { uisignal_emit } from "../ui/core/signal/signal.js";
-import { UI_SIGNAL } from "../ui/core/signal/signal.types.js";
-import { store_set_world, store_set_ui_state, store_set_should_save } from "../ui/core/store.js";
-import { uistate_create } from "../ui/core/ui_state/ui_state.js";
-import { signalbus_emit } from "./signal_bus.js";
+/** @template T, E @typedef {import("./result.js").Res<T, E>} Res */
+import { err, ok } from "./result.js";
 
 const __STORAGE_KEY = "machin_save";
-const __CURRENT_VERSION = 0;
-
-// TODO: ne pas inclure les logs dans la save + recréer avec liste logs vides au chargements
-/**
- * @typedef {Object} SaveStruct
- * @property {number} version
- * @property {World} world
- * @property {UIState} ui_state
- */
 
 /**
- * @param {World} world
- * @param {UIState} ui_state
+ * @param {unknown} data
+ * @returns {boolean}
  */
-export function save_save(world, ui_state) {
-    /** @type {SaveStruct} */
-    const save_struct = {
-        version: __CURRENT_VERSION,
-        world,
-        ui_state,
-    };
+export function save_save(data) {
     try {
-        const json = JSON.stringify(save_struct);
+        const json = JSON.stringify(data);
+        if (json === undefined) throw new Error("Save data is not serializable");
         localStorage.setItem(__STORAGE_KEY, json);
-    } catch (e) {
-        console.error("Could not save:", e);
+        return true;
+    } catch (error) {
+        console.error("Could not save:", error);
+        return false;
     }
 }
 
-/**
- * @returns {SaveStruct|undefined}
- */
+/** @returns {Res<unknown, string>} */
 export function save_load() {
     try {
         const json = localStorage.getItem(__STORAGE_KEY);
-        if (json) {
-            const res = JSON.parse(json);
-            if (res && res.world) {
-                return res;
-            }
-        }
-        return undefined;
-    } catch (e) {
-        console.error("Could not load save:", e);
-        localStorage.removeItem(__STORAGE_KEY);
-        return undefined;
+        return ok(json ? JSON.parse(json) : undefined);
+    } catch (error) {
+        console.error("Could not load save:", error);
+        return err("Could not load save");
     }
 }
 
+/** @returns {boolean} */
 export function save_clear() {
-    localStorage.removeItem(__STORAGE_KEY);
-    const new_world = world_create();
-    world_init(new_world);
-    store_set_world(new_world);
-    store_set_ui_state(uistate_create());
-    store_set_should_save(false);
-    uisignal_emit(UI_SIGNAL.SCENE_SWITCHED, { new_scene: "MAIN" });
-    // Runtime.clear();
-    // const app = /**@type {HTMLElement}*/(document.getElementById("app"));
-    // // scene_render_current_scene(app, Runtime.WORLD, Runtime.UI_STATE);
-    // Runtime.set_should_save(false);
-    // window.zone.reload();
+    try {
+        localStorage.removeItem(__STORAGE_KEY);
+        return true;
+    } catch (error) {
+        console.error("Could not clear save:", error);
+        return false;
+    }
 }
 
-/**
- * @param {World} world
- * @param {UIState} ui_state
- */
-export function save_download(world, ui_state) {
-    /** @type {SaveStruct} */
-    const save_struct = {
-        version: __CURRENT_VERSION,
-        world,
-        ui_state,
-    };
-    const json = JSON.stringify(save_struct, null, 2);
+/** @param {unknown} data */
+export function save_download(data) {
+    const json = JSON.stringify(data, null, 2);
+    if (json === undefined) throw new Error("Save data is not serializable");
     const blob = new Blob([json], { type: "application/json" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "save.json";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "save.json";
+    try {
+        document.body.appendChild(link);
+        link.click();
+    } finally {
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 0);
+    }
 }
 
+/** @returns {Promise<unknown>} */
 export function save_upload() {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
         const input = document.createElement("input");
         input.type = "file";
         input.accept = ".json";
-        input.onchange = (e) => {
-            const target = e.target;
-            if (!(target instanceof HTMLInputElement)) throw new Error();
-            const file = target.files?.[0];
+        input.oncancel = () => resolve(undefined);
+        input.onchange = () => {
+            const file = input.files?.[0];
             if (!file) {
-                resolve(null);
+                resolve(undefined);
                 return;
             }
             const reader = new FileReader();
-            reader.onload = (event) => {
+            reader.onload = () => {
                 try {
-                    const model = JSON.parse(/**@type {string}*/(event.target?.result));
-                    // TODO: valider que les champs sont bons
-                    resolve(model);
-                } catch (err) {
-                    console.error("Fichier invalide");
-                    resolve(null);
+                    resolve(JSON.parse(/** @type {string} */ (reader.result)));
+                } catch {
+                    resolve(undefined);
                 }
             };
-            reader.onerror = () => resolve(null);
+            reader.onerror = () => resolve(undefined);
+            reader.onabort = () => resolve(undefined);
             reader.readAsText(file);
         };
         input.click();

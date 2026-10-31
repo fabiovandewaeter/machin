@@ -1,32 +1,22 @@
-// ui/core/component/core/sub_comp_manager.js
+/** @typedef {import("./utils.js").DestroyFunction} DestroyFunction */
 
 /**
- * @typedef {import("./utils.js").DestroyFunction} DestroyFunction
- */
-
-/**
- * @typedef {Object} SubComp
- * @property {DestroyFunction} destroy
- */
-
-/**
+ * @typedef {{destroy: DestroyFunction}} SubComp
  * @typedef {string} SubCompKey
- * 
- * @typedef {Object} SubCompManager
- * @property {Map<SubCompKey, SubComp>} sub_comps
+ * @typedef {{sub_comps: Map<SubCompKey, SubComp>}} SubCompManager
  */
 
-/**
- * @returns {SubCompManager}
- */
-export function subcompmanager_create() { return { sub_comps: new Map() } };
+/** @returns {SubCompManager} */
+export function subcompmanager_create() {
+    return { sub_comps: new Map() };
+}
 
 /**
  * @param {SubCompManager} manager
  * @param {SubCompKey} key
  * @returns {boolean}
  */
-export function has(manager, key) {
+export function subcompmanager_has(manager, key) {
     return manager.sub_comps.has(key);
 }
 
@@ -36,42 +26,44 @@ export function has(manager, key) {
  * @param {SubComp} sub
  */
 export function subcompmanager_add(manager, key, sub) {
-    // if (manager.sub_comps.has(key)) {
-    if (has(manager, key)) {
-        throw new Error(`sub_comp_manager: la clé "${String(key)}" existe déjà`);
-    }
+    if (subcompmanager_has(manager, key)) throw new Error(`Duplicate subcomponent key: ${key}`);
     manager.sub_comps.set(key, sub);
 }
 
 /**
  * @param {SubCompManager} manager
  * @param {SubCompKey} key
- * @returns {boolean} true si un enfant a bien été supprimé
+ * @returns {boolean}
  */
 export function subcompmanager_remove(manager, key) {
     const sub = manager.sub_comps.get(key);
     if (!sub) return false;
-    sub.destroy();
     manager.sub_comps.delete(key);
+    sub.destroy();
     return true;
 }
 
-/**
- * @param {SubCompManager} manager
- */
+/** @param {SubCompManager} manager */
 export function subcompmanager_destroy_all(manager) {
-    const reversed = [...manager.sub_comps.values()].reverse();
-    for (const sub of reversed) sub.destroy();
+    const children = [...manager.sub_comps.values()].reverse();
     manager.sub_comps.clear();
+    /** @type {unknown[]} */
+    const errors = [];
+    for (const child of children) {
+        try {
+            child.destroy();
+        } catch (error) {
+            errors.push(error);
+        }
+    }
+    if (errors.length) throw new AggregateError(errors, "Could not destroy subcomponents");
 }
 
 /**
- * Ajoute l'enfant s'il est absent, le détruit s'il est présent. Le cas d'usage
- * "un bouton spawn/destroy un component" (menu, hide_logs...) tient en un appel.
  * @param {SubCompManager} manager
  * @param {SubCompKey} key
- * @param {() => SubComp} create_sub - appelé seulement si besoin de créer
- * @returns {boolean} true si l'enfant vient d'être ajouté, false s'il vient d'être supprimé
+ * @param {() => SubComp} create_sub
+ * @returns {boolean}
  */
 export function subcompmanager_mount_or_toggle(manager, key, create_sub) {
     if (subcompmanager_remove(manager, key)) return false;
