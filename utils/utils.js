@@ -1,5 +1,7 @@
 // utils/utils.js
 
+import { assert } from "./assert.js";
+
 /**
  * pour convertir un string en number ou TID par exemple
  * PAS de verification au runtime sur le type, juste sur la conversion string to int
@@ -8,9 +10,9 @@
  * @returns {RType}
  */
 export function utils_string_to_rkind(id_string) {
-    if (!id_string) throw new Error();
+    assert(id_string, "Missing ID string");
     const id = Number(id_string);
-    if (!Number.isSafeInteger(id) || id < 0) throw new Error;
+    assert(Number.isSafeInteger(id) && id >= 0, `Invalid ID: ${id_string}`);
     return  /**@type {RType}*/(id);
 }
 

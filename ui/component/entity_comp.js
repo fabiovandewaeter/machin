@@ -6,6 +6,7 @@
  */
 /** @template {Record<string, unknown>} T @typedef {import("../../utils/enum.js").EnumKey<T>} EnumKey */
 import { enginesignal_on } from "../../engine/core/signal/signal.js";
+import { assert } from "../../utils/assert.js";
 import { enum_create } from "../../utils/enum.js";
 import { repository_get } from "../../utils/repository.js";
 import { undefined_unwrap } from "../../utils/undefined.js";
@@ -50,7 +51,7 @@ function __entitycomp_update(el, entity_id) {
     const span_name = el.querySelector(".entity-name");
     const span_room_id = el.querySelector(".entity-room-id");
 
-    if (!span_id || !span_name || !span_room_id) throw new Error();
+    assert(span_id && span_name && span_room_id, "Missing entity fields");
 
     span_id.textContent = entity.id.toString();
     span_name.textContent = entity.name;
@@ -70,7 +71,7 @@ export function entitycomp_mount(container, entity_id) {
         const entity = undefined_unwrap(repository_get(s.world.entity_repo, entity_id));
 
         const inventory_container = /**@type {HTMLElement}*/(el.querySelector(".inventory"));
-        if (!inventory_container) throw new Error();
+        assert(inventory_container, "Missing inventory container");
         subcompmanager_add(
             sub_comp_manager,
             __INVENTORY_KEY,

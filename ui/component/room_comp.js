@@ -10,6 +10,7 @@
 import { enginesignal_on } from "../../engine/core/signal/signal.js";
 import { world_mine, world_move_entity } from "../../engine/core/world/world.js";
 import { ore_can_be_extracted } from "../../engine/extraction/ore.js";
+import { assert } from "../../utils/assert.js";
 import { enum_create } from "../../utils/enum.js";
 import { repository_get } from "../../utils/repository.js";
 import { result_is_err } from "../../utils/result.js";
@@ -54,7 +55,7 @@ function __roomcomp_update(element) {
     const exits = element.querySelector(".connected-rooms");
     const entities = element.querySelector(".visible-entities");
     const content = element.querySelector(".content");
-    if (!id || !kind || !name || !exits || !entities || !content) throw new Error("Missing room fields");
+    assert(id && kind && name && exits && entities && content, "Missing room fields");
     id.textContent = String(room.id);
     kind.textContent = room.kind;
     name.textContent = room.name;

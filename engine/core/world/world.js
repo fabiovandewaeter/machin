@@ -10,6 +10,7 @@
  * @typedef {import("../../item/material/material_item.js").MaterialItemStack} MaterialItemStack
  */
 /** @template T, E @typedef {import("../../../utils/result.js").Res<T, E>} Res */
+import { assert } from "../../../utils/assert.js";
 import { repository_create, repository_get, repository_next_id } from "../../../utils/repository.js";
 import { err, ok, result_is_err } from "../../../utils/result.js";
 import { undefined_expect } from "../../../utils/undefined.js";
@@ -74,9 +75,8 @@ export function world_move_entity(world, entity_id, target_id) {
     if (!Object.values(previous_room.exits).some(exit => exit.target_id === target_id)) {
         return err(`Room ${target_id} is not accessible from room ${previous_room.id}`);
     }
-    if (!previous_room.entities.includes(entity_id) || target_room.entities.includes(entity_id)) {
-        throw new Error(`Inconsistent room membership: ${entity_id}`);
-    }
+    assert(previous_room.entities.includes(entity_id) && !target_room.entities.includes(entity_id),
+        `Inconsistent room membership: ${entity_id}`);
     return enginesignals_batch(() => {
         entity_move(world.entity_repo, entity_id, target_id);
         room_remove_entity(world.galaxy.room_repo, previous_room.id, entity_id);

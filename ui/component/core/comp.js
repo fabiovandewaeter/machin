@@ -4,6 +4,7 @@
  * @typedef {import("./utils.js").DestroyFunction} DestroyFunction
  * @typedef {import("./sub_comp_manager.js").SubCompManager} SubCompManager
  */
+import { assert } from "../../../utils/assert.js";
 import { enum_is_enum_key } from "../../../utils/enum.js";
 import { subcompmanager_create, subcompmanager_destroy_all } from "./sub_comp_manager.js";
 
@@ -94,7 +95,7 @@ export function comp_delegate_click(root, handler) {
  */
 export function comp_delegate_click_with_enum(root, action_enum, handler) {
     return comp_delegate_click(root, (action, event, target) => {
-        if (!enum_is_enum_key(action_enum, action)) throw new Error(`Invalid action: ${action}`);
+        assert(enum_is_enum_key(action_enum, action), `Invalid action: ${action}`);
         handler(action, event, target);
     });
 }

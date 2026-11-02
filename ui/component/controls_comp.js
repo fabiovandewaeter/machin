@@ -2,6 +2,7 @@
 
 /** @typedef {import("./core/utils.js").DestroyFunction} DestroyFunction */
 /** @template {Record<string, unknown>} T @typedef {import("../../utils/enum.js").EnumKey<T>} EnumKey */
+import { assert } from "../../utils/assert.js";
 import { SECONDS_PER_DAY, SECONDS_PER_HOUR, SECONDS_PER_MINUTE, SECONDS_PER_WEEK, SECONDS_PER_YEAR } from "../../utils/const.js";
 import { enum_create } from "../../utils/enum.js";
 import { utils_assert_unreachable, utils_string_to_rkind } from "../../utils/utils.js";
@@ -47,7 +48,7 @@ export function controlscomp_render() {
 /** @param {HTMLElement} element */
 function __controlscomp_update_toggle_button(element) {
     const button = element.querySelector(`button[data-action="${__ACTIONS.TOGGLE_TICK}"]`);
-    if (!button) throw new Error("Missing tick button");
+    assert(button, "Missing tick button");
     button.textContent = game_is_running() ? "Stop" : "Start";
 }
 

@@ -1,6 +1,7 @@
 // ui/component/core/sub_comp_manager.js
 
 /** @typedef {import("./utils.js").DestroyFunction} DestroyFunction */
+import { assert } from "../../../utils/assert.js";
 
 /**
  * @typedef {{destroy: DestroyFunction}} SubComp
@@ -28,7 +29,7 @@ export function subcompmanager_has(manager, key) {
  * @param {SubComp} sub
  */
 export function subcompmanager_add(manager, key, sub) {
-    if (subcompmanager_has(manager, key)) throw new Error(`Duplicate subcomponent key: ${key}`);
+    assert(!subcompmanager_has(manager, key), `Duplicate subcomponent key: ${key}`);
     manager.sub_comps.set(key, sub);
 }
 

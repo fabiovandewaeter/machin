@@ -1,6 +1,7 @@
 // ui/component/logs_comp.js
 
 /** @typedef {import("./core/utils.js").DestroyFunction} DestroyFunction */
+import { assert } from "../../utils/assert.js";
 import { uisignal_on } from "../core/signal/signal.js";
 import { UI_SIGNAL } from "../core/signal/signal.types.js";
 import { store_get } from "../core/store/store.js";
@@ -21,7 +22,7 @@ export function logscomp_mount(container) {
     return comp_create_comp(container, "logs-comp", (element, add_cleanup) => {
         element.innerHTML = logscomp_render();
         const list = element.querySelector(".logs-list");
-        if (!list) throw new Error("Missing logs list");
+        assert(list, "Missing logs list");
         const update = () => {
             list.replaceChildren(...store_get().ui_state.logs.slice(-__MAX_RENDERED_LOGS).map(log => {
                 const item = document.createElement("li");

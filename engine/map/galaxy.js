@@ -12,6 +12,7 @@
  * @typedef {import("../core/ids.types.js").RoomID} RoomID
  * @typedef {import("./room/room.js").RoomRepo} RoomRepo
  */
+import { assert } from "../../utils/assert.js";
 import { repository_create } from "../../utils/repository.js";
 import { ore_generate } from "../extraction/ore.js";
 
@@ -56,7 +57,8 @@ export function galaxy_init(galaxy) {
         content: ore_generate(5),
     });
     // TODO: enlever ça faire une système plus propre
-    if (default_room.id != GALAXY_DEFAULT_ROOM_ID) throw new Error(`default_room_id different from DEFAULT_ROOM_ID: ${default_room.id} ${GALAXY_DEFAULT_ROOM_ID}`)
+    assert(default_room.id == GALAXY_DEFAULT_ROOM_ID,
+        `default_room_id different from DEFAULT_ROOM_ID: ${default_room.id} ${GALAXY_DEFAULT_ROOM_ID}`);
     const seconde_room = room_spawn(galaxy.room_repo, {
         kind: "FOREST",
         name: "seconde_room",

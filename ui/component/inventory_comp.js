@@ -5,6 +5,7 @@
  * @typedef {import("../../engine/core/ids.types.js").InventoryID} InventoryID
  */
 import { enginesignal_on } from "../../engine/core/signal/signal.js";
+import { assert } from "../../utils/assert.js";
 import { repository_get } from "../../utils/repository.js";
 import { undefined_unwrap } from "../../utils/undefined.js";
 import { store_get } from "../core/store/store.js";
@@ -17,7 +18,7 @@ import { comp_create_comp } from "./core/comp.js";
 function __inventorycomp_update(element, inventory_id) {
     const inventory = undefined_unwrap(repository_get(store_get().world.inventory_repo, inventory_id));
     const items = element.querySelector(".items");
-    if (!items) throw new Error("Missing inventory items");
+    assert(items, "Missing inventory items");
     items.replaceChildren(...inventory.item_stack.map(({ id, item }) => {
         const button = document.createElement("button");
         button.dataset.itemId = String(id);

@@ -1,5 +1,7 @@
 // utils/signal_bus.js
 
+import { assert } from "./assert.js";
+
 // ======================================================
 // Helpers de types
 // ======================================================
@@ -151,7 +153,7 @@ export function signalbus_create() { return { listeners: Object.create(null) }; 
  *  @returns {() => void} */
 export function signalbus_on(bus, signal_kind, callback) {
     const handlers = bus.listeners[signal_kind] ?? [];
-    if (handlers.includes(callback)) throw new Error(`duplicate: ${String(signal_kind)}`);
+    assert(!handlers.includes(callback), `duplicate: ${String(signal_kind)}`);
     bus.listeners[signal_kind] = [...handlers, callback];
     return () => signalbus_off(bus, signal_kind, callback);
 }

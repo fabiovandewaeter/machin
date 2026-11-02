@@ -5,6 +5,7 @@
  * @typedef {import("../../item/material/material.js").MaterialKind} MaterialKind
  * @typedef {import("../../item/quality.js").Quality} Quality
  */
+import { assert } from "../../../utils/assert.js";
 import { result_unwrap } from "../../../utils/result.js";
 import { inventory_add_item } from "../../inventory/inventory.js";
 import { materialitem_create } from "../../item/material/material_item.js";
@@ -15,9 +16,8 @@ import { world_spawn_entity } from "./world.js";
 
 /** @param {World} world */
 export function world_init(world) {
-    if (world.galaxy.room_repo.elements.length || world.entity_repo.elements.length || world.inventory_repo.elements.length) {
-        throw new Error("World is already initialized");
-    }
+    assert(world.galaxy.room_repo.elements.length === 0 && world.entity_repo.elements.length === 0
+        && world.inventory_repo.elements.length === 0, "World is already initialized");
     enginesignals_batch(() => {
         galaxy_init(world.galaxy);
         const robot = world_spawn_entity(world, {

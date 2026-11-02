@@ -6,6 +6,7 @@
  * @typedef {import("../core/store/store.types.js").GameStore} GameStore
  */
 
+import { assert } from "../../utils/assert.js";
 import { SECONDS_PER_DAY, SECONDS_PER_HOUR, SECONDS_PER_MINUTE, SECONDS_PER_WEEK, SECONDS_PER_YEAR } from "../../utils/const.js";
 import { store_get } from "../core/store/store.js";
 import { comp_create_comp } from "./core/comp.js";
@@ -46,7 +47,7 @@ export function timecomp_update(el) {
     const w_counter = el.querySelector(".time-weeks");
     const y_counter = el.querySelector(".time-years");
 
-    if (!s_counter || !m_counter || !h_counter || !d_counter || !w_counter || !y_counter) throw new Error();
+    assert(s_counter && m_counter && h_counter && d_counter && w_counter && y_counter, "Missing time counters");
 
     s_counter.textContent = Math.floor(accumulated_seconds).toString();
     m_counter.textContent = Math.floor(accumulated_seconds / SECONDS_PER_MINUTE).toString();
