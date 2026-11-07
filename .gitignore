@@ -1,1 +1,30 @@
-AGENTS.md
+# Dépendances
+node_modules/
+
+# Fichiers générés par TypeScript
+dist/
+build/
+*.tsbuildinfo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Variables d'environnement et secrets
+.env
+.env.*
+!.env.example
+
+# Fichiers temporaires
+*.tmp
+*.swp
+*.swo
+*~
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# Couverture de tests
+coverage/
+

@@ -1,18 +1,24 @@
 // tsconfig.json
 {
-    "compilerOptions": {
-        "target": "ES2022",
-        "lib": [
-            "ES2022",
-            "DOM"
-        ],
-        "checkJs": true,
-        "strict": true,
-        "noEmit": true,
-        "allowJs": true,
-        "moduleDetection": "force",
-    },
-    "include": [
-        "./**/*.js"
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": [
+      "ES2022",
+      "DOM"
+    ],
+    "checkJs": true,
+    "strict": true,
+    "noEmit": true,
+    "allowJs": true,
+    "moduleDetection": "force",
+    "noUncheckedIndexedAccess": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitOverride": true,
+
+  },
+  "include": [
+    "./**/*.js"
     ]
 }
