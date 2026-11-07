@@ -1,43 +1,43 @@
 // utils/result.js
 
 /**
- * @template T, E
+ * @template T
  * @typedef {{ readonly _tag: "Ok", readonly value: T}} Ok
  */
 /**
- * @template T, E
+ * @template E
  * @typedef {{ readonly _tag: "Err", readonly error: E}} Err
  */
 /**
  * @template T, E
- * @typedef {Ok<T, E> | Err<T, E>} Res
+ * @typedef {Ok<T> | Err<E>} Res
  */
 
 /**
- * @template T, E
+ * @template T
  * @param {T} value
- * @returns {Ok<T,E>}
+ * @returns {Ok<T>}
  */
 export const ok = (value) => ({ _tag: "Ok", value });
 
 /**
- * @template T, E
+ * @template E
  * @param {E} error
- * @returns {Err<T,E>}
+ * @returns {Err<E>}
  */
 export const err = (error) => ({ _tag: "Err", error });
 
 /**
  * @template T, E
  * @param {Res<T, E>} res
- * @returns {res is Ok<T, E>}
+ * @returns {res is Ok<T>}
  */
 export const result_is_ok = (res) => res._tag === "Ok";
 
 /**
  * @template T, E
  * @param {Res<T, E>} res
- * @returns {res is Err<T, E>}
+ * @returns {res is Err<E>}
  */
 export const result_is_err = (res) => res._tag === "Err";
 
@@ -64,7 +64,7 @@ export const result_unwrap_or = (res, fallback) => result_is_ok(res) ? res.value
  * @template T, E
  * @param {Res<T, E>} res
  * @param {string} [msg]
- * @returns {asserts res is Ok<T, E>}
+ * @returns {asserts res is Ok<T>}
  */
 export function result_assert_ok(res, msg) {
     if (result_is_err(res)) {
@@ -78,7 +78,7 @@ export function result_assert_ok(res, msg) {
  * @template T, E
  * @param {Res<T, E>} res
  * @param {string} [msg]
- * @returns {asserts res is Err<T, E>}
+ * @returns {asserts res is Err<E>}
  */
 export function result_assert_err(res, msg) {
     if (result_is_ok(res)) {

@@ -1,5 +1,6 @@
 // engine/extraction/ore.js
 
+import { array_get } from "../../utils/array.js";
 import { assert } from "../../utils/assert.js";
 import { MATERIAL, MATERIAL_KIND } from "../item/material/material.js";
 import { materialitem_create, materialitem_create_stack } from "../item/material/material_item.js";
@@ -32,9 +33,9 @@ import { materialitem_create, materialitem_create_stack } from "../item/material
 export function ore_create({ internal_id, composition }) {
     assert(composition.length > 0 && composition.every(stack => Number.isSafeInteger(stack.amount) && stack.amount >= 0),
         "Invalid ore composition");
-    let max_mining_level = MATERIAL[composition[0].material_item.material].mining_level;
+    let max_mining_level = MATERIAL[array_get(composition, 0).material_item.material].mining_level;
     for (let i = 1; i < composition.length; i++) {
-        const current_mining_level = MATERIAL[composition[i].material_item.material].mining_level;
+        const current_mining_level = MATERIAL[array_get(composition, i).material_item.material].mining_level;
         if (current_mining_level > max_mining_level) {
             max_mining_level = current_mining_level;
         }
@@ -73,7 +74,7 @@ export function ore_generate(amount) {
 
         const mi = materialitem_create({
             kind: "ORE",
-            material: materials[material_index],
+            material: array_get(materials, material_index),
             quality: "NORMAL",
         });
         const stack = materialitem_create_stack(mi, random_amount);

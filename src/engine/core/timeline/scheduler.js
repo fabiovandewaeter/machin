@@ -1,3 +1,4 @@
+import { array_get } from "../../../utils/array.js";
 // engine/core/timeline/scheduler.js
 
 /**
@@ -92,7 +93,7 @@ export function timelinescheduler_all_pending(scheduler) { return repository_all
 
 /** @param {TimelineScheduler} scheduler */
 function __timelinescheduler_purge_stale(scheduler) {
-    while (scheduler.heap.length > 0 && !repository_get(scheduler.repo, scheduler.heap[0].id)) {
+    while (scheduler.heap.length > 0 && !repository_get(scheduler.repo, array_get(scheduler.heap, 0).id)) {
         heap_pop(scheduler.heap);
     }
 }

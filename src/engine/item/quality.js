@@ -1,3 +1,4 @@
+import { array_get } from "../../utils/array.js";
 // engine/item/quality.js
 
 /** @template {Record<string, unknown>} T @typedef {import("../../utils/enum.js").EnumKey<T>} EnumKey */
@@ -18,9 +19,9 @@ export const QUALITY = Object.freeze(/**@type {const}*/({
  */
 export function quality_lowest_quality(qualities) {
     assert(qualities.length > 0);
-    let lowest = QUALITY[qualities[0]];
+    let lowest = QUALITY[array_get(qualities, 0)];
     for (let i = 1; i < qualities.length; i++) {
-        const current = QUALITY[qualities[i]];
+        const current = QUALITY[array_get(qualities, i)];
         if (current.id < lowest.id) {
             lowest = current;
         }

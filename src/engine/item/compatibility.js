@@ -1,3 +1,4 @@
+import { array_get } from "../../utils/array.js";
 // engine/item/compatibility.js
 
 /**
@@ -31,7 +32,7 @@ export function compatibility_are_material_items_and_parts_compatibles(material_
  */
 export function compatibility_are_all_same_material(material_items) {
     assert(material_items.length > 0);
-    const material = material_items[0].material;
+    const material = array_get(material_items, 0).material;
     for (const item of material_items) {
         if (item.material !== material) return err(`Tous les items doivent avoir le même Material: ${material} et ${item.material} sont différents`);
     }

@@ -59,7 +59,7 @@ function __controlscomp_update_toggle_button(element) {
 export function controlscomp_mount(container) {
     return comp_create_comp(container, "controls-comp", (element, add_cleanup) => {
         element.innerHTML = controlscomp_render();
-        add_cleanup(comp_delegate_click_with_enum(element, __ACTIONS, (action, event, button) => {
+        add_cleanup(comp_delegate_click_with_enum(element, __ACTIONS, (action, _event, button) => {
             __controlscomp_handle_action(action, button);
         }));
         add_cleanup(uisignal_on(UI_SIGNAL.TOGGLE_TICK, () => __controlscomp_update_toggle_button(element)));

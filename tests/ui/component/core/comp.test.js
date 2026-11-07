@@ -1,8 +1,8 @@
 // tests/ui/component/core/comp.test.js
 
-import { comp_create_comp, comp_create_comp_with_sub_comps, comp_delegate_click } from "../../../../ui/component/core/comp.js";
-import { subcompmanager_add, subcompmanager_create, subcompmanager_destroy_all, subcompmanager_remove } from "../../../../ui/component/core/sub_comp_manager.js";
-import { assert_equal, assert_throws } from "../../../../utils/assert.js";
+import { comp_create_comp, comp_create_comp_with_sub_comps, comp_delegate_click } from "../../../../src/ui/component/core/comp.js";
+import { subcompmanager_add, subcompmanager_create, subcompmanager_destroy_all, subcompmanager_remove } from "../../../../src/ui/component/core/sub_comp_manager.js";
+import { assert_equal, assert_throws } from "../../../../src/utils/assert.js";
 import { test } from "../../../test.js";
 
 test("les clics d'un composant enfant ne déclenchent pas les actions du parent", () => {
@@ -40,7 +40,7 @@ test("un setup interrompu détruit aussi les abonnements et les enfants déjà c
     let cleanups = 0;
     const error = assert_throws(() => comp_create_comp_with_sub_comps(container, "parent", (root, children, add_cleanup) => {
         add_cleanup(() => { cleanups++; });
-        subcompmanager_add(children, "child", comp_create_comp(root, "child", (child_root, child_cleanup) => {
+        subcompmanager_add(children, "child", comp_create_comp(root, "child", (_child_root, child_cleanup) => {
             child_cleanup(() => { cleanups++; });
         }));
         throw failure;
@@ -54,7 +54,7 @@ test("une erreur de cleanup n'interrompt pas les suivants et destroy reste idemp
     const container = document.createElement("div");
     /** @type {string[]} */
     const calls = [];
-    const component = comp_create_comp(container, "component", (root, add_cleanup) => {
+    const component = comp_create_comp(container, "component", (_root, add_cleanup) => {
         add_cleanup(() => { calls.push("first"); });
         add_cleanup(() => { calls.push("failing"); throw new Error("cleanup failed"); });
         return () => { calls.push("last"); };

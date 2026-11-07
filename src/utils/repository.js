@@ -2,6 +2,7 @@
 
 /** @template T, E @typedef {import("./result.js").Res<T, E>} Res */
 import { ok, err } from "./result.js";
+import { undefined_unwrap } from "./undefined.js";
 
 /**
  * @template {number} TID
@@ -105,7 +106,7 @@ export function repository_remove_element(repo, id) {
 
     // swap
     if (index !== last_index) {
-        const last_element = repo.elements[last_index];
+        const last_element = undefined_unwrap(repo.elements[last_index]);
 
         repo.elements[index] = last_element;
         repo.indices[last_element.id] = index;

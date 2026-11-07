@@ -1,5 +1,7 @@
 // engine/core/timeline/heap.js
 
+import { array_get } from "../../../utils/array.js";
+
 /**
  * @typedef {import("../ids.types.js").TimelineEventID} TimelineEventID
  */
@@ -51,8 +53,15 @@ export function heap_pop(heap) {
 function __heap_sift_up(heap, i) {
     while (i > 0) {
         const parent = (i - 1) >> 1;
-        if (!heap_is_before(heap[i], heap[parent])) break;
-        [heap[i], heap[parent]] = [heap[parent], heap[i]];
+
+        const current_entry = array_get(heap, i);
+        const parent_entry = array_get(heap, parent);
+
+        if (!heap_is_before(current_entry, parent_entry)) break;
+
+        heap[i] = parent_entry;
+        heap[parent] = current_entry;
+
         i = parent;
     }
 }
@@ -63,12 +72,28 @@ function __heap_sift_up(heap, i) {
  */
 function __heap_sift_down(heap, i) {
     const n = heap.length;
+
     while (true) {
-        let smallest = i, l = 2 * i + 1, r = 2 * i + 2;
-        if (l < n && heap_is_before(heap[l], heap[smallest])) smallest = l;
-        if (r < n && heap_is_before(heap[r], heap[smallest])) smallest = r;
+        let smallest = i;
+        const l = 2 * i + 1;
+        const r = 2 * i + 2;
+
+        if (l < n && heap_is_before(array_get(heap, l), array_get(heap, smallest))) {
+            smallest = l;
+        }
+
+        if (r < n && heap_is_before(array_get(heap, r), array_get(heap, smallest))) {
+            smallest = r;
+        }
+
         if (smallest === i) break;
-        [heap[i], heap[smallest]] = [heap[smallest], heap[i]];
+
+        const current_entry = array_get(heap, i);
+        const smallest_entry = array_get(heap, smallest);
+
+        heap[i] = smallest_entry;
+        heap[smallest] = current_entry;
+
         i = smallest;
     }
 }

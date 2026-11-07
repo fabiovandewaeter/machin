@@ -1,12 +1,12 @@
 // tests/engine/item/tool/pickaxe.js
 
 /**
- * @typedef {import("../../../../engine/item/material/material_item.js").MaterialItem} MaterialItem
+ * @typedef {import("../../../../src/engine/item/material/material_item.js").MaterialItem} MaterialItem
  */
-import { materialitem_create } from "../../../../engine/item/material/material_item.js";
-import { pickaxe_craft } from "../../../../engine/item/tool/pickaxe.js";
-import { result_assert_ok, result_is_err } from "../../../../utils/result.js";
-import { assert, assert_equal } from "../../../../utils/assert.js";
+import { materialitem_create } from "../../../../src/engine/item/material/material_item.js";
+import { pickaxe_craft } from "../../../../src/engine/item/tool/pickaxe.js";
+import { result_assert_ok, result_is_err } from "../../../../src/utils/result.js";
+import { assert, assert_equal } from "../../../../src/utils/assert.js";
 import { test } from "../../../test.js";
 
 test("craft(): craft bon", () => {

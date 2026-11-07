@@ -23,7 +23,7 @@ export function menuscene_mount(container) {
     <button data-action="${__ACTIONS.SWITCH_SCENE}" data-scene="MAIN">Switch to main</button>
 </div>
         `;
-        add_cleanup(comp_delegate_click_with_enum(element, __ACTIONS, (action, event, button) => {
+        add_cleanup(comp_delegate_click_with_enum(element, __ACTIONS, (action, _event, button) => {
             __menuscene_handle_action(action, button);
         }));
     });

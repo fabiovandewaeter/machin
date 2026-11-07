@@ -1,3 +1,4 @@
+import { array_get } from "../../../utils/array.js";
 // engine/item/material/material.js
 
 /**
@@ -44,9 +45,9 @@ export const MATERIAL = Object.freeze(/**@type {const}*/({
  */
 export function material_lowest_mining_level(materials) {
     assert(materials.length > 0);
-    let lowest = MATERIAL[materials[0]].mining_level;
+    let lowest = MATERIAL[array_get(materials, 0)].mining_level;
     for (let i = 1; i < materials.length; i++) {
-        const current = MATERIAL[materials[i]].mining_level;
+        const current = MATERIAL[array_get(materials, i)].mining_level;
         if (current < lowest) {
             lowest = current;
         }

@@ -91,7 +91,7 @@ function __roomcomp_update(element) {
 export function roomcomp_mount(container) {
     return comp_create_comp(container, "room-comp", (element, add_cleanup) => {
         element.innerHTML = __roomcomp_render();
-        add_cleanup(comp_delegate_click_with_enum(element, __ACTIONS, (action, event, button) => {
+        add_cleanup(comp_delegate_click_with_enum(element, __ACTIONS, (action, _event, button) => {
             __roomcomp_handle_action(action, button);
         }));
         const update_room = (/** @type {{room_id: RoomID}} */ payload) => {

@@ -39,7 +39,7 @@ export function menucomp_mount(container) {
     return comp_create_comp_with_sub_comps(container, "menu-comp", (el, sub_comp_manager, add_cleanup) => {
         el.innerHTML = menucomp_render();
 
-        add_cleanup(comp_delegate_click_with_enum(el, __ACTIONS, (action, event, btn) => {
+        add_cleanup(comp_delegate_click_with_enum(el, __ACTIONS, (action, _event, btn) => {
             __menucomp_handle_action(action, btn, sub_comp_manager, el);
         }));
     });

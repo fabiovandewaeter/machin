@@ -1,11 +1,11 @@
 // tests/engine/core/timeline/timeline.test.js
 
-import { clock_create } from "../../../../engine/core/clock.js";
-import { timelinedispatcher_register } from "../../../../engine/core/timeline/dispatcher.js";
-import { timelinescheduler_cancel, timelinescheduler_create, timelinescheduler_pop_due, timelinescheduler_schedule } from "../../../../engine/core/timeline/scheduler.js";
-import { timeline_advance_by, timeline_advance_to, timeline_advance_to_now, timeline_clear_handlers } from "../../../../engine/core/timeline/timeline.js";
-import { world_create } from "../../../../engine/core/world/world.js";
-import { assert_equal, assert_throws } from "../../../../utils/assert.js";
+import { clock_create } from "../../../../src/engine/core/clock.js";
+import { timelinedispatcher_register } from "../../../../src/engine/core/timeline/dispatcher.js";
+import { timelinescheduler_cancel, timelinescheduler_create, timelinescheduler_pop_due, timelinescheduler_schedule } from "../../../../src/engine/core/timeline/scheduler.js";
+import { timeline_advance_by, timeline_advance_to, timeline_advance_to_now, timeline_clear_handlers } from "../../../../src/engine/core/timeline/timeline.js";
+import { world_create } from "../../../../src/engine/core/world/world.js";
+import { assert_equal, assert_throws } from "../../../../src/utils/assert.js";
 import { test } from "../../../test.js";
 
 test("les handlers voient l'heure de leur événement et peuvent en planifier la suite", () => {

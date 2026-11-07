@@ -1,12 +1,12 @@
 // tests/engine/item/tool/step.js
 
 /**
- * @typedef {import("../../../../engine/item/material/material_item.js").MaterialItem} MaterialItem
+ * @typedef {import("../../../../src/engine/item/material/material_item.js").MaterialItem} MaterialItem
  */
-import { MATERIAL } from "../../../../engine/item/material/material.js";
-import { materialitem_create } from "../../../../engine/item/material/material_item.js";
-import { step_how_many_steps, BASE_STEP_AMOUNT } from "../../../../engine/item/tool/step.js";
-import { assert, assert_equal } from "../../../../utils/assert.js";
+import { MATERIAL } from "../../../../src/engine/item/material/material.js";
+import { materialitem_create } from "../../../../src/engine/item/material/material_item.js";
+import { step_how_many_steps, BASE_STEP_AMOUNT } from "../../../../src/engine/item/tool/step.js";
+import { assert, assert_equal } from "../../../../src/utils/assert.js";
 import { test } from "../../../test.js";
 
 test("how_many_steps(): retourne BASE_STEP_AMOUNT quand meme mining_level", () => {

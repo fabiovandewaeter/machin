@@ -1,14 +1,15 @@
 // tests/ui/core/save.test.js
 
-/** @typedef {import("../../../ui/core/save/save.types.js").GameSave} GameSave */
-import { timelinescheduler_peek, timelinescheduler_schedule } from "../../../engine/core/timeline/scheduler.js";
-import { world_mine } from "../../../engine/core/world/world.js";
-import { gamesave_create, gamesave_parse } from "../../../ui/core/save/save.js";
-import { uistate_create } from "../../../ui/core/ui_state/ui_state.js";
-import { assert, assert_equal } from "../../../utils/assert.js";
-import { repository_get } from "../../../utils/repository.js";
-import { result_assert_ok } from "../../../utils/result.js";
-import { undefined_unwrap } from "../../../utils/undefined.js";
+/** @typedef {import("../../../src/ui/core/save/save.types.js").GameSave} GameSave */
+import { timelinescheduler_peek, timelinescheduler_schedule } from "../../../src/engine/core/timeline/scheduler.js";
+import { world_mine } from "../../../src/engine/core/world/world.js";
+import { gamesave_create, gamesave_parse } from "../../../src/ui/core/save/save.js";
+import { uistate_create } from "../../../src/ui/core/ui_state/ui_state.js";
+import { array_get } from "../../../src/utils/array.js";
+import { assert, assert_equal } from "../../../src/utils/assert.js";
+import { repository_get } from "../../../src/utils/repository.js";
+import { result_assert_ok } from "../../../src/utils/result.js";
+import { undefined_unwrap } from "../../../src/utils/undefined.js";
 import { create_test_world } from "../../fixtures.js";
 import { test } from "../../test.js";
 
@@ -48,8 +49,9 @@ test("le chargement reconstruit les index, les appartenances et le tas depuis le
     save.world.inventory_repo.indices[entity.inventory_id] = 999;
     save.world.timeline_scheduler.repo.indices[event.id] = 999;
     save.world.timeline_scheduler.heap = [];
-    save.world.galaxy.room_repo.elements[0].entities = [];
-    save.world.galaxy.room_repo.elements[1].entities = [entity.id];
+
+    array_get(save.world.galaxy.room_repo.elements, 0).entities = [];
+    array_get(save.world.galaxy.room_repo.elements, 1).entities = [entity.id];
     const loaded = undefined_unwrap(gamesave_parse(save));
     assert_equal(repository_get(loaded.world.entity_repo, entity.id)?.name, entity.name);
     assert(repository_get(loaded.world.inventory_repo, entity.inventory_id) !== undefined);
@@ -68,23 +70,23 @@ test("les sauvegardes incomplètes et les versions inconnues sont refusées", ()
 
 test("les anciens gisements à quantité nulle restent chargeables et extractibles", () => {
     const { world, entity, ore } = create_test_world();
-    ore.composition[0].amount = 0;
+    array_get(ore.composition, 0).amount = 0;
     const save = gamesave_create({ world, ui_state: uistate_create(), should_save: true });
     const loaded = undefined_unwrap(gamesave_parse(save));
     result_assert_ok(world_mine(loaded.world, entity.id, ore.internal_id));
-    assert_equal(loaded.world.galaxy.room_repo.elements[0].content.length, 0);
-    assert_equal(loaded.world.inventory_repo.elements[0].item_stack.length, 0);
+    assert_equal(array_get(loaded.world.galaxy.room_repo.elements, 0).content.length, 0);
+    assert_equal(array_get(loaded.world.inventory_repo.elements, 0).item_stack.length, 0);
 });
 
 test("les références cassées, les identifiants dupliqués et les compteurs invalides sont refusés", () => {
     /** @type {((save: GameSave) => void)[]} */
     const corruptions = [
         save => { save.world.clock.sim_time = NaN; },
-        save => { save.world.entity_repo.elements.push(save.world.entity_repo.elements[0]); },
-        save => { save.world.entity_repo.current_id = /** @type {import("../../../engine/core/ids.types.js").EntityID} */ (0); },
-        save => { save.world.entity_repo.elements[0].room_id = /** @type {import("../../../engine/core/ids.types.js").RoomID} */ (999); },
-        save => { save.world.inventory_repo.elements[0].__current_intenal_item_id = /** @type {import("../../../engine/inventory/inventory.types.js").__InternalItemID} */ (-1); },
-        save => { save.world.galaxy.room_repo.elements[0].content[0].composition[0].amount = -1; },
+        save => { save.world.entity_repo.elements.push(array_get(save.world.entity_repo.elements, 0)); },
+        save => { save.world.entity_repo.current_id = /** @type {import("../../../src/engine/core/ids.types.js").EntityID} */ (0); },
+        save => { array_get(save.world.entity_repo.elements, 0).room_id = /** @type {import("../../../src/engine/core/ids.types.js").RoomID} */ (999); },
+        save => { array_get(save.world.inventory_repo.elements, 0).__current_intenal_item_id = /** @type {import("../../../src/engine/inventory/inventory.types.js").__InternalItemID} */ (-1); },
+        save => { array_get(array_get(array_get(save.world.galaxy.room_repo.elements, 0).content, 0).composition, 0).amount = -1; },
     ];
     for (const corrupt of corruptions) {
         const { world } = create_test_world();

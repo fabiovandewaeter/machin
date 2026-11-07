@@ -77,7 +77,7 @@ export function entitycomp_mount(container, entity_id) {
             __INVENTORY_KEY,
             inventorycomp_mount(inventory_container, entity.inventory_id));
 
-        add_cleanup(comp_delegate_click_with_enum(el, __ACTIONS, (action, event, btn) => {
+        add_cleanup(comp_delegate_click_with_enum(el, __ACTIONS, (action, _event, _btn) => {
             __entitycomp_handle_action(action);
         }));
 

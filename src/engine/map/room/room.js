@@ -1,3 +1,4 @@
+import { array_get } from "../../../utils/array.js";
 // engine/map/room/room.js
 
 /**
@@ -93,11 +94,16 @@ export function room_remove_entity(repo, id, entity_id) {
 export function room_remove_ore(repo, id, ore_id) {
     const room = undefined_unwrap(repository_get(repo, id));
     const ore_index = room.content.findIndex(ore => ore.internal_id === ore_id);
+
     assert(ore_index !== -1, `Unknown ore in room ${id}: ${ore_id}`);
-    const [ore] = room.content.splice(ore_index, 1);
+
+    const ore = array_get(room.content, ore_index);
+    room.content.splice(ore_index, 1);
+
     enginesignal_emit("room.content.removed", {
         room_id: id,
         removed: ore_id,
     });
+
     return ore;
 }

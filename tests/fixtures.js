@@ -1,18 +1,18 @@
 // tests/fixtures.js
 
-import { clock_create } from "../engine/core/clock.js";
-import { world_create, world_spawn_entity } from "../engine/core/world/world.js";
-import { ore_create } from "../engine/extraction/ore.js";
-import { materialitem_create, materialitem_create_stack } from "../engine/item/material/material_item.js";
-import { pickaxe_craft } from "../engine/item/tool/pickaxe.js";
-import { room_add_exit, room_spawn } from "../engine/map/room/room.js";
-import { result_unwrap } from "../utils/result.js";
+import { clock_create } from "../src/engine/core/clock.js";
+import { world_create, world_spawn_entity } from "../src/engine/core/world/world.js";
+import { ore_create } from "../src/engine/extraction/ore.js";
+import { materialitem_create, materialitem_create_stack } from "../src/engine/item/material/material_item.js";
+import { pickaxe_craft } from "../src/engine/item/tool/pickaxe.js";
+import { room_add_exit, room_spawn } from "../src/engine/map/room/room.js";
+import { result_unwrap } from "../src/utils/result.js";
 
 export function create_test_world() {
     const world = world_create();
     world.clock = clock_create(0);
     const ore = ore_create({
-        internal_id: /** @type {import("../engine/extraction/ore.js").__InternalOreID} */ (0),
+        internal_id: /** @type {import("../src/engine/extraction/ore.js").__InternalOreID} */ (0),
         composition: [materialitem_create_stack(materialitem_create({ kind: "ORE", material: "STONE", quality: "NORMAL" }), 2)],
     });
     const source = room_spawn(world.galaxy.room_repo, { kind: "CITY", name: "source", layer: 0, content: [ore] });

@@ -1,15 +1,15 @@
 // tests/engine/item/material/durability.js
 
 /**
- * @typedef {import("../../../../engine/item/material/material_item.js").MaterialItem} MaterialItem
+ * @typedef {import("../../../../src/engine/item/material/material_item.js").MaterialItem} MaterialItem
  */
-import { durability_decrease_durability } from "../../../../engine/item/material/durability.js";
-import { BASE_DURABILITY, BASE_COST } from "../../../../engine/item/material/durability.types.js";
-import { MATERIAL } from "../../../../engine/item/material/material.js";
-import { materialitem_create } from "../../../../engine/item/material/material_item.js";
-import { pickaxe_craft } from "../../../../engine/item/tool/pickaxe.js";
-import { result_unwrap } from "../../../../utils/result.js";
-import { assert, assert_equal } from "../../../../utils/assert.js";
+import { durability_decrease_durability } from "../../../../src/engine/item/material/durability.js";
+import { BASE_DURABILITY, BASE_COST } from "../../../../src/engine/item/material/durability.types.js";
+import { MATERIAL } from "../../../../src/engine/item/material/material.js";
+import { materialitem_create } from "../../../../src/engine/item/material/material_item.js";
+import { pickaxe_craft } from "../../../../src/engine/item/tool/pickaxe.js";
+import { result_unwrap } from "../../../../src/utils/result.js";
+import { assert, assert_equal } from "../../../../src/utils/assert.js";
 import { test } from "../../../test.js";
 
 test("descrease_durability(): retire BASE_COST de durability quand meme mining_level", () => {
