@@ -175,6 +175,46 @@ test("une erreur de callback interrompt la livraison et nettoie la file", () => 
     assert_equal(calls, 1);
 });
 
+test("une erreur imbriquée interceptée invalide quand même le batch extérieur", () => {
+    const bus = signalbus_create();
+    const failure = new Error("nested failure");
+    let calls = 0;
+    signalbus_on(bus, "event", () => calls++);
+    assert_throws(() => signalbus_batch(bus, () => {
+        signalbus_emit(bus, "event");
+        try {
+            signalbus_batch(bus, () => { throw failure; });
+        } catch (error) {
+            assert_equal(error, failure);
+        }
+        signalbus_emit(bus, "event");
+    }), failure);
+    assert_equal(calls, 0);
+    signalbus_batch(bus, () => signalbus_emit(bus, "event"));
+    assert_equal(calls, 1);
+});
+
+test("un retour asynchrone est refusé sans diffuser les notifications en attente", () => {
+    const bus = signalbus_create();
+    let calls = 0;
+    signalbus_on(bus, "event", () => calls++);
+    const operation = /** @type {() => never} */ (/** @type {unknown} */ (() => {
+        signalbus_emit(bus, "event");
+        return Promise.resolve();
+    }));
+    let failure;
+    try {
+        signalbus_batch(bus, operation);
+    } catch (error) {
+        failure = error;
+    }
+    assert(failure instanceof Error);
+    assert_equal(failure.message, "Signal batches must be synchronous");
+    assert_equal(calls, 0);
+    signalbus_batch(bus, () => signalbus_emit(bus, "event"));
+    assert_equal(calls, 1);
+});
+
 test("une chaîne finie de signaux ne fait pas de récursion et n'est pas tronquée", () => {
     enginesignals_clear_handlers();
     let count = 0;

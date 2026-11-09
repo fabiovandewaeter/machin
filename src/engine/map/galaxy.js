@@ -15,6 +15,7 @@
 import { assert } from "../../utils/assert.js";
 import { repository_create } from "../../utils/repository.js";
 import { ore_generate } from "../extraction/ore.js";
+import { enginesignals_batch } from "../core/signal/signal.js";
 
 import { room_add_exit, room_spawn } from "./room/room.js";
 
@@ -50,25 +51,27 @@ export function galaxy_create() {
  * @param {Galaxy} galaxy 
  */
 export function galaxy_init(galaxy) {
-    const default_room = room_spawn(galaxy.room_repo, {
-        kind: "CITY",
-        name: "default",
-        layer: 0,
-        content: ore_generate(5),
-    });
-    // TODO: enlever ça faire une système plus propre
-    assert(default_room.id == GALAXY_DEFAULT_ROOM_ID,
-        `default_room_id different from DEFAULT_ROOM_ID: ${default_room.id} ${GALAXY_DEFAULT_ROOM_ID}`);
-    const seconde_room = room_spawn(galaxy.room_repo, {
-        kind: "FOREST",
-        name: "seconde_room",
-        layer: 0,
-        content: ore_generate(5),
-    });
-    room_add_exit(galaxy.room_repo, default_room.id, "sortie foret", {
-        target_id: seconde_room.id
-    });
-    room_add_exit(galaxy.room_repo, seconde_room.id, "room default", {
-        target_id: default_room.id
+    enginesignals_batch(() => {
+        const default_room = room_spawn(galaxy.room_repo, {
+            kind: "CITY",
+            name: "default",
+            layer: 0,
+            content: ore_generate(5),
+        });
+        // TODO: enlever ça faire une système plus propre
+        assert(default_room.id == GALAXY_DEFAULT_ROOM_ID,
+            `default_room_id different from DEFAULT_ROOM_ID: ${default_room.id} ${GALAXY_DEFAULT_ROOM_ID}`);
+        const seconde_room = room_spawn(galaxy.room_repo, {
+            kind: "FOREST",
+            name: "seconde_room",
+            layer: 0,
+            content: ore_generate(5),
+        });
+        room_add_exit(galaxy.room_repo, default_room.id, "sortie foret", {
+            target_id: seconde_room.id
+        });
+        room_add_exit(galaxy.room_repo, seconde_room.id, "room default", {
+            target_id: default_room.id
+        });
     });
 }

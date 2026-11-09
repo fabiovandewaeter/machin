@@ -39,7 +39,7 @@ export function enginesignal_emit(signal_kind, ...args) {
 
 /**
  * @template T
- * @param {() => T} operation
+ * @param {() => T & (T extends PromiseLike<unknown> ? never : unknown)} operation
  * @returns {T}
  */
 export function enginesignals_batch(operation) {

@@ -41,6 +41,7 @@ export function timelinescheduler_rebuild_heap(scheduler) {
  * @returns {TimelineEvent}
  */
 export function timelinescheduler_schedule(scheduler, kind, at, payload) {
+    if (!Number.isFinite(at) || at < 0) throw new RangeError("Invalid timeline event time");
     const event = repository_spawn_element(scheduler.repo, { kind, at, payload });
     heap_push(scheduler.heap, { at: event.at, id: event.id });
     return event;

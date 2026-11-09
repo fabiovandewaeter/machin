@@ -35,6 +35,6 @@ export function timelinedispatcher_dispatch(world, event) {
     enginesignals_batch(() => {
         const handler = __HANDLERS[event.kind];
         assert(handler, `Aucun handler enregistré pour l'event kind: ${event.kind}`);
-        handler(world, event);
+        return handler(world, event);
     });
 }

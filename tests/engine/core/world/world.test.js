@@ -1,7 +1,9 @@
 // tests/engine/core/world/world.test.js
 
 import { enginesignal_on } from "../../../../src/engine/core/signal/signal.js";
-import { world_mine, world_move_entity, world_spawn_entity } from "../../../../src/engine/core/world/world.js";
+import { world_create, world_mine, world_move_entity, world_spawn_entity } from "../../../../src/engine/core/world/world.js";
+import { world_init } from "../../../../src/engine/core/world/world_init.js";
+import { galaxy_create, galaxy_init } from "../../../../src/engine/map/galaxy.js";
 import { materialitem_create } from "../../../../src/engine/item/material/material_item.js";
 import { array_get } from "../../../../src/utils/array.js";
 import { assert, assert_equal, assert_throws } from "../../../../src/utils/assert.js";
@@ -10,6 +12,42 @@ import { result_assert_err, result_assert_ok } from "../../../../src/utils/resul
 import { undefined_unwrap } from "../../../../src/utils/undefined.js";
 import { create_test_world } from "../../../fixtures.js";
 import { test } from "../../../test.js";
+
+test("initialiser la galaxie termine les sorties réciproques avant notification", () => {
+    const galaxy = galaxy_create();
+    let calls = 0;
+    const off = enginesignal_on("room.exits.set", () => {
+        assert_equal(galaxy.room_repo.elements.length, 2);
+        for (const room of galaxy.room_repo.elements) {
+            assert_equal(Object.keys(room.exits).length, 1);
+        }
+        calls++;
+    });
+    try {
+        galaxy_init(galaxy);
+        assert_equal(calls, 2);
+    } finally {
+        off();
+    }
+});
+
+test("initialiser le monde termine toutes les entités et leurs inventaires avant notification", () => {
+    const world = world_create();
+    let calls = 0;
+    const off = enginesignal_on("room.exits.set", () => {
+        assert_equal(world.entity_repo.elements.length, 2);
+        assert_equal(world.inventory_repo.elements.length, 2);
+        assert_equal(array_get(world.galaxy.room_repo.elements, 0).entities.length, 2);
+        assert_equal(array_get(world.inventory_repo.elements, 0).item_stack.length, 1);
+        calls++;
+    });
+    try {
+        world_init(world);
+        assert_equal(calls, 2);
+    } finally {
+        off();
+    }
+});
 
 test("le spawn crée un inventaire et inscrit l'entité dans sa salle avant notification", () => {
     const { world, source } = create_test_world();

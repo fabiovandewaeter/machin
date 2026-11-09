@@ -142,6 +142,7 @@ import { assert } from "./assert.js";
  *  @property {Partial<{ [K in SType]: Array<(...args: M[K]) => void> }>} listeners
  *  @property {{ kind: SType, args: M[SType] }[]} pending_signals
  *  @property {number} batch_depth
+ *  @property {{ error: unknown } | null} batch_failure
  *  @property {boolean} flushing
  *  @property {boolean} queue_nested_signals
  */
@@ -154,6 +155,7 @@ export function signalbus_create({ queue_nested_signals = false } = {}) {
         listeners: Object.create(null),
         pending_signals: [],
         batch_depth: 0,
+        batch_failure: null,
         flushing: false,
         queue_nested_signals,
     };
@@ -198,18 +200,23 @@ export function signalbus_emit(bus, signal_kind, ...args) {
 
 /** @template {string} SType @template {Record<SType, unknown[]>} M @template T
  *  @param {SignalBus<SType, M>} bus
- *  @param {() => T} operation
+ *  @param {() => T & (T extends PromiseLike<unknown> ? never : unknown)} operation
  *  @returns {T} */
 export function signalbus_batch(bus, operation) {
     bus.batch_depth++;
     let result;
     try {
         result = operation();
+        assert(!(result && (typeof result === "object" || typeof result === "function")
+            && "then" in result && typeof result.then === "function"), "Signal batches must be synchronous");
+        if (bus.batch_failure) throw bus.batch_failure.error;
     } catch (error) {
+        bus.batch_failure ??= { error };
         bus.pending_signals.length = 0;
         throw error;
     } finally {
         bus.batch_depth--;
+        if (bus.batch_depth === 0) bus.batch_failure = null;
     }
     __signalbus_flush(bus);
     return result;
