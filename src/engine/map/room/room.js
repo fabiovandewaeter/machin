@@ -34,6 +34,7 @@ export function room_spawn(repo, { kind, name, layer, content }) {
         exits: Object.create(null),
         entities: [],
         content,
+        machines: [],
     });
 }
 

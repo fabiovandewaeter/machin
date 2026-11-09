@@ -5,6 +5,7 @@
  * @typedef {import("../../core/ids.types.js").RoomID} RoomID
  * @typedef {import("../atmosphere.js").Atmosphere} Atmosphere
  * @typedef {import("../../extraction/ore.js").Ore} Ore
+ * @import {MachineRef} from "../../machine/machine.types.js"
  */
 /** @template {Record<string, unknown>} T @typedef {import("../../../utils/enum.js").EnumKey<T>} EnumKey */
 import { enum_create } from "../../../utils/enum.js";
@@ -26,6 +27,7 @@ export const ROOM_KIND = enum_create(/**@type {const}*/([
  * @property {Record<string, RoomExit>} exits // "north", "portal"
  * @property {EntityID[]} entities
  * @property {Ore[]} content
+ * @property {MachineRef[]} machines
  *
  * @typedef {import("../../../utils/repository.js").Repo<RoomID, Room>} RoomRepo
  */
@@ -36,3 +38,4 @@ export const ROOM_KIND = enum_create(/**@type {const}*/([
  * @typedef {Object} RoomExit
  * @property {RoomID} target_id
  */
+

@@ -11,6 +11,8 @@
  * @typedef {number & {readonly __brand:"RoomID"}} RoomID
  * 
  * @typedef {number & {readonly __brand:"InventoryID"}} InventoryID
+ *
+ * @typedef {number & {readonly __brand:"ExtractorID"}} ExtractorID
  */
 
 export { };

@@ -8,6 +8,7 @@
  * @typedef {import("../../extraction/ore.js").__InternalOreID} __InternalOreID
  * @typedef {import("../ids.types.js").InventoryID} InventoryID
  * @typedef {import("../../inventory/inventory.types.js").__InternalItemID} __InternalItemID
+ * @import {MachineRef} from "../../machine/machine.types.js"
  */
 /** @template {Record<string, unknown>} T @typedef {import("../../../utils/enum.js").EnumKey<T>} EnumKey */
 /** @template {string} Base @template Id @template {Record<string, unknown>} T @typedef {import("../../../utils/signal_bus.js").ChangedSignals<Base, Id, T>} ChangedSignals*/
@@ -55,9 +56,14 @@ export const ENGINE_SIGNAL = Object.freeze(/**@type {const}*/({
  *       "room.content.removed": [{ room_id: RoomID, removed: __InternalOreID }],
  *      }
  *      & {
+ *       "room.machines.added": [{ room_id: RoomID, added: MachineRef}],
+ *       "room.machines.removed": [{ room_id: RoomID, removed: MachineRef}],
+ *      }
+ *      & {
  *       "inventory.item_stack.added": [{ inventory_id: InventoryID, added: __InternalItemID }],
  *       "inventory.item_stack.removed": [{ inventory_id: InventoryID, removed: __InternalItemID }],
  *      }
  * } EngineSignalPayload
  */
 /** @typedef {keyof EngineSignalPayload} EngineSignal */
+
