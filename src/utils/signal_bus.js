@@ -140,11 +140,24 @@ import { assert } from "./assert.js";
 /** @template {string} SType @template {Record<SType, unknown[]>} M
  *  @typedef {Object} SignalBus
  *  @property {Partial<{ [K in SType]: Array<(...args: M[K]) => void> }>} listeners
+ *  @property {{ kind: SType, args: M[SType] }[]} pending_signals
+ *  @property {number} batch_depth
+ *  @property {boolean} flushing
+ *  @property {boolean} queue_nested_signals
  */
 
 /** @template {string} SType @template {Record<SType, unknown[]>} M
+ *  @param {{ queue_nested_signals?: boolean }} [options]
  *  @returns {SignalBus<SType, M>} */
-export function signalbus_create() { return { listeners: Object.create(null) }; }
+export function signalbus_create({ queue_nested_signals = false } = {}) {
+    return {
+        listeners: Object.create(null),
+        pending_signals: [],
+        batch_depth: 0,
+        flushing: false,
+        queue_nested_signals,
+    };
+}
 
 /** @template {string} SType @template {Record<SType, unknown[]>} M @template {SType} K
  *  @param {SignalBus<SType, M>} bus
@@ -175,6 +188,53 @@ export function signalbus_off(bus, signal_kind, callback) {
  *  @param {K} signal_kind
  *  @param {M[K]} args */
 export function signalbus_emit(bus, signal_kind, ...args) {
+    if (bus.queue_nested_signals || bus.batch_depth > 0 || bus.flushing) {
+        bus.pending_signals.push({ kind: signal_kind, args });
+        __signalbus_flush(bus);
+        return;
+    }
+    __signalbus_deliver(bus, signal_kind, ...args);
+}
+
+/** @template {string} SType @template {Record<SType, unknown[]>} M @template T
+ *  @param {SignalBus<SType, M>} bus
+ *  @param {() => T} operation
+ *  @returns {T} */
+export function signalbus_batch(bus, operation) {
+    bus.batch_depth++;
+    let result;
+    try {
+        result = operation();
+    } catch (error) {
+        bus.pending_signals.length = 0;
+        throw error;
+    } finally {
+        bus.batch_depth--;
+    }
+    __signalbus_flush(bus);
+    return result;
+}
+
+/** @template {string} SType @template {Record<SType, unknown[]>} M
+ *  @param {SignalBus<SType, M>} bus */
+function __signalbus_flush(bus) {
+    if (bus.batch_depth > 0 || bus.flushing) return;
+    bus.flushing = true;
+    try {
+        for (const { kind, args } of bus.pending_signals) {
+            __signalbus_deliver(bus, kind, ...args);
+        }
+    } finally {
+        bus.pending_signals.length = 0;
+        bus.flushing = false;
+    }
+}
+
+/** @template {string} SType @template {Record<SType, unknown[]>} M @template {SType} K
+ *  @param {SignalBus<SType, M>} bus
+ *  @param {K} signal_kind
+ *  @param {M[K]} args */
+function __signalbus_deliver(bus, signal_kind, ...args) {
     const handlers = bus.listeners[signal_kind];
     if (!handlers?.length) return;
     for (const callback of handlers) callback(...args);
@@ -184,4 +244,5 @@ export function signalbus_emit(bus, signal_kind, ...args) {
  *  @param {SignalBus<SType, M>} bus */
 export function signalbus_clear(bus) {
     bus.listeners = Object.create(null);
+    bus.pending_signals.length = 0;
 }

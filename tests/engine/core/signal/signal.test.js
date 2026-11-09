@@ -1,7 +1,7 @@
 // tests/engine/core/signal/signal.test.js
 
 import { assert, assert_equal } from "../../../../src/utils/assert.js";
-import { signalbus_create, signalbus_emit, signalbus_on } from "../../../../src/utils/signal_bus.js";
+import { signalbus_batch, signalbus_clear, signalbus_create, signalbus_emit, signalbus_on } from "../../../../src/utils/signal_bus.js";
 import { enginesignal_emit, enginesignal_on, enginesignals_batch, enginesignals_clear_handlers } from "../../../../src/engine/core/signal/signal.js";
 import { test } from "../../../test.js";
 
@@ -44,6 +44,52 @@ test("les abonnements modifiés pendant une livraison prennent effet à la suiva
     signalbus_emit(bus, "event");
     signalbus_emit(bus, "event");
     assert_equal(calls.join(","), "first,second,new");
+});
+
+test("un bus sans option conserve la livraison immédiate des signaux imbriqués", () => {
+    const bus = signalbus_create();
+    /** @type {string[]} */
+    const calls = [];
+    signalbus_on(bus, "event", () => {
+        calls.push("first");
+        signalbus_emit(bus, "nested");
+    });
+    signalbus_on(bus, "event", () => calls.push("second"));
+    signalbus_on(bus, "nested", () => calls.push("nested"));
+    signalbus_emit(bus, "event");
+    assert_equal(calls.join(","), "first,nested,second");
+});
+
+test("le batch d'un bus ne retarde pas les notifications d'un autre bus", () => {
+    const bus = signalbus_create();
+    const other_bus = signalbus_create();
+    /** @type {string[]} */
+    const calls = [];
+    signalbus_on(bus, "event", () => calls.push("batched"));
+    signalbus_on(other_bus, "event", () => calls.push("immediate"));
+    const result = signalbus_batch(bus, () => {
+        signalbus_emit(bus, "event");
+        signalbus_batch(bus, () => signalbus_emit(bus, "event"));
+        signalbus_emit(other_bus, "event");
+        assert_equal(calls.join(","), "immediate");
+        return 42;
+    });
+    assert_equal(result, 42);
+    assert_equal(calls.join(","), "immediate,batched,batched");
+});
+
+test("effacer un bus pendant un batch abandonne ses notifications en attente", () => {
+    const bus = signalbus_create();
+    let calls = 0;
+    signalbus_on(bus, "event", () => calls++);
+    signalbus_batch(bus, () => {
+        signalbus_emit(bus, "event");
+        signalbus_clear(bus);
+        signalbus_on(bus, "event", () => calls++);
+        signalbus_emit(bus, "event");
+        assert_equal(calls, 0);
+    });
+    assert_equal(calls, 1);
 });
 
 test("les batches imbriqués diffusent uniquement après l'opération extérieure", () => {
