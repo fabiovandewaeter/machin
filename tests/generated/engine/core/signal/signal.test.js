@@ -1,9 +1,9 @@
-// tests/engine/core/signal/signal.test.js
+// tests/generated/engine/core/signal/signal.test.js
 
-import { assert, assert_equal } from "../../../../src/utils/assert.js";
-import { signalbus_batch, signalbus_clear, signalbus_create, signalbus_emit, signalbus_on } from "../../../../src/utils/signal_bus.js";
-import { enginesignal_emit, enginesignal_on, enginesignals_batch, enginesignals_clear_handlers } from "../../../../src/engine/core/signal/signal.js";
-import { test } from "../../../test.js";
+import { assert, assert_equal } from "../../../../../src/utils/assert.js";
+import { signalbus_batch, signalbus_clear, signalbus_create, signalbus_emit, signalbus_on } from "../../../../../src/utils/signal_bus.js";
+import { enginesignal_emit, enginesignal_on, enginesignals_batch, enginesignals_clear_handlers } from "../../../../../src/engine/core/signal/signal.js";
+import { test } from "../../../../shared/test.js";
 
 /** @param {() => void} operation @param {Error} expected */
 function assert_throws(operation, expected) {
@@ -130,7 +130,7 @@ test("les signaux émis par un callback rejoignent la fin de la file", () => {
     enginesignals_batch(() => {
         enginesignal_emit("TICK");
         enginesignal_emit("ENTITY_BROKE", {
-            entity_id: /** @type {import("../../../../src/engine/core/ids.types.js").EntityID} */ (0),
+            entity_id: /** @type {import("../../../../../src/engine/core/ids.types.js").EntityID} */ (0),
         });
     });
     assert_equal(calls.join(","), "first,second,other,first,second");

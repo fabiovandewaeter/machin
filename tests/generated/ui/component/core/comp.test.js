@@ -1,9 +1,9 @@
-// tests/ui/component/core/comp.test.js
+// tests/generated/ui/component/core/comp.test.js
 
-import { comp_create_comp, comp_create_comp_with_sub_comps, comp_delegate_click } from "../../../../src/ui/component/core/comp.js";
-import { subcompmanager_add, subcompmanager_create, subcompmanager_destroy_all, subcompmanager_remove } from "../../../../src/ui/component/core/sub_comp_manager.js";
-import { assert_equal, assert_throws } from "../../../../src/utils/assert.js";
-import { test } from "../../../test.js";
+import { comp_create_comp, comp_create_comp_with_sub_comps, comp_delegate_click } from "../../../../../src/ui/component/core/comp.js";
+import { subcompmanager_add, subcompmanager_create, subcompmanager_destroy_all, subcompmanager_remove } from "../../../../../src/ui/component/core/sub_comp_manager.js";
+import { assert_equal, assert_throws } from "../../../../../src/utils/assert.js";
+import { test } from "../../../../shared/test.js";
 
 test("les clics d'un composant enfant ne déclenchent pas les actions du parent", () => {
     const container = document.createElement("div");

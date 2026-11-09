@@ -1,17 +1,17 @@
-// tests/engine/core/world/world.test.js
+// tests/generated/engine/core/world/world.test.js
 
-import { enginesignal_on } from "../../../../src/engine/core/signal/signal.js";
-import { world_create, world_mine, world_move_entity, world_spawn_entity } from "../../../../src/engine/core/world/world.js";
-import { world_init } from "../../../../src/engine/core/world/world_init.js";
-import { galaxy_create, galaxy_init } from "../../../../src/engine/map/galaxy.js";
-import { materialitem_create } from "../../../../src/engine/item/material/material_item.js";
-import { array_get } from "../../../../src/utils/array.js";
-import { assert, assert_equal, assert_throws } from "../../../../src/utils/assert.js";
-import { repository_get } from "../../../../src/utils/repository.js";
-import { result_assert_err, result_assert_ok } from "../../../../src/utils/result.js";
-import { undefined_unwrap } from "../../../../src/utils/undefined.js";
-import { create_test_world } from "../../../fixtures.js";
-import { test } from "../../../test.js";
+import { enginesignal_on } from "../../../../../src/engine/core/signal/signal.js";
+import { world_create, world_mine, world_move_entity, world_spawn_entity } from "../../../../../src/engine/core/world/world.js";
+import { world_init } from "../../../../../src/engine/core/world/world_init.js";
+import { galaxy_create, galaxy_init } from "../../../../../src/engine/map/galaxy.js";
+import { materialitem_create } from "../../../../../src/engine/item/material/material_item.js";
+import { array_get } from "../../../../../src/utils/array.js";
+import { assert, assert_equal, assert_throws } from "../../../../../src/utils/assert.js";
+import { repository_get } from "../../../../../src/utils/repository.js";
+import { result_assert_err, result_assert_ok } from "../../../../../src/utils/result.js";
+import { undefined_unwrap } from "../../../../../src/utils/undefined.js";
+import { create_test_world } from "../../../../shared/fixtures.js";
+import { test } from "../../../../shared/test.js";
 
 test("initialiser la galaxie termine les sorties réciproques avant notification", () => {
     const galaxy = galaxy_create();
@@ -94,7 +94,7 @@ test("une destination sans sortie est refusée sans mutation", () => {
 test("un spawn impossible ne laisse pas d'inventaire orphelin", () => {
     const { world, source } = create_test_world();
     const inventory_count = world.inventory_repo.elements.length;
-    world.entity_repo.current_id = /** @type {import("../../../../src/engine/core/ids.types.js").EntityID} */ (Number.MAX_SAFE_INTEGER);
+    world.entity_repo.current_id = /** @type {import("../../../../../src/engine/core/ids.types.js").EntityID} */ (Number.MAX_SAFE_INTEGER);
     assert_throws(() => world_spawn_entity(world, { name: "overflow", room_id: source.id }));
     assert_equal(world.inventory_repo.elements.length, inventory_count);
 });
@@ -138,7 +138,7 @@ test("un outil insuffisant laisse le minerai et l'inventaire intacts", () => {
 test("un inventaire saturé refuse tout le minage avant mutation", () => {
     const { world, entity, ore } = create_test_world();
     const inventory = undefined_unwrap(repository_get(world.inventory_repo, entity.inventory_id));
-    inventory.__current_intenal_item_id = /** @type {import("../../../../src/engine/inventory/inventory.types.js").__InternalItemID} */ (Number.MAX_SAFE_INTEGER - 1);
+    inventory.__current_intenal_item_id = /** @type {import("../../../../../src/engine/inventory/inventory.types.js").__InternalItemID} */ (Number.MAX_SAFE_INTEGER - 1);
     const before = JSON.stringify(world);
     result_assert_err(world_mine(world, entity.id, ore.internal_id));
     assert_equal(JSON.stringify(world), before);

@@ -1,4 +1,4 @@
-// tests/test.js
+// tests/shared/test.js
 
 /**
  * Run a test

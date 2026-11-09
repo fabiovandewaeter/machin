@@ -1,13 +1,13 @@
-// tests/engine/item/tool/pickaxe.js
+// tests/manual/engine/item/tool/pickaxe.test.js
 
 /**
- * @typedef {import("../../../../src/engine/item/material/material_item.js").MaterialItem} MaterialItem
+ * @typedef {import("../../../../../src/engine/item/material/material_item.js").MaterialItem} MaterialItem
  */
-import { materialitem_create } from "../../../../src/engine/item/material/material_item.js";
-import { pickaxe_craft } from "../../../../src/engine/item/tool/pickaxe.js";
-import { result_assert_ok, result_is_err } from "../../../../src/utils/result.js";
-import { assert, assert_equal } from "../../../../src/utils/assert.js";
-import { test } from "../../../test.js";
+import { materialitem_create } from "../../../../../src/engine/item/material/material_item.js";
+import { pickaxe_craft } from "../../../../../src/engine/item/tool/pickaxe.js";
+import { result_assert_ok, result_is_err } from "../../../../../src/utils/result.js";
+import { assert, assert_equal } from "../../../../../src/utils/assert.js";
+import { test } from "../../../../shared/test.js";
 
 test("craft(): craft bon", () => {
     const parts = {

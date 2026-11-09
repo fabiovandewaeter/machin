@@ -9,6 +9,14 @@ Code
 - Match existing project conventions and keep changes narrowly scoped.
 - Can't use Nodejs or other runtime in code, only to run tests if needed
 
+Tests
+- Put all agent-generated test cases in tests/generated/ only.
+- Put shared test helpers and fixtures in tests/shared/; both suites import them directly.
+- Reserve tests/manual/ for user-written tests.
+- Mirror the src/ hierarchy inside both test suites and name test files *.test.js.
+- Register user test suites in tests/manual/runtime.js; tests/manual/test.html runs this suite.
+- Register generated test suites in tests/generated/runtime.js; tests/generated/test.html runs this suite.
+
 Environment
 - Never install anything: no packages, dependencies, tools, extensions, or system software.
 - Never run install commands or modify dependencies or lockfiles. If something required is missing, say so briefly and stop that step.
