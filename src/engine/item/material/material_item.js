@@ -5,9 +5,11 @@
  * @typedef {import("./material.js").MaterialKind} MaterialKind
  * @typedef {import("../../utils/gauge.js").Gauge} Gauge
  */
-/** @template {Record<string, unknown>} T @typedef {import("../../../utils/enum.js").EnumKey<T>} EnumKey */
+/** @import { EnumKey } from "../../../utils/enum.js" */
 import { enum_create } from "../../../utils/enum.js";
+import { QUALITY } from "../quality.js";
 import { BASE_DURABILITY } from "./durability.types.js";
+import { MATERIAL_KIND } from "./material.js";
 
 // 1: items basiques (une plaque d'un certains materiau) (structure de donnée plate)
 // 2: items qui viennent d'autres items (un moteur) (structure de donnée plate)
@@ -16,10 +18,10 @@ import { BASE_DURABILITY } from "./durability.types.js";
 
 /**
  * @typedef {Object} MaterialItem
- * @property {MaterialItemKind} kind
- * @property {MaterialKind} material
- * @property {Quality} quality
- * @property {number} durability
+ * @prop {MaterialItemKind} kind
+ * @prop {MaterialKind} material
+ * @prop {Quality} quality
+ * @prop {number} durability
  */
 
 export const MATERIAL_ITEM_KIND = enum_create(/**@type {const}*/([
@@ -56,9 +58,23 @@ export function materialitem_create({ kind, material, quality }) {
 }
 
 /**
+ * @param {unknown} value
+ * @returns {value is MaterialItem}
+ */
+export function materialitem_is_valid(value) {
+    if (!value || typeof value !== "object") return false;
+    const item = /** @type {MaterialItem} */ (value);
+    return typeof item.kind === "string" && Object.hasOwn(MATERIAL_ITEM_KIND, item.kind)
+        && typeof item.material === "string" && Object.hasOwn(MATERIAL_KIND, item.material)
+        && typeof item.quality === "string" && Object.hasOwn(QUALITY, item.quality)
+        && Number.isFinite(item.durability)
+        && item.durability >= 0;
+}
+
+/**
  * @typedef {Object} MaterialItemStack
- * @property {MaterialItem} material_item pas limité pour pouvoir faire des gisements de tout kind
- * @property {number} amount
+ * @prop {MaterialItem} material_item pas limité pour pouvoir faire des gisements de tout kind
+ * @prop {number} amount
  */
 
 /**

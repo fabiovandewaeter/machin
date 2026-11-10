@@ -11,22 +11,27 @@
  */
 /** @template T, E @typedef {import("../../../utils/result.js").Res<T, E>} Res */
 import { assert } from "../../../utils/assert.js";
+import { randomgenerator_create } from "../../../utils/random_generator.js";
 import { repository_create, repository_get, repository_next_id } from "../../../utils/repository.js";
 import { err, ok, result_is_err } from "../../../utils/result.js";
 import { undefined_expect } from "../../../utils/undefined.js";
 import { mining_mine } from "../../action/mining.js";
 import { entity_move, entity_spawn } from "../../entity/entity.js";
-import { inventory_add_item, inventory_spawn } from "../../inventory/inventory.js";
+import { inventory_add_stack, inventory_spawn } from "../../inventory/inventory.js";
 import { galaxy_create } from "../../map/galaxy.js";
 import { room_add_entity, room_remove_entity, room_remove_ore } from "../../map/room/room.js";
 import { clock_create } from "../clock.js";
 import { enginesignals_batch } from "../signal/signal.js";
 import { timelinescheduler_create, timelinescheduler_peek } from "../timeline/scheduler.js";
 
-/** @returns {World} */
-export function world_create() {
+/**
+ * @param {{now: number, seed: number}} options
+ * @returns {World}
+ */
+export function world_create({ now, seed }) {
     return {
-        clock: clock_create(),
+        clock: clock_create(now),
+        random_generator: randomgenerator_create(seed),
         timeline_scheduler: timelinescheduler_create(),
         galaxy: galaxy_create(),
         entity_repo: repository_create(),
@@ -101,15 +106,13 @@ export function world_mine(world, entity_id, ore_id) {
     const loot = mining_mine(ore, entity.tool);
     if (result_is_err(loot)) return loot;
     const inventory = undefined_expect(repository_get(world.inventory_repo, entity.inventory_id), `Unknown inventory: ${entity.inventory_id}`);
-    const item_count = loot.value.reduce((total, stack) => total + stack.amount, 0);
-    if (!Number.isSafeInteger(inventory.__current_intenal_item_id + item_count)) {
+    const stacks = loot.value.filter(stack => stack.amount > 0);
+    if (!Number.isSafeInteger(inventory.__current_internal_item_id + stacks.length)) {
         return err("Inventory item ID limit reached");
     }
     return enginesignals_batch(() => {
-        for (const stack of loot.value) {
-            for (let index = 0; index < stack.amount; index++) {
-                inventory_add_item(world.inventory_repo, entity.inventory_id, stack.material_item);
-            }
+        for (const stack of stacks) {
+            inventory_add_stack(world.inventory_repo, entity.inventory_id, stack.material_item, stack.amount);
         }
         room_remove_ore(world.galaxy.room_repo, room.id, ore_id);
         return loot;

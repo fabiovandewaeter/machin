@@ -2,8 +2,8 @@
 
 import { compatibility_are_material_items_and_parts_compatibles } from "../../../../src/engine/item/compatibility.js";
 import { materialitem_create } from "../../../../src/engine/item/material/material_item.js";
-import { assert_equal } from "../../../../src/utils/assert.js";
 import { result_assert_err, result_assert_ok } from "../../../../src/utils/result.js";
+import { assert_equal } from "../../../shared/assert.js";
 import { test } from "../../../shared/test.js";
 
 test("la validation des pièces compare les kinds sans trier les tableaux d'entrée", () => {

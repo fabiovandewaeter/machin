@@ -9,8 +9,8 @@ import { array_get } from "../../../utils/array.js";
 
 /**
  * @typedef {Object} HeapEntry
- * @property {number} at
- * @property {TimelineEventID} id
+ * @prop {number} at
+ * @prop {TimelineEventID} id
  */
 
 // --- tas binaire interne (ordonné par at, puis par id pour départager) ---

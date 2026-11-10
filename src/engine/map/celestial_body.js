@@ -9,11 +9,11 @@ import { repository_spawn_element } from "../../utils/repository.js";
 
 /**
  * @typedef {Object} CelestialBody
- * @property {CelestialBodyID} id
- * @property {string} name
- * @property {CelestialBodyID[]} orbits
- * @property {Atmosphere|undefined} atmosphere
- * @property {RegionID[]} regions
+ * @prop {CelestialBodyID} id
+ * @prop {string} name
+ * @prop {CelestialBodyID[]} orbits
+ * @prop {Atmosphere|undefined} atmosphere
+ * @prop {RegionID[]} regions
  * 
  * @typedef {import("../../utils/repository.js").Repo<CelestialBodyID, CelestialBody>} CelestialBodyRepo
  */

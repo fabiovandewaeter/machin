@@ -7,7 +7,7 @@
 
 /**
  * @typedef {Object} UIState
- * @property {Scene} scene
- * @property {string[]} logs
- * @property {EntityID|undefined} selected_entity_id
+ * @prop {Scene} scene
+ * @prop {string[]} logs
+ * @prop {EntityID|undefined} selected_entity_id
  */

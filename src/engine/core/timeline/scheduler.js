@@ -14,8 +14,8 @@ import { heap_pop, heap_push } from "./heap.js";
 
 /**
  * @typedef {Object} TimelineScheduler
- * @property {TimelineEventRepo} repo
- * @property {HeapEntry[]} heap
+ * @prop {TimelineEventRepo} repo
+ * @prop {HeapEntry[]} heap
  */
 
 /** @returns {TimelineScheduler} */

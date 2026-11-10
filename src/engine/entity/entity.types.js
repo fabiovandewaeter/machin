@@ -9,11 +9,11 @@
 
 /**
  * @typedef {Object} Entity
- * @property {EntityID} id
- * @property {string} name
- * @property {RoomID} room_id
- * @property {Tool|undefined} tool
- * @property {InventoryID} inventory_id
+ * @prop {EntityID} id
+ * @prop {string} name
+ * @prop {RoomID} room_id
+ * @prop {Tool|undefined} tool
+ * @prop {InventoryID} inventory_id
  *
  * @typedef {import("../../utils/repository.js").Repo<EntityID, Entity>} EntityRepo
  */

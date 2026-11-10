@@ -2,10 +2,15 @@
 
 /** @typedef {import("./world.types.js").World} World */
 import { assert } from "../../../utils/assert.js";
+import { randomgenerator_is_valid } from "../../../utils/random_generator.js";
 import { repository_get, repository_reindex } from "../../../utils/repository.js";
 import { ore_create } from "../../extraction/ore.js";
-import { item_is_valid, materialitem_is_valid } from "../../item/item.js";
+import { item_is_valid } from "../../item/item.js";
+import { materialitem_is_valid } from "../../item/material/material_item.js";
+import { pickaxe_is_valid } from "../../item/tool/pickaxe.js";
+import { MACHINE_KIND } from "../../machine/machine.types.js";
 import { ROOM_KIND } from "../../map/room/room.types.js";
+import { timelinedispatcher_has_handler } from "../timeline/dispatcher.js";
 import { timelinescheduler_rebuild_heap } from "../timeline/scheduler.js";
 
 /**
@@ -17,6 +22,7 @@ export function world_restore(value) {
     const world = /** @type {World} */ (value);
     assert(world.clock && Number.isFinite(world.clock.created_at) && world.clock.created_at >= 0
         && Number.isFinite(world.clock.sim_time) && world.clock.sim_time >= world.clock.created_at, "Invalid clock");
+    assert(randomgenerator_is_valid(world.random_generator), "Invalid random generator");
     const galaxy = world.galaxy;
     assert(galaxy && Array.isArray(galaxy.star_systems), "Invalid galaxy");
     repository_reindex(galaxy.star_system_repo);
@@ -48,19 +54,22 @@ export function world_restore(value) {
             && area.rooms.every(id => repository_get(galaxy.room_repo, id) !== undefined), "Invalid area");
     }
     for (const inventory of world.inventory_repo.elements) {
-        assert(Array.isArray(inventory.item_stack) && Number.isSafeInteger(inventory.__current_intenal_item_id)
-            && inventory.__current_intenal_item_id >= 0, "Invalid inventory");
+        assert(Array.isArray(inventory.item_stack) && Number.isSafeInteger(inventory.__current_internal_item_id)
+            && inventory.__current_internal_item_id >= 0, "Invalid inventory");
         const item_ids = new Set();
         for (const stack of inventory.item_stack) {
-            assert(stack && Number.isSafeInteger(stack.id) && stack.id >= 0 && stack.id < inventory.__current_intenal_item_id
-                && !item_ids.has(stack.id) && item_is_valid(stack.item), "Invalid inventory item");
+            assert(stack && Number.isSafeInteger(stack.id) && stack.id >= 0 && stack.id < inventory.__current_internal_item_id
+                && !item_ids.has(stack.id) && Number.isSafeInteger(stack.amount) && stack.amount > 0
+                && item_is_valid(stack.item), "Invalid inventory item");
             item_ids.add(stack.id);
         }
     }
     for (const room of galaxy.room_repo.elements) {
         assert(typeof room.name === "string" && Object.hasOwn(ROOM_KIND, room.kind) && Number.isFinite(room.layer)
             && room.exits && typeof room.exits === "object" && !Array.isArray(room.exits)
-            && Array.isArray(room.content), "Invalid room");
+            && Array.isArray(room.content) && Array.isArray(room.machines)
+            && room.machines.every(machine => machine && typeof machine.kind === "string" && Object.hasOwn(MACHINE_KIND, machine.kind)
+                && Number.isSafeInteger(machine.id) && machine.id >= 0), "Invalid room");
         for (const exit of Object.values(room.exits)) {
             assert(exit && repository_get(galaxy.room_repo, exit.target_id) !== undefined, "Unknown room exit");
         }
@@ -82,12 +91,12 @@ export function world_restore(value) {
         assert(typeof entity.name === "string" && room
             && repository_get(world.inventory_repo, entity.inventory_id) !== undefined
             && !owned_inventories.has(entity.inventory_id)
-            && (entity.tool === undefined || item_is_valid(entity.tool) && entity.tool.kind === "PICKAXE"), "Invalid entity");
+            && (entity.tool === undefined || pickaxe_is_valid(entity.tool)), "Invalid entity");
         room.entities.push(entity.id);
         owned_inventories.add(entity.inventory_id);
     }
     for (const event of world.timeline_scheduler.repo.elements) {
-        assert(["craft_complete", "building_complete", "potion_effect"].includes(event.kind)
+        assert(typeof event.kind === "string" && timelinedispatcher_has_handler(event.kind)
             && event.payload && typeof event.payload === "object", "Invalid timeline event");
     }
     timelinescheduler_rebuild_heap(world.timeline_scheduler);

@@ -17,9 +17,18 @@ export function utils_string_to_rkind(id_string) {
 }
 
 /**
- * @param {object} data
+ * @param {unknown} data
+ * @returns {string|undefined}
  */
-export function utils_data_key(data) { return JSON.stringify(data, Object.keys(data).sort()); }
+export function utils_data_key(data) {
+    return JSON.stringify(data, (_key, value) => {
+        if (!value || typeof value !== "object" || Array.isArray(value)) return value;
+        /** @type {Record<string, unknown>} */
+        const sorted = {};
+        for (const key of Object.keys(value).sort()) sorted[key] = value[key];
+        return sorted;
+    });
+}
 
 /**
  * @param {never} value

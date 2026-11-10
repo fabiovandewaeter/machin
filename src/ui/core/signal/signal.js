@@ -6,7 +6,7 @@
  */
 import { signalbus_create, signalbus_clear, signalbus_on, signalbus_emit } from "../../../utils/signal_bus.js";
 
-/**@type {import("../../../utils/signal_bus.js").SignalBus<UISignal, UISignalPayload>} */
+/**@type {import("../../../utils/signal_bus.js").SignalBus<UISignalPayload>} */
 const __UI_SIGNAL_BUS = signalbus_create();
 
 export function uisignals_init() {

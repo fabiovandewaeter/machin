@@ -11,6 +11,7 @@
  * @typedef {import("./area.js").AreaRepo} AreaRepo
  * @typedef {import("../core/ids.types.js").RoomID} RoomID
  * @typedef {import("./room/room.js").RoomRepo} RoomRepo
+ * @typedef {import("../../utils/random_generator.js").RandomGenerator} RandomGenerator
  */
 import { assert } from "../../utils/assert.js";
 import { repository_create } from "../../utils/repository.js";
@@ -25,12 +26,12 @@ export const GALAXY_DEFAULT_ROOM_ID = /**@type {RoomID} */ (0);
 
 /**
  * @typedef {Object} Galaxy
- * @property {StarSystemID[]} star_systems
- * @property {StarSystemRepo} star_system_repo
- * @property {CelestialBodyRepo} celestial_body_repo
- * @property {RegionRepo}  region_repo
- * @property {AreaRepo}  area_repo
- * @property {RoomRepo} room_repo
+ * @prop {StarSystemID[]} star_systems
+ * @prop {StarSystemRepo} star_system_repo
+ * @prop {CelestialBodyRepo} celestial_body_repo
+ * @prop {RegionRepo}  region_repo
+ * @prop {AreaRepo}  area_repo
+ * @prop {RoomRepo} room_repo
  */
 
 /**
@@ -48,15 +49,16 @@ export function galaxy_create() {
 }
 
 /**
- * @param {Galaxy} galaxy 
+ * @param {Galaxy} galaxy
+ * @param {RandomGenerator} random_generator
  */
-export function galaxy_init(galaxy) {
+export function galaxy_init(galaxy, random_generator) {
     enginesignals_batch(() => {
         const default_room = room_spawn(galaxy.room_repo, {
             kind: "CITY",
             name: "default",
             layer: 0,
-            content: ore_generate(5),
+            content: ore_generate(random_generator, 5),
         });
         // TODO: enlever ça faire une système plus propre
         assert(default_room.id == GALAXY_DEFAULT_ROOM_ID,
@@ -65,7 +67,7 @@ export function galaxy_init(galaxy) {
             kind: "FOREST",
             name: "seconde_room",
             layer: 0,
-            content: ore_generate(5),
+            content: ore_generate(random_generator, 5),
         });
         room_add_exit(galaxy.room_repo, default_room.id, "sortie foret", {
             target_id: seconde_room.id

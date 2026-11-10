@@ -8,9 +8,9 @@ import { undefined_unwrap } from "./undefined.js";
  * @template {number} TID
  * @template {{ id: TID }} T
  * @typedef {Object} Repo
- * @property {TID} current_id
- * @property {T[]} elements
- * @property {Record<TID, number>} indices
+ * @prop {TID} current_id
+ * @prop {T[]} elements
+ * @prop {Record<TID, number>} indices
  */
 
 const __MAX_SAFE_ID = Number.MAX_SAFE_INTEGER;

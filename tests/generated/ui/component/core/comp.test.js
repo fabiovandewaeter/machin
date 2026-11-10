@@ -2,7 +2,7 @@
 
 import { comp_create_comp, comp_create_comp_with_sub_comps, comp_delegate_click } from "../../../../../src/ui/component/core/comp.js";
 import { subcompmanager_add, subcompmanager_create, subcompmanager_destroy_all, subcompmanager_remove } from "../../../../../src/ui/component/core/sub_comp_manager.js";
-import { assert_equal, assert_throws } from "../../../../../src/utils/assert.js";
+import { assert_equal, assert_throws } from "../../../../shared/assert.js";
 import { test } from "../../../../shared/test.js";
 
 test("les clics d'un composant enfant ne déclenchent pas les actions du parent", () => {
@@ -44,7 +44,7 @@ test("un setup interrompu détruit aussi les abonnements et les enfants déjà c
             child_cleanup(() => { cleanups++; });
         }));
         throw failure;
-    }));
+    }), Error);
     assert_equal(error, failure);
     assert_equal(cleanups, 2);
     assert_equal(container.children.length, 0);
@@ -59,7 +59,7 @@ test("une erreur de cleanup n'interrompt pas les suivants et destroy reste idemp
         add_cleanup(() => { calls.push("failing"); throw new Error("cleanup failed"); });
         return () => { calls.push("last"); };
     });
-    assert_throws(component.destroy);
+    assert_throws(component.destroy, AggregateError, "Could not destroy component");
     component.destroy();
     assert_equal(calls.join(","), "last,failing,first");
     assert_equal(container.children.length, 0);
@@ -82,7 +82,7 @@ test("tous les enfants sont détruits même si l'un d'eux échoue", () => {
     let calls = 0;
     subcompmanager_add(manager, "first", { destroy: () => { calls++; } });
     subcompmanager_add(manager, "second", { destroy: () => { throw new Error("child failed"); } });
-    assert_throws(() => subcompmanager_destroy_all(manager));
+    assert_throws(() => subcompmanager_destroy_all(manager), AggregateError, "Could not destroy subcomponents");
     assert_equal(calls, 1);
     assert_equal(manager.sub_comps.size, 0);
     subcompmanager_destroy_all(manager);

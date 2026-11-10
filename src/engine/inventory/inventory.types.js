@@ -8,15 +8,16 @@
 
 /**
  * @typedef {Object} ItemStack
- * @property {__InternalItemID} id
- * @property {Item} item
+ * @prop {__InternalItemID} id
+ * @prop {Item} item
+ * @prop {number} amount
  */
 
 /**
  * @typedef {Object} Inventory
- * @property {InventoryID} id
- * @property {__InternalItemID} __current_intenal_item_id
- * @property {ItemStack[]} item_stack
+ * @prop {InventoryID} id
+ * @prop {__InternalItemID} __current_internal_item_id
+ * @prop {ItemStack[]} item_stack
  * @typedef {import("../../utils/repository.js").Repo<InventoryID, Inventory>} InventoryRepo
  */
 

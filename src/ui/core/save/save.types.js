@@ -6,9 +6,9 @@
 
 /**
  * @typedef {Object} GameSave
- * @property {number} version
- * @property {import("../../../engine/core/world/world.types.js").World} world
- * @property {SavedUIState} ui_state
+ * @prop {number} version
+ * @prop {import("../../../engine/core/world/world.types.js").World} world
+ * @prop {SavedUIState} ui_state
  */
 
 export {};

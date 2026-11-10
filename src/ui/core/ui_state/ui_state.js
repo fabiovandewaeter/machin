@@ -7,6 +7,7 @@
  */
 import { uisignal_emit } from "../signal/signal.js";
 import { UI_SIGNAL } from "../signal/signal.types.js";
+import { SCENES } from "../../scene/scene.types.js";
 
 const __MAX_LOGS = 100;
 
@@ -16,7 +17,7 @@ const __MAX_LOGS = 100;
  */
 export function uistate_create(saved = {}) {
     return {
-        scene: saved.scene ?? "MAIN",
+        scene: saved.scene ?? SCENES.MAIN,
         logs: [],
         selected_entity_id: saved.selected_entity_id,
     };

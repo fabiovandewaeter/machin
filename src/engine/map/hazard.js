@@ -1,6 +1,6 @@
 // engine/map/hazard.js
 
-/** @template {Record<string, unknown>} T @typedef {import("../../utils/enum.js").EnumKey<T>} EnumKey */
+/** @import { EnumKey } from "../../utils/enum.js" */
 import { enum_create } from "../../utils/enum.js";
 
 export const HAZARD_KIND = enum_create(/**@type {const}*/([
@@ -17,8 +17,8 @@ export const HAZARD_KIND = enum_create(/**@type {const}*/([
 
 /**
  * @typedef {Object} Hazard
- * @property {HazardKind} kind
- * @property {number} intensity 0..1
+ * @prop {HazardKind} kind
+ * @prop {number} intensity 0..1
  */
 
 /**

@@ -1,20 +1,9 @@
 // tests/generated/engine/core/signal/signal.test.js
 
-import { assert, assert_equal } from "../../../../../src/utils/assert.js";
 import { signalbus_batch, signalbus_clear, signalbus_create, signalbus_emit, signalbus_on } from "../../../../../src/utils/signal_bus.js";
-import { enginesignal_emit, enginesignal_on, enginesignals_batch, enginesignals_clear_handlers } from "../../../../../src/engine/core/signal/signal.js";
+import { enginesignal_emit, enginesignal_on, enginesignals_batch } from "../../../../../src/engine/core/signal/signal.js";
+import { assert_equal, assert_throws } from "../../../../shared/assert.js";
 import { test } from "../../../../shared/test.js";
-
-/** @param {() => void} operation @param {Error} expected */
-function assert_throws(operation, expected) {
-    try {
-        operation();
-    } catch (error) {
-        assert_equal(error, expected);
-        return;
-    }
-    assert(false, "Expected an exception");
-}
 
 test("le bus livre immédiatement les arguments et permet de se désabonner", () => {
     const bus = signalbus_create();
@@ -46,7 +35,7 @@ test("les abonnements modifiés pendant une livraison prennent effet à la suiva
     assert_equal(calls.join(","), "first,second,new");
 });
 
-test("un bus sans option conserve la livraison immédiate des signaux imbriqués", () => {
+test("les signaux émis par un callback sont livrés après les callbacks en cours", () => {
     const bus = signalbus_create();
     /** @type {string[]} */
     const calls = [];
@@ -57,7 +46,7 @@ test("un bus sans option conserve la livraison immédiate des signaux imbriqués
     signalbus_on(bus, "event", () => calls.push("second"));
     signalbus_on(bus, "nested", () => calls.push("nested"));
     signalbus_emit(bus, "event");
-    assert_equal(calls.join(","), "first,nested,second");
+    assert_equal(calls.join(","), "first,second,nested");
 });
 
 test("le batch d'un bus ne retarde pas les notifications d'un autre bus", () => {
@@ -93,7 +82,6 @@ test("effacer un bus pendant un batch abandonne ses notifications en attente", (
 });
 
 test("les batches imbriqués diffusent uniquement après l'opération extérieure", () => {
-    enginesignals_clear_handlers();
     let state = 0;
     /** @type {number[]} */
     const observed = [];
@@ -114,7 +102,6 @@ test("les batches imbriqués diffusent uniquement après l'opération extérieur
 });
 
 test("les signaux émis par un callback rejoignent la fin de la file", () => {
-    enginesignals_clear_handlers();
     /** @type {string[]} */
     const calls = [];
     let first = true;
@@ -126,30 +113,30 @@ test("les signaux émis par un callback rejoignent la fin de la file", () => {
         }
     });
     enginesignal_on("TICK", () => calls.push("second"));
-    enginesignal_on("ENTITY_BROKE", () => calls.push("other"));
+    enginesignal_on("room.exits.set", () => calls.push("other"));
     enginesignals_batch(() => {
         enginesignal_emit("TICK");
-        enginesignal_emit("ENTITY_BROKE", {
-            entity_id: /** @type {import("../../../../../src/engine/core/ids.types.js").EntityID} */ (0),
+        enginesignal_emit("room.exits.set", {
+            room_id: /** @type {import("../../../../../src/engine/core/ids.types.js").RoomID} */ (0),
+            key: "exit",
         });
     });
     assert_equal(calls.join(","), "first,second,other,first,second");
 });
 
 test("une erreur d'opération remonte et abandonne la file sans rollback", () => {
-    enginesignals_clear_handlers();
     const failure = new Error("operation failed");
     let state = 0;
     let calls = 0;
     enginesignal_on("TICK", () => calls++);
-    assert_throws(() => enginesignals_batch(() => {
+    assert_equal(assert_throws(() => enginesignals_batch(() => {
         state = 1;
         enginesignal_emit("TICK");
         enginesignals_batch(() => {
             enginesignal_emit("TICK");
             throw failure;
         });
-    }), failure);
+    }), Error), failure);
     assert_equal(state, 1);
     assert_equal(calls, 0);
     enginesignal_emit("TICK");
@@ -157,7 +144,6 @@ test("une erreur d'opération remonte et abandonne la file sans rollback", () =>
 });
 
 test("une erreur de callback interrompt la livraison et nettoie la file", () => {
-    enginesignals_clear_handlers();
     const failure = new Error("callback failed");
     let calls = 0;
     const off = enginesignal_on("TICK", () => {
@@ -165,33 +151,35 @@ test("une erreur de callback interrompt la livraison et nettoie la file", () => 
         throw failure;
     });
     enginesignal_on("TICK", () => calls++);
-    assert_throws(() => enginesignals_batch(() => {
+    assert_equal(assert_throws(() => enginesignals_batch(() => {
         enginesignal_emit("TICK");
         enginesignal_emit("TICK");
-    }), failure);
+    }), Error), failure);
     assert_equal(calls, 0);
     off();
     enginesignal_emit("TICK");
     assert_equal(calls, 1);
 });
 
-test("une erreur imbriquée interceptée invalide quand même le batch extérieur", () => {
+test("une erreur imbriquée interceptée conserve les signaux du batch extérieur", () => {
     const bus = signalbus_create();
     const failure = new Error("nested failure");
     let calls = 0;
     signalbus_on(bus, "event", () => calls++);
-    assert_throws(() => signalbus_batch(bus, () => {
+    signalbus_batch(bus, () => {
         signalbus_emit(bus, "event");
         try {
-            signalbus_batch(bus, () => { throw failure; });
+            signalbus_batch(bus, () => {
+                signalbus_emit(bus, "event");
+                throw failure;
+            });
         } catch (error) {
             assert_equal(error, failure);
         }
         signalbus_emit(bus, "event");
-    }), failure);
-    assert_equal(calls, 0);
-    signalbus_batch(bus, () => signalbus_emit(bus, "event"));
-    assert_equal(calls, 1);
+        assert_equal(calls, 0);
+    });
+    assert_equal(calls, 3);
 });
 
 test("un retour asynchrone est refusé sans diffuser les notifications en attente", () => {
@@ -202,21 +190,13 @@ test("un retour asynchrone est refusé sans diffuser les notifications en attent
         signalbus_emit(bus, "event");
         return Promise.resolve();
     }));
-    let failure;
-    try {
-        signalbus_batch(bus, operation);
-    } catch (error) {
-        failure = error;
-    }
-    assert(failure instanceof Error);
-    assert_equal(failure.message, "Signal batches must be synchronous");
+    assert_throws(() => signalbus_batch(bus, operation), Error, "Signal batches must be synchronous");
     assert_equal(calls, 0);
     signalbus_batch(bus, () => signalbus_emit(bus, "event"));
     assert_equal(calls, 1);
 });
 
 test("une chaîne finie de signaux ne fait pas de récursion et n'est pas tronquée", () => {
-    enginesignals_clear_handlers();
     let count = 0;
     enginesignal_on("TICK", () => {
         if (++count < 20000) enginesignal_emit("TICK");
@@ -224,5 +204,3 @@ test("une chaîne finie de signaux ne fait pas de récursion et n'est pas tronqu
     enginesignal_emit("TICK");
     assert_equal(count, 20000);
 });
-
-enginesignals_clear_handlers();

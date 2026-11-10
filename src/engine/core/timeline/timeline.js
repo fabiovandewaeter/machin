@@ -25,9 +25,12 @@ export function timeline_advance_to(world, target_time) {
     enginesignal_emit("TICK");
 }
 
-/** @param {World} world */
-export function timeline_advance_to_now(world) {
-    timeline_advance_to(world, Math.max(world.clock.sim_time, Date.now()));
+/**
+ * @param {World} world
+ * @param {number} now
+ */
+export function timeline_advance_to_now(world, now) {
+    timeline_advance_to(world, Math.max(world.clock.sim_time, now));
 }
 
 /**

@@ -2,8 +2,8 @@
 
 /**
  * @typedef {Object} Gauge
- * @property {number} current
- * @property {number} max
+ * @prop {number} current
+ * @prop {number} max
  */
 
 /**

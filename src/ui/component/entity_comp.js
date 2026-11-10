@@ -4,7 +4,7 @@
  * @typedef {import("./core/utils.js").DestroyFunction} DestroyFunction
  * @typedef {import("../../engine/core/ids.types.js").EntityID} EntityID
  */
-/** @template {Record<string, unknown>} T @typedef {import("../../utils/enum.js").EnumKey<T>} EnumKey */
+/** @import { EnumKey } from "../../utils/enum.js" */
 import { enginesignal_on } from "../../engine/core/signal/signal.js";
 import { assert } from "../../utils/assert.js";
 import { enum_create } from "../../utils/enum.js";

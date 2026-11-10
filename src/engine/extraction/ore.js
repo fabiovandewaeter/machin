@@ -2,6 +2,7 @@
 
 import { array_get } from "../../utils/array.js";
 import { assert } from "../../utils/assert.js";
+import { randomgenerator_next_int } from "../../utils/random_generator.js";
 import { MATERIAL, MATERIAL_KIND } from "../item/material/material.js";
 import { materialitem_create, materialitem_create_stack } from "../item/material/material_item.js";
 
@@ -10,6 +11,7 @@ import { materialitem_create, materialitem_create_stack } from "../item/material
  * @typedef {import("../item/material/material_item.js").MaterialItemStack} MaterialItemStack
  * @typedef {import("../item/tool/tool.js").ToolKind} ToolKind
  * @typedef {import("../item/tool/tool.js").Tool} Tool
+ * @typedef {import("../../utils/random_generator.js").RandomGenerator} RandomGenerator
  */
 
 /**
@@ -18,10 +20,10 @@ import { materialitem_create, materialitem_create_stack } from "../item/material
 
 /**
  * @typedef {Object} Ore
- * @property {__InternalOreID} internal_id
- * @property {MaterialItemStack[]} composition
- * @property {number} required_mining_level
- * @property {ToolKind} tool_kind
+ * @prop {__InternalOreID} internal_id
+ * @prop {MaterialItemStack[]} composition
+ * @prop {number} required_mining_level
+ * @prop {ToolKind} tool_kind
  */
 
 /**
@@ -60,17 +62,18 @@ export function ore_can_be_extracted(ore, tool) {
 }
 
 /**
- * @param {number} amount 
+ * @param {RandomGenerator} random_generator
+ * @param {number} amount
  * @returns {Ore[]}
  */
-export function ore_generate(amount) {
+export function ore_generate(random_generator, amount) {
     /** @type {Ore[]} */
     const ores = [];
     const materials = /** @type {MaterialKind[]} */ (Object.keys(MATERIAL_KIND));
     const max_amount = 20;
     for (let i = 0; i < amount; i++) {
-        const material_index = Math.floor(Math.random() * materials.length);
-        const random_amount = Math.floor(Math.random() * max_amount) + 1;
+        const material_index = randomgenerator_next_int(random_generator, materials.length);
+        const random_amount = randomgenerator_next_int(random_generator, max_amount) + 1;
 
         const mi = materialitem_create({
             kind: "ORE",

@@ -6,8 +6,8 @@
 
 /**
  * @typedef {Object} Connection
- * @property {number} distance
- * @property {Hazard[]} hazards TODO: trucs qui peuvent ralentir, endommager, faire glisser, seulement accessible en volant etc.
+ * @prop {number} distance
+ * @prop {Hazard[]} hazards TODO: trucs qui peuvent ralentir, endommager, faire glisser, seulement accessible en volant etc.
  */
 
 export { };

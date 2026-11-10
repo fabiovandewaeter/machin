@@ -1,9 +1,9 @@
 // engine/inventory/inventory.js
 
+import { assert } from "../../utils/assert.js";
 import { repository_get, repository_spawn_element } from "../../utils/repository.js";
 import { undefined_unwrap } from "../../utils/undefined.js";
 import { enginesignal_emit } from "../core/signal/signal.js";
-import { item_copy } from "../item/item.js";
 
 /**
  * @typedef {import("../item/item.types.js").Item} Item
@@ -14,12 +14,12 @@ import { item_copy } from "../item/item.js";
  */
 
 /**
- * @param {InventoryRepo} repo 
+ * @param {InventoryRepo} repo
  * @returns {Inventory}
  */
 export function inventory_spawn(repo) {
     return repository_spawn_element(repo, {
-        __current_intenal_item_id: /**@type {__InternalItemID}*/(0),
+        __current_internal_item_id: /**@type {__InternalItemID}*/(0),
         item_stack: [],
     });
 }
@@ -27,17 +27,18 @@ export function inventory_spawn(repo) {
 /**
  * @param {InventoryRepo} repo
  * @param {InventoryID} id
- * @param {Item} item 
+ * @param {Item} item
+ * @param {number} amount
  * @returns {__InternalItemID}
  */
-export function inventory_add_item(repo, id, item) {
+export function inventory_add_stack(repo, id, item, amount) {
+    assert(Number.isSafeInteger(amount) && amount > 0, `Invalid item amount: ${amount}`);
     const inventory = undefined_unwrap(repository_get(repo, id));
-    if (!Number.isSafeInteger(inventory.__current_intenal_item_id) || inventory.__current_intenal_item_id < 0 || inventory.__current_intenal_item_id >= Number.MAX_SAFE_INTEGER) {
+    if (!Number.isSafeInteger(inventory.__current_internal_item_id) || inventory.__current_internal_item_id < 0 || inventory.__current_internal_item_id >= Number.MAX_SAFE_INTEGER) {
         throw new RangeError("Inventory item ID limit reached");
     }
-    const stored_item = item_copy(item);
-    const internal_id = /**@type {__InternalItemID} */ (inventory.__current_intenal_item_id++);
-    inventory.item_stack.push({ id: internal_id, item: stored_item });
+    const internal_id = /**@type {__InternalItemID} */ (inventory.__current_internal_item_id++);
+    inventory.item_stack.push({ id: internal_id, item, amount });
     enginesignal_emit("inventory.item_stack.added", {
         inventory_id: id,
         added: internal_id,

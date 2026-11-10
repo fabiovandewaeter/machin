@@ -6,13 +6,15 @@
  * @typedef {import("../../map/galaxy.js").Galaxy} Galaxy
  * @typedef {import("../../entity/entity.types.js").EntityRepo} EntityRepo
  * @typedef {import("../../inventory/inventory.types.js").InventoryRepo} InventoryRepo
+ * @typedef {import("../../../utils/random_generator.js").RandomGenerator} RandomGenerator
  */
 
 /**
  * @typedef {Object} World
- * @property {Clock} clock
- * @property {TimelineScheduler} timeline_scheduler 
- * @property {Galaxy} galaxy
- * @property {EntityRepo} entity_repo
- * @property {InventoryRepo} inventory_repo
+ * @prop {Clock} clock
+ * @prop {RandomGenerator} random_generator
+ * @prop {TimelineScheduler} timeline_scheduler 
+ * @prop {Galaxy} galaxy
+ * @prop {EntityRepo} entity_repo
+ * @prop {InventoryRepo} inventory_repo
  */

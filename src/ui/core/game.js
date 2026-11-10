@@ -100,13 +100,14 @@ export function game_reset() {
 function __game_replace(save) {
     game_stop();
     uisignal_emit(UI_SIGNAL.GAME_REPLACING);
-    const world = save?.world ?? world_create();
+    const now = Date.now();
+    const world = save?.world ?? world_create({ now, seed: Math.floor(Math.random() * 0x100000000) });
     if (!save) world_init(world);
     const ui_state = uistate_create(save?.ui_state);
     if (ui_state.selected_entity_id === undefined || !repository_get(world.entity_repo, ui_state.selected_entity_id)) {
         ui_state.selected_entity_id = world.entity_repo.elements[0]?.id;
     }
     store_set({ world, ui_state, should_save: true });
-    timeline_advance_to_now(world);
+    timeline_advance_to_now(world, now);
     uisignal_emit(UI_SIGNAL.SCENE_SWITCHED, { new_scene: ui_state.scene });
 }

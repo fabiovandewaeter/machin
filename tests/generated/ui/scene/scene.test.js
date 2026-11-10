@@ -8,7 +8,7 @@ import { UI_SIGNAL } from "../../../../src/ui/core/signal/signal.types.js";
 import { store_set } from "../../../../src/ui/core/store/store.js";
 import { uistate_create, uistate_select_entity } from "../../../../src/ui/core/ui_state/ui_state.js";
 import { scene_mount } from "../../../../src/ui/scene/scene.js";
-import { assert, assert_equal } from "../../../../src/utils/assert.js";
+import { assert, assert_equal } from "../../../shared/assert.js";
 import { create_test_world } from "../../../shared/fixtures.js";
 import { test } from "../../../shared/test.js";
 
@@ -37,7 +37,7 @@ test("remplacer une partie détruit les abonnements de ses panneaux avant de cha
         assert(container.querySelector(".entity-comp") !== null);
         uisignal_emit(UI_SIGNAL.GAME_REPLACING);
         assert_equal(container.children.length, 0);
-        store_set({ world: world_create(), ui_state: uistate_create(), should_save: true });
+        store_set({ world: world_create({ now: 0, seed: 1 }), ui_state: uistate_create(), should_save: true });
         enginesignal_emit("inventory.item_stack.added", {
             inventory_id: entity.inventory_id,
             added: /** @type {import("../../../../src/engine/inventory/inventory.types.js").__InternalItemID} */ (0),

@@ -3,7 +3,7 @@
 /**
  * @typedef {import("./pickaxe.js").Pickaxe} Pickaxe
  */
-/** @template {Record<string, unknown>} T @typedef {import("../../../utils/enum.js").EnumKey<T>} EnumKey */
+/** @import { EnumKey } from "../../../utils/enum.js" */
 import { enum_create } from "../../../utils/enum.js";
 
 export const TOOL_KIND = enum_create(/**@type {const}*/([

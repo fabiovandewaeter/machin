@@ -9,7 +9,7 @@ import { MATERIAL } from "../../../../../src/engine/item/material/material.js";
 import { materialitem_create } from "../../../../../src/engine/item/material/material_item.js";
 import { pickaxe_craft } from "../../../../../src/engine/item/tool/pickaxe.js";
 import { result_unwrap } from "../../../../../src/utils/result.js";
-import { assert, assert_equal } from "../../../../../src/utils/assert.js";
+import { assert, assert_equal } from "../../../../shared/assert.js";
 import { test } from "../../../../shared/test.js";
 
 test("descrease_durability(): retire BASE_COST de durability quand meme mining_level", () => {

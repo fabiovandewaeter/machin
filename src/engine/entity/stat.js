@@ -9,12 +9,12 @@ import { gauge_create } from "../utils/gauge.js";
 
 /**
  * @typedef { Object } GaugeStat
- * @property { "HP" | "ENERGY" } key
- * @property { Gauge } gauge
+ * @prop { "HP" | "ENERGY" } key
+ * @prop { Gauge } gauge
  * 
  * @typedef {Object} ValueStat
- * @property {"DEFENSE"} key
- * @property {number} value
+ * @prop {"DEFENSE"} key
+ * @prop {number} value
  * 
  * @typedef {GaugeStat | ValueStat} Stat
  */

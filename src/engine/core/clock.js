@@ -2,15 +2,15 @@
 
 /**
  * @typedef {Object} Clock
- * @property {number} created_at
- * @property {number} sim_time
+ * @prop {number} created_at
+ * @prop {number} sim_time
  */
 
 /**
- * @param {number} [timestamp]
+ * @param {number} timestamp
  * @returns {Clock}
  */
-export function clock_create(timestamp = Date.now()) {
+export function clock_create(timestamp) {
     if (!Number.isFinite(timestamp) || timestamp < 0) throw new RangeError("Invalid clock timestamp");
     return { created_at: timestamp, sim_time: timestamp };
 }
@@ -29,10 +29,11 @@ export function clock_advance_by(clock, ms) {
  * Temps réel (ms) écoulé depuis la dernière simulation — indique s'il y a
  * du rattrapage à faire.
  * @param {Clock} clock
+ * @param {number} now
  * @returns {number}
  */
-export function clock_real_time_elapsed_since(clock) {
-    return Math.max(0, Date.now() - clock.sim_time);
+export function clock_real_time_elapsed_since(clock, now) {
+    return Math.max(0, now - clock.sim_time);
 }
 
 /**

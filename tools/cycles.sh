@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # tools/cycles.sh
 #
-# usage : bash tools/levels.sh [--types] [--deps] [dossier]
+# usage : bash tools/cycles.sh [--types] [--deps] [dossier]
 #
 #   --types   les imports de types comptent aussi dans les niveaux et les cycles
 #             (par défaut : seuls les imports d'exécution comptent)
@@ -33,10 +33,10 @@ done
 [[ -d $ROOT ]] || { echo "Dossier introuvable : $ROOT" >&2; exit 2; }
 cd "$ROOT" || exit 2
 
-# Tous les .js/.mjs/.html, dossiers cachés ignorés (.git, .vscode...)
+# Tous les .js/.mjs/.html, dossiers cachés (.git, .vscode...) et node_modules ignorés
 FILES=()
 while IFS= read -r f; do FILES+=("$f"); done < <(
-  find . -name '.?*' -prune -o -type f \( -name '*.js' -o -name '*.mjs' -o -name '*.html' \) -print \
+  find . \( -name '.?*' -o -name node_modules \) -prune -o -type f \( -name '*.js' -o -name '*.mjs' -o -name '*.html' \) -print \
     | sed 's|^\./||' | LC_ALL=C sort
 )
 (( ${#FILES[@]} )) || { echo "Aucun fichier .js/.mjs/.html dans $ROOT" >&2; exit 0; }

@@ -4,7 +4,7 @@ import { array_get } from "../../../utils/array.js";
 /**
  * @typedef {import("./category.types.js").MaterialCategory} MaterialCategory
  */
-/** @template {Record<string, unknown>} T @typedef {import("../../../utils/enum.js").EnumKey<T>} EnumKey */
+/** @import { EnumKey } from "../../../utils/enum.js" */
 import { assert } from "../../../utils/assert.js";
 import { enum_create } from "../../../utils/enum.js";
 
@@ -21,9 +21,9 @@ export const MATERIAL_KIND = enum_create(/**@type {const} */([
 
 /**
  * @typedef {Object} MaterialDefinition
- * @property {MaterialKind} kind
- * @property {MaterialCategory[]} categories
- * @property {number} mining_level
+ * @prop {MaterialKind} kind
+ * @prop {MaterialCategory[]} categories
+ * @prop {number} mining_level
  */
 
 // différentes roches voir si catégories pour les items ou alors propriété physiques style température fusion ???

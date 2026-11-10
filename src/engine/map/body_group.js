@@ -2,5 +2,5 @@
 
 // /**
 //  * @typedef {Object} BodyGroup
-//  * @property 
+//  * @prop 
 //  */

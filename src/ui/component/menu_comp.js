@@ -5,7 +5,7 @@
  * @typedef {import("./core/sub_comp_manager.js").SubCompKey} SubCompKey
  * @typedef {import("./core/sub_comp_manager.js").SubCompManager} SubCompManager
  */
-/** @template {Record<string, unknown>} T @typedef {import("../../utils/enum.js").EnumKey<T>} EnumKey */
+/** @import { EnumKey } from "../../utils/enum.js" */
 import { enum_create } from "../../utils/enum.js";
 import { utils_assert_unreachable } from "../../utils/utils.js";
 import { store_get } from "../core/store/store.js";

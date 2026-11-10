@@ -7,7 +7,7 @@
  */
 import { assert } from "../../../utils/assert.js";
 import { result_unwrap } from "../../../utils/result.js";
-import { inventory_add_item } from "../../inventory/inventory.js";
+import { inventory_add_stack } from "../../inventory/inventory.js";
 import { materialitem_create } from "../../item/material/material_item.js";
 import { pickaxe_craft } from "../../item/tool/pickaxe.js";
 import { GALAXY_DEFAULT_ROOM_ID, galaxy_init } from "../../map/galaxy.js";
@@ -19,13 +19,13 @@ export function world_init(world) {
     assert(world.galaxy.room_repo.elements.length === 0 && world.entity_repo.elements.length === 0
         && world.inventory_repo.elements.length === 0, "World is already initialized");
     enginesignals_batch(() => {
-        galaxy_init(world.galaxy);
+        galaxy_init(world.galaxy, world.random_generator);
         const robot = world_spawn_entity(world, {
             name: "robot 1",
             room_id: GALAXY_DEFAULT_ROOM_ID,
             tool: __worldinit_create_pickaxe("STONE", "POOR"),
         });
-        inventory_add_item(world.inventory_repo, robot.inventory_id, __worldinit_create_pickaxe("IRON", "PERFECT"));
+        inventory_add_stack(world.inventory_repo, robot.inventory_id, __worldinit_create_pickaxe("IRON", "PERFECT"), 1);
         world_spawn_entity(world, {
             name: "entity 2",
             room_id: GALAXY_DEFAULT_ROOM_ID,

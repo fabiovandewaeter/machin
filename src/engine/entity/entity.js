@@ -11,8 +11,6 @@
 import { repository_get, repository_spawn_element } from "../../utils/repository.js";
 import { undefined_unwrap } from "../../utils/undefined.js";
 import { enginesignal_emit } from "../core/signal/signal.js";
-import { item_copy } from "../item/item.js";
-
 /**
  * @param {EntityRepo} repo
  * @param {Object} options
@@ -26,7 +24,7 @@ export function entity_spawn(repo, { name, room_id, inventory_id, tool }) {
     return repository_spawn_element(repo, {
         name,
         room_id,
-        tool: tool === undefined ? undefined : item_copy(tool),
+        tool,
         inventory_id,
     });
 }

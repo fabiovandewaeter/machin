@@ -11,9 +11,9 @@
 
 // /**
 //  * @typedef {Object} Atmosphere
-//  * @property {Record<Gas, number>} amounts moles
-//  * @property {number} volume m³
-//  * @property {number} temperature K
+//  * @prop {Record<Gas, number>} amounts moles
+//  * @prop {number} volume m³
+//  * @prop {number} temperature K
 //  */
 /**
  * @typedef {Object} Atmosphere

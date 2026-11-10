@@ -7,7 +7,7 @@
  * @typedef {import("../../extraction/ore.js").Ore} Ore
  * @import {MachineRef} from "../../machine/machine.types.js"
  */
-/** @template {Record<string, unknown>} T @typedef {import("../../../utils/enum.js").EnumKey<T>} EnumKey */
+/** @import { EnumKey } from "../../../utils/enum.js" */
 import { enum_create } from "../../../utils/enum.js";
 
 export const ROOM_KIND = enum_create(/**@type {const}*/([
@@ -20,22 +20,22 @@ export const ROOM_KIND = enum_create(/**@type {const}*/([
 
 /**
  * @typedef {Object} Room
- * @property {RoomID} id
- * @property {RoomKind} kind
- * @property {string} name
- * @property {number} layer
- * @property {Record<string, RoomExit>} exits // "north", "portal"
- * @property {EntityID[]} entities
- * @property {Ore[]} content
- * @property {MachineRef[]} machines
+ * @prop {RoomID} id
+ * @prop {RoomKind} kind
+ * @prop {string} name
+ * @prop {number} layer
+ * @prop {Record<string, RoomExit>} exits // "north", "portal"
+ * @prop {EntityID[]} entities
+ * @prop {Ore[]} content
+ * @prop {MachineRef[]} machines
  *
  * @typedef {import("../../../utils/repository.js").Repo<RoomID, Room>} RoomRepo
  */
-// TODO: @property {Atmosphere} default_atmosphere pour pouvoir retourner à ça quand on unseal
+// TODO: @prop {Atmosphere} default_atmosphere pour pouvoir retourner à ça quand on unseal
 
 /**
  * Un seul sens, ajouter conditions passage, cooldown etc.
  * @typedef {Object} RoomExit
- * @property {RoomID} target_id
+ * @prop {RoomID} target_id
  */
 

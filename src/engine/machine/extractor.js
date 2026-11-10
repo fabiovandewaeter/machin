@@ -6,15 +6,15 @@ import { repository_spawn_element } from "../../utils/repository.js";
  * @import {MachineKind} from "./machine.types.js"
  * @import {MaterialItemStack} from "../item/material/material_item.js"
  * @import {ExtractorID} from "../core/ids.types.js"
- * @import {RoomID} from "../map/room/room.types.js"
+ * @import {RoomID} from "../core/ids.types.js"
  */
 
 /**
  * @typedef {Object} Extractor
- * @property {ExtractorID} id
- * @property {MachineKind} kind
- * @property {MaterialItemStack[]} extracted
- * @property {RoomID} room_id
+ * @prop {ExtractorID} id
+ * @prop {MachineKind} kind
+ * @prop {MaterialItemStack[]} extracted
+ * @prop {RoomID} room_id
  *
  * @typedef {import("../../utils/repository.js").Repo<ExtractorID, Extractor>} ExtractorRepo
  */

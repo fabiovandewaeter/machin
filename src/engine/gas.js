@@ -1,12 +1,11 @@
 // engine/gas.js
 
-/** @template {Record<string, unknown>} T @typedef {import("../utils/enum.js").EnumKey<T>} EnumKey */
 
 /**
  * @typedef {Object} GasDefinition
- * @property {string} kind
- * @property {string} formula
- * @property {number} molar_mass g/mol
+ * @prop {string} kind
+ * @prop {string} formula
+ * @prop {number} molar_mass g/mol
  */
 
 // TODO:

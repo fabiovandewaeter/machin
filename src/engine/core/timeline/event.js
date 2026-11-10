@@ -8,10 +8,10 @@
 
 /**
  * @typedef {Object} TimelineEvent
- * @property {TimelineEventID} id
- * @property {TimelineEventKind} kind
- * @property {number} at
- * @property {Object} payload
+ * @prop {TimelineEventID} id
+ * @prop {TimelineEventKind} kind
+ * @prop {number} at
+ * @prop {Object} payload
  * 
  * @typedef {'craft_complete'|'building_complete'|'potion_effect'} TimelineEventKind
  * @typedef {import("../../../utils/repository.js").Repo<TimelineEventID, TimelineEvent>} TimelineEventRepo

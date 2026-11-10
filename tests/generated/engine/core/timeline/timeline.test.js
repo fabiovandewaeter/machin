@@ -1,18 +1,15 @@
 // tests/generated/engine/core/timeline/timeline.test.js
 
-import { clock_create } from "../../../../../src/engine/core/clock.js";
 import { enginesignal_emit, enginesignal_on } from "../../../../../src/engine/core/signal/signal.js";
 import { timelinedispatcher_dispatch, timelinedispatcher_register } from "../../../../../src/engine/core/timeline/dispatcher.js";
 import { timelinescheduler_cancel, timelinescheduler_create, timelinescheduler_pop_due, timelinescheduler_schedule } from "../../../../../src/engine/core/timeline/scheduler.js";
 import { timeline_advance_by, timeline_advance_to, timeline_advance_to_now, timeline_clear_handlers } from "../../../../../src/engine/core/timeline/timeline.js";
 import { world_create } from "../../../../../src/engine/core/world/world.js";
-import { assert_equal, assert_throws } from "../../../../../src/utils/assert.js";
+import { assert_equal, assert_throws } from "../../../../shared/assert.js";
 import { test } from "../../../../shared/test.js";
 
 test("les handlers voient l'heure de leur événement et peuvent en planifier la suite", () => {
-    timeline_clear_handlers();
-    const world = world_create();
-    world.clock = clock_create(0);
+    const world = world_create({ now: 0, seed: 1 });
     /** @type {number[]} */
     const observed = [];
     timelinedispatcher_register("craft_complete", current_world => {
@@ -21,14 +18,10 @@ test("les handlers voient l'heure de leur événement et peuvent en planifier la
     });
     timelinedispatcher_register("potion_effect", current_world => observed.push(current_world.clock.sim_time));
     timelinescheduler_schedule(world.timeline_scheduler, "craft_complete", 10, {});
-    try {
-        timeline_advance_to(world, 20);
-        assert_equal(observed.join(","), "10,15");
-        assert_equal(world.clock.sim_time, 20);
-        assert_equal(world.timeline_scheduler.repo.elements.length, 0);
-    } finally {
-        timeline_clear_handlers();
-    }
+    timeline_advance_to(world, 20);
+    assert_equal(observed.join(","), "10,15");
+    assert_equal(world.clock.sim_time, 20);
+    assert_equal(world.timeline_scheduler.repo.elements.length, 0);
 });
 
 test("les annulations conservent l'ordre des événements à la même date", () => {
@@ -45,13 +38,11 @@ test("les annulations conservent l'ordre des événements à la même date", () 
 });
 
 test("chaque événement termine ses mutations et diffuse avant l'événement suivant", () => {
-    timeline_clear_handlers();
-    const world = world_create();
-    world.clock = clock_create(0);
+    const world = world_create({ now: 0, seed: 1 });
     let state = 0;
     /** @type {string[]} */
     const observed = [];
-    const off = enginesignal_on("TICK", () => observed.push(`${world.clock.sim_time}:${state}`));
+    enginesignal_on("TICK", () => observed.push(`${world.clock.sim_time}:${state}`));
     timelinedispatcher_register("craft_complete", () => {
         state++;
         enginesignal_emit("TICK");
@@ -59,61 +50,49 @@ test("chaque événement termine ses mutations et diffuse avant l'événement su
     });
     timelinescheduler_schedule(world.timeline_scheduler, "craft_complete", 5, {});
     timelinescheduler_schedule(world.timeline_scheduler, "craft_complete", 10, {});
-    try {
-        timeline_advance_to(world, 20);
-        assert_equal(observed.join(","), "5:2,10:4,20:4");
-    } finally {
-        off();
-        timeline_clear_handlers();
-    }
+    timeline_advance_to(world, 20);
+    assert_equal(observed.join(","), "5:2,10:4,20:4");
 });
 
 test("un handler de timeline asynchrone ne contourne pas le contrôle du batch", () => {
-    timeline_clear_handlers();
-    const world = world_create();
+    const world = world_create({ now: 0, seed: 1 });
     let calls = 0;
-    const off = enginesignal_on("TICK", () => calls++);
+    enginesignal_on("TICK", () => calls++);
     timelinedispatcher_register("craft_complete", async () => {
         enginesignal_emit("TICK");
     });
     const event = timelinescheduler_schedule(world.timeline_scheduler, "craft_complete", 0, {});
-    try {
-        const failure = assert_throws(() => timelinedispatcher_dispatch(world, event));
-        assert_equal(failure instanceof Error ? failure.message : undefined, "Signal batches must be synchronous");
-        assert_equal(calls, 0);
-    } finally {
-        off();
-        timeline_clear_handlers();
-    }
+    assert_throws(() => timelinedispatcher_dispatch(world, event), Error, "Signal batches must be synchronous");
+    assert_equal(calls, 0);
 });
 
 test("les dates invalides et les retours dans le temps sont refusés sans mutation", () => {
-    const world = world_create();
-    world.clock = clock_create(10);
-    for (const target of [9, NaN, Infinity]) assert_throws(() => timeline_advance_to(world, target));
-    for (const delay of [-1, NaN, Infinity]) assert_throws(() => timeline_advance_by(world, delay));
+    const world = world_create({ now: 10, seed: 1 });
+    for (const target of [9, NaN, Infinity]) {
+        assert_throws(() => timeline_advance_to(world, target), RangeError, "Simulation time cannot move backwards");
+    }
+    for (const delay of [-1, NaN, Infinity]) {
+        assert_throws(() => timeline_advance_by(world, delay), RangeError, "Simulation time cannot move backwards");
+    }
     for (const at of [-1, NaN, Infinity]) {
-        assert_throws(() => timelinescheduler_schedule(world.timeline_scheduler, "craft_complete", at, {}));
+        assert_throws(() => timelinescheduler_schedule(world.timeline_scheduler, "craft_complete", at, {}), RangeError, "Invalid timeline event time");
     }
     assert_equal(world.clock.sim_time, 10);
     assert_equal(world.timeline_scheduler.repo.elements.length, 0);
 });
 
 test("un chargement conserve le temps déjà simulé au-delà de l'heure réelle", () => {
-    const world = world_create();
-    const future = Date.now() + 100000;
-    world.clock = clock_create(future);
-    timeline_advance_to_now(world);
-    assert_equal(world.clock.sim_time, future);
+    const world = world_create({ now: 1000, seed: 1 });
+    timeline_advance_to_now(world, 500);
+    assert_equal(world.clock.sim_time, 1000);
 });
 
 test("effacer les handlers retire réellement les anciennes inscriptions", () => {
-    const world = world_create();
-    world.clock = clock_create(0);
+    const world = world_create({ now: 0, seed: 1 });
     let calls = 0;
     timelinedispatcher_register("craft_complete", () => calls++);
     timeline_clear_handlers();
     timelinescheduler_schedule(world.timeline_scheduler, "craft_complete", 1, {});
-    assert_throws(() => timeline_advance_to(world, 1));
+    assert_throws(() => timeline_advance_to(world, 1), Error, "Aucun handler enregistré");
     assert_equal(calls, 0);
 });

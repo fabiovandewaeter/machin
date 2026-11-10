@@ -7,8 +7,8 @@ import { signalbus_batch, signalbus_clear, signalbus_create, signalbus_emit, sig
  * @typedef {import("./signal.types.js").EngineSignalPayload} EngineSignalPayload
  */
 
-/** @type {import("../../../utils/signal_bus.js").SignalBus<EngineSignal, EngineSignalPayload>} */
-const __ENGINE_SIGNAL_BUS = signalbus_create({ queue_nested_signals: true });
+/** @type {import("../../../utils/signal_bus.js").SignalBus<EngineSignalPayload>} */
+const __ENGINE_SIGNAL_BUS = signalbus_create();
 
 export function enginesignals_init() {
     enginesignals_clear_handlers();

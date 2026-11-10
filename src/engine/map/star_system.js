@@ -9,9 +9,9 @@ import { repository_spawn_element } from "../../utils/repository.js";
 
 /**
  * @typedef {Object} StarSystem
- * @property {StarSystemID} id
- * @property {string} name
- * @property {CelestialBodyID[]} celestial_bodies
+ * @prop {StarSystemID} id
+ * @prop {string} name
+ * @prop {CelestialBodyID[]} celestial_bodies
  * 
  * @typedef {import("../../utils/repository.js").Repo<StarSystemID, StarSystem>} StarSystemRepo
  */

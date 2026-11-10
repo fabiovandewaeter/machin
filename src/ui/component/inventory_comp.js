@@ -19,10 +19,10 @@ function __inventorycomp_update(element, inventory_id) {
     const inventory = undefined_unwrap(repository_get(store_get().world.inventory_repo, inventory_id));
     const items = element.querySelector(".items");
     assert(items, "Missing inventory items");
-    items.replaceChildren(...inventory.item_stack.map(({ id, item }) => {
+    items.replaceChildren(...inventory.item_stack.map(({ id, item, amount }) => {
         const button = document.createElement("button");
         button.dataset.itemId = String(id);
-        button.textContent = item.kind;
+        button.textContent = `${item.kind} x${amount}`;
         return button;
     }));
 }

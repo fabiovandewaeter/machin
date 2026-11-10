@@ -6,10 +6,10 @@
  * @typedef {import("../../engine/core/ids.types.js").EntityID} EntityID
  * @typedef {import("../../engine/entity/entity.types.js").Entity} Entity
  */
-/** @template {Record<string, unknown>} T @typedef {import("../../utils/enum.js").EnumKey<T>} EnumKey */
+/** @import { EnumKey } from "../../utils/enum.js" */
 import { enginesignal_on } from "../../engine/core/signal/signal.js";
 import { world_mine, world_move_entity } from "../../engine/core/world/world.js";
-import { ore_can_be_extracted } from "../../engine/extraction/ore.js";
+import { mining_can_mine } from "../../engine/action/mining.js";
 import { assert } from "../../utils/assert.js";
 import { enum_create } from "../../utils/enum.js";
 import { repository_get } from "../../utils/repository.js";
@@ -79,7 +79,7 @@ function __roomcomp_update(element) {
         button.dataset.action = __ACTIONS.EXTRACT;
         button.dataset.internalId = String(ore.internal_id);
         button.textContent = String(ore.required_mining_level);
-        button.disabled = !entity.tool || !entity.tool.compatible_actions.includes("MINING") || !ore_can_be_extracted(ore, entity.tool);
+        button.disabled = !mining_can_mine(ore, entity.tool);
         return button;
     }));
 }

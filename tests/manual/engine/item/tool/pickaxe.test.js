@@ -6,7 +6,7 @@
 import { materialitem_create } from "../../../../../src/engine/item/material/material_item.js";
 import { pickaxe_craft } from "../../../../../src/engine/item/tool/pickaxe.js";
 import { result_assert_ok, result_is_err } from "../../../../../src/utils/result.js";
-import { assert, assert_equal } from "../../../../../src/utils/assert.js";
+import { assert, assert_equal } from "../../../../shared/assert.js";
 import { test } from "../../../../shared/test.js";
 
 test("craft(): craft bon", () => {

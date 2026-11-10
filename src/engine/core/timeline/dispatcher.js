@@ -28,6 +28,12 @@ export function timelinedispatcher_clear_handlers() {
 export function timelinedispatcher_register(kind, handler) { __HANDLERS[kind] = handler; }
 
 /**
+ * @param {string} kind
+ * @returns {kind is TimelineEventKind}
+ */
+export function timelinedispatcher_has_handler(kind) { return Object.hasOwn(__HANDLERS, kind); }
+
+/**
  * @param {World} world 
  * @param {TimelineEvent} event 
  */

@@ -42,7 +42,6 @@ export function runtime_init() {
     __destroy_scene = scene_mount(app);
     app.tabIndex = -1;
     app.focus();
-    window.addEventListener("beforeunload", __runtime_save);
     window.addEventListener("pagehide", __runtime_save);
 }
 

@@ -9,9 +9,9 @@ import { repository_spawn_element } from "../../utils/repository.js";
 
 /**
  * @typedef {Object} Region
- * @property {RegionID} id
- * @property {string} name
- * @property {AreaID[]} areas
+ * @prop {RegionID} id
+ * @prop {string} name
+ * @prop {AreaID[]} areas
  * 
  * @typedef {import("../../utils/repository.js").Repo<RegionID, Region>} RegionRepo
  */

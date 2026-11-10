@@ -1,7 +1,7 @@
 import { array_get } from "../../utils/array.js";
 // engine/item/quality.js
 
-/** @template {Record<string, unknown>} T @typedef {import("../../utils/enum.js").EnumKey<T>} EnumKey */
+/** @import { EnumKey } from "../../utils/enum.js" */
 import { assert } from "../../utils/assert.js";
 
 export const QUALITY = Object.freeze(/**@type {const}*/({
