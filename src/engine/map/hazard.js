@@ -28,7 +28,7 @@ export const HAZARD_KIND = enum_create(/**@type {const}*/([
  * @returns {Hazard}
  */
 export function hazard_create({ kind, intensity }) {
-    if (intensity < 0 || intensity > 1) {
+    if (!(intensity >= 0 && intensity <= 1)) {
         throw new Error(`has to be between 0 and 1: ${intensity}`);
     }
     return {

@@ -15,13 +15,13 @@ import { MATERIAL } from "./material.js";
  * @throws {Error} si la target est impossible à miner
  */
 export function durability_decrease_durability(material_items, target) {
-    const target_material = MATERIAL[target];
-    for (let material_item of material_items) {
-        const current_material = MATERIAL[material_item.material];
-        const diff = current_material.mining_level - target_material.mining_level;
-        assert(diff >= 0);
-
-        const cost = BASE_COST / (diff + 1);
-        material_item.durability -= cost;
-    }
+    const target_level = MATERIAL[target].mining_level;
+    const costs = material_items.map(material_item => {
+        const diff = MATERIAL[material_item.material].mining_level - target_level;
+        assert(diff >= 0, `Cannot mine ${target} with ${material_item.material}`);
+        return BASE_COST / (diff + 1);
+    });
+    material_items.forEach((material_item, index) => {
+        material_item.durability = Math.max(0, material_item.durability - costs[index]);
+    });
 }

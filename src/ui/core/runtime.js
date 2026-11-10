@@ -45,6 +45,9 @@ export function runtime_init() {
     app.tabIndex = -1;
     app.focus();
     window.addEventListener("pagehide", __runtime_save);
+    document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "hidden") __runtime_save();
+    });
 }
 
 window.addEventListener("error", __runtime_crash);

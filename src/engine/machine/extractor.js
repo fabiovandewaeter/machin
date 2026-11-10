@@ -1,19 +1,17 @@
 // engine/machine/extractor.js
 
-import { repository_spawn_element } from "../../utils/repository.js";
-
 /**
- * @import {MachineKind} from "./machine.types.js"
  * @import {MaterialItemStack} from "../item/material/material_item.js"
  * @import {ExtractorID} from "../core/ids.types.js"
  * @import {RoomID} from "../core/ids.types.js"
  * @import {Repo} from "../../utils/repository.js"
  */
+import { repository_spawn_element } from "../../utils/repository.js";
 
 /**
  * @typedef {Object} Extractor
  * @prop {ExtractorID} id
- * @prop {MachineKind} kind
+ * @prop {"EXTRACTOR"} kind
  * @prop {MaterialItemStack[]} extracted
  * @prop {RoomID} room_id
  *

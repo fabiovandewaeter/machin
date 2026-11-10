@@ -1,5 +1,7 @@
 // engine/utils/gauge.js
 
+import { assert } from "../../utils/assert.js";
+
 /**
  * @typedef {Object} Gauge
  * @prop {number} current
@@ -23,13 +25,19 @@ export function gauge_create({ max, current = max }) {
  * @param {Gauge} gauge
  * @param {number} amount
  */
-export function gauge_damage(gauge, amount) { gauge.current = Math.max(0, gauge.current - amount); }
+export function gauge_damage(gauge, amount) {
+    assert(Number.isFinite(amount) && amount >= 0, `Invalid damage: ${amount}`);
+    gauge.current = Math.max(0, gauge.current - amount);
+}
 
 /**
  * @param {Gauge} gauge
  * @param {number} amount
  */
-export function gauge_heal(gauge, amount) { gauge.current = Math.min(gauge.max, gauge.current + amount); }
+export function gauge_heal(gauge, amount) {
+    assert(Number.isFinite(amount) && amount >= 0, `Invalid heal: ${amount}`);
+    gauge.current = Math.min(gauge.max, gauge.current + amount);
+}
 
 /**
  * @param {Gauge} gauge

@@ -18,6 +18,7 @@ import { undefined_expect } from "../../../utils/undefined.js";
 import { mining_mine } from "../../action/mining.js";
 import { entity_move, entity_spawn } from "../../entity/entity.js";
 import { inventory_add_stack, inventory_spawn } from "../../inventory/inventory.js";
+import { pickaxe_is_valid } from "../../item/tool/pickaxe.js";
 import { galaxy_create } from "../../map/galaxy.js";
 import { room_add_entity, room_remove_entity, room_remove_ore } from "../../map/room/room.js";
 import { clock_create } from "../clock.js";
@@ -46,6 +47,7 @@ export function world_create({ now, seed }) {
  */
 export function world_spawn_entity(world, { name, room_id, tool }) {
     undefined_expect(repository_get(world.galaxy.room_repo, room_id), `Unknown room: ${room_id}`);
+    assert(tool === undefined || pickaxe_is_valid(tool), "Invalid tool");
     repository_next_id(world.entity_repo);
     repository_next_id(world.inventory_repo);
     return enginesignals_batch(() => {

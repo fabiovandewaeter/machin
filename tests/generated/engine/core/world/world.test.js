@@ -148,3 +148,11 @@ test("un inventaire saturé refuse tout le minage avant mutation", () => {
     result_assert_err(world_mine(world, entity.id, ore.internal_id));
     assert_equal(JSON.stringify(world), before);
 });
+
+test("un outil invalide est refusé avant toute mutation", () => {
+    const { world, source } = create_test_world();
+    const before = JSON.stringify(world);
+    const tool = /** @type {import("../../../../../src/engine/item/tool/tool.js").Tool} */ (/** @type {unknown} */ ({ kind: "PICKAXE" }));
+    assert_throws(() => world_spawn_entity(world, { name: "broken", room_id: source.id, tool }), Error, "Invalid tool");
+    assert_equal(JSON.stringify(world), before);
+});
