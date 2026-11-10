@@ -1,8 +1,8 @@
-import { array_get } from "../../utils/array.js";
 // engine/item/quality.js
 
 /** @import { EnumKey } from "../../utils/enum.js" */
 import { assert } from "../../utils/assert.js";
+import { array_get } from "../../utils/array.js";
 
 export const QUALITY = Object.freeze(/**@type {const}*/({
     POOR: { kind: "POOR", id: 0, multiplier: 0.8 },

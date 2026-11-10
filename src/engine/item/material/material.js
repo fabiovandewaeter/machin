@@ -1,4 +1,3 @@
-import { array_get } from "../../../utils/array.js";
 // engine/item/material/material.js
 
 /**
@@ -7,6 +6,7 @@ import { array_get } from "../../../utils/array.js";
 /** @import { EnumKey } from "../../../utils/enum.js" */
 import { assert } from "../../../utils/assert.js";
 import { enum_create } from "../../../utils/enum.js";
+import { array_get } from "../../../utils/array.js";
 
 export const MATERIAL_KIND = enum_create(/**@type {const} */([
     "STONE",

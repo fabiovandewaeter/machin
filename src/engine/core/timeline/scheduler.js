@@ -1,4 +1,3 @@
-import { array_get } from "../../../utils/array.js";
 // engine/core/timeline/scheduler.js
 
 /**
@@ -9,7 +8,7 @@ import { array_get } from "../../../utils/array.js";
  * @import {TimelineEventRepo} from "./event.js"
  */
 import { repository_all, repository_create, repository_get, repository_remove_element, repository_spawn_element } from "../../../utils/repository.js";
-
+import { array_get } from "../../../utils/array.js";
 import { heap_pop, heap_push } from "./heap.js";
 
 /**
