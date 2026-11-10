@@ -1,6 +1,8 @@
 // utils/save.js
 
-/** @template T, E @typedef {import("./result.js").Res<T, E>} Res */
+/**
+ * @import {Res} from "./result.js"
+ */
 import { err, ok } from "./result.js";
 
 const __STORAGE_KEY = "machin_save";

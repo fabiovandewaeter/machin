@@ -1,7 +1,7 @@
 // ui/scene/scene.ops.js
 
 /**
- * @typedef {import("../core/ui_state/ui_state.types.js").UIState} UIState
+ * @import {UIState} from "../core/ui_state/ui_state.types.js"
  */
 import { assert } from "../../utils/assert.js";
 import { enum_is_enum_key } from "../../utils/enum.js";

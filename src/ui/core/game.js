@@ -1,6 +1,8 @@
 // ui/core/game.js
 
-/** @typedef {import("./save/save.types.js").GameSave} GameSave */
+/**
+ * @import {GameSave} from "./save/save.types.js"
+ */
 import { enginesignals_init } from "../../engine/core/signal/signal.js";
 import { timeline_advance_by, timeline_advance_to_now, timeline_init } from "../../engine/core/timeline/timeline.js";
 import { world_create } from "../../engine/core/world/world.js";

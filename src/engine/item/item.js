@@ -1,6 +1,8 @@
 // engine/item/item.js
 
-/** @typedef {import("./item.types.js").Item} Item */
+/**
+ * @import {Item} from "./item.types.js"
+ */
 import { materialitem_is_valid } from "./material/material_item.js";
 import { pickaxe_is_valid } from "./tool/pickaxe.js";
 

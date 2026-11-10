@@ -1,12 +1,12 @@
 // engine/core/world/world.types.js
 
 /**
- * @typedef {import("../clock.js").Clock} Clock
- * @typedef {import("../timeline/scheduler.js").TimelineScheduler} TimelineScheduler
- * @typedef {import("../../map/galaxy.js").Galaxy} Galaxy
- * @typedef {import("../../entity/entity.types.js").EntityRepo} EntityRepo
- * @typedef {import("../../inventory/inventory.types.js").InventoryRepo} InventoryRepo
- * @typedef {import("../../../utils/random_generator.js").RandomGenerator} RandomGenerator
+ * @import {Clock} from "../clock.js"
+ * @import {TimelineScheduler} from "../timeline/scheduler.js"
+ * @import {Galaxy} from "../../map/galaxy.js"
+ * @import {EntityRepo} from "../../entity/entity.types.js"
+ * @import {InventoryRepo} from "../../inventory/inventory.types.js"
+ * @import {RandomGenerator} from "../../../utils/random_generator.js"
  */
 
 /**

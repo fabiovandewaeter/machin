@@ -1,11 +1,11 @@
 // engine/action/mining.js
 
 /**
- * @typedef {import("../extraction/ore.js").Ore} Ore
- * @typedef {import("../item/tool/tool.js").Tool} Tool
- * @typedef {import("../item/material/material_item.js").MaterialItemStack} MaterialItemStack
+ * @import {Ore} from "../extraction/ore.js"
+ * @import {Tool} from "../item/tool/tool.js"
+ * @import {MaterialItemStack} from "../item/material/material_item.js"
+ * @import {Res} from "../../utils/result.js"
  */
-/** @template T, E @typedef {import("../../utils/result.js").Res<T, E>} Res */
 import { err, ok } from "../../utils/result.js";
 import { ore_can_be_extracted } from "../extraction/ore.js";
 

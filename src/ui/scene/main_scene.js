@@ -1,8 +1,8 @@
 // ui/scene/main_scene.js
 
 /**
- * @typedef {import("../component/core/utils.js").DestroyFunction} DestroyFunction
- * @typedef {import("../component/core/sub_comp_manager.js").SubCompKey} SubCompKey
+ * @import {DestroyFunction} from "../component/core/utils.js"
+ * @import {SubCompKey} from "../component/core/sub_comp_manager.js"
  */
 
 import { controlscomp_mount } from "../component/controls_comp.js";

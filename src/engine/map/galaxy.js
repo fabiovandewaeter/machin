@@ -1,22 +1,20 @@
 // engine/map/galaxy.js
 
 /**
- * @typedef {import("../core/ids.types.js").StarSystemID} StarSystemID
- * @typedef {import("./star_system.js").StarSystemRepo} StarSystemRepo
- * @typedef {import("../core/ids.types.js").CelestialBodyID} CelestialBodyID
- * @typedef {import("./celestial_body.js").CelestialBodyRepo} CelestialBodyRepo
- * @typedef {import("../core/ids.types.js").RegionID} RegionID
- * @typedef {import("./region.js").RegionRepo} RegionRepo
- * @typedef {import("../core/ids.types.js").AreaID} AreaID
- * @typedef {import("./area.js").AreaRepo} AreaRepo
- * @typedef {import("../core/ids.types.js").RoomID} RoomID
- * @typedef {import("./room/room.js").RoomRepo} RoomRepo
- * @typedef {import("../../utils/random_generator.js").RandomGenerator} RandomGenerator
+ * @import {StarSystemID} from "../core/ids.types.js"
+ * @import {StarSystemRepo} from "./star_system.js"
+ * @import {CelestialBodyRepo} from "./celestial_body.js"
+ * @import {RegionRepo} from "./region.js"
+ * @import {AreaRepo} from "./area.js"
+ * @import {RoomID} from "../core/ids.types.js"
+ * @import {RoomRepo} from "./room/room.types.js"
+ * @import {RandomGenerator} from "../../utils/random_generator.js"
  */
 import { assert } from "../../utils/assert.js";
 import { repository_create } from "../../utils/repository.js";
 import { ore_generate } from "../extraction/ore.js";
 import { enginesignals_batch } from "../core/signal/signal.js";
+
 
 import { room_add_exit, room_spawn } from "./room/room.js";
 

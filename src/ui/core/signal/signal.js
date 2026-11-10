@@ -1,8 +1,8 @@
 // ui/core/signal/signal.js
 
 /**
- * @typedef {import("./signal.types.js").UISignal} UISignal
- * @typedef {import("./signal.types.js").UISignalPayload} UISignalPayload
+ * @import {UISignal} from "./signal.types.js"
+ * @import {UISignalPayload} from "./signal.types.js"
  */
 import { signalbus_create, signalbus_clear, signalbus_on, signalbus_emit } from "../../../utils/signal_bus.js";
 

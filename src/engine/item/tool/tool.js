@@ -1,7 +1,7 @@
 // engine/item/tool/tool.js
 
 /**
- * @typedef {import("./pickaxe.js").Pickaxe} Pickaxe
+ * @import {Pickaxe} from "./pickaxe.js"
  */
 /** @import { EnumKey } from "../../../utils/enum.js" */
 import { enum_create } from "../../../utils/enum.js";

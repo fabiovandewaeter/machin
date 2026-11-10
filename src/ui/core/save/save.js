@@ -1,8 +1,8 @@
 // ui/core/save/save.js
 
 /**
- * @typedef {import("./save.types.js").GameSave} GameSave
- * @typedef {import("../store/store.types.js").GameStore} GameStore
+ * @import {GameSave} from "./save.types.js"
+ * @import {GameStore} from "../store/store.types.js"
  */
 import { world_restore } from "../../../engine/core/world/world_restore.js";
 import { SCENES } from "../../scene/scene.types.js";

@@ -1,9 +1,9 @@
 // ui/component/menu_comp.js
 
 /**
- * @typedef {import("./core/utils.js").DestroyFunction} DestroyFunction
- * @typedef {import("./core/sub_comp_manager.js").SubCompKey} SubCompKey
- * @typedef {import("./core/sub_comp_manager.js").SubCompManager} SubCompManager
+ * @import {DestroyFunction} from "./core/utils.js"
+ * @import {SubCompKey} from "./core/sub_comp_manager.js"
+ * @import {SubCompManager} from "./core/sub_comp_manager.js"
  */
 /** @import { EnumKey } from "../../utils/enum.js" */
 import { enum_create } from "../../utils/enum.js";

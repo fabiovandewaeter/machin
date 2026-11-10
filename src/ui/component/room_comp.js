@@ -1,10 +1,10 @@
 // ui/component/room_comp.js
 
 /**
- * @typedef {import("./core/utils.js").DestroyFunction} DestroyFunction
- * @typedef {import("../../engine/core/ids.types.js").RoomID} RoomID
- * @typedef {import("../../engine/core/ids.types.js").EntityID} EntityID
- * @typedef {import("../../engine/entity/entity.types.js").Entity} Entity
+ * @import {DestroyFunction} from "./core/utils.js"
+ * @import {RoomID} from "../../engine/core/ids.types.js"
+ * @import {EntityID} from "../../engine/core/ids.types.js"
+ * @import {Entity} from "../../engine/entity/entity.types.js"
  */
 /** @import { EnumKey } from "../../utils/enum.js" */
 import { enginesignal_on } from "../../engine/core/signal/signal.js";

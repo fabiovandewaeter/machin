@@ -1,8 +1,8 @@
 // ui/component/inventory_comp.js
 
 /**
- * @typedef {import("./core/utils.js").DestroyFunction} DestroyFunction
- * @typedef {import("../../engine/core/ids.types.js").InventoryID} InventoryID
+ * @import {DestroyFunction} from "./core/utils.js"
+ * @import {InventoryID} from "../../engine/core/ids.types.js"
  */
 import { enginesignal_on } from "../../engine/core/signal/signal.js";
 import { assert } from "../../utils/assert.js";

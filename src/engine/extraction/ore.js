@@ -7,11 +7,11 @@ import { MATERIAL, MATERIAL_KIND } from "../item/material/material.js";
 import { materialitem_create, materialitem_create_stack } from "../item/material/material_item.js";
 
 /**
- * @typedef {import("../item/material/material.js").MaterialKind} MaterialKind
- * @typedef {import("../item/material/material_item.js").MaterialItemStack} MaterialItemStack
- * @typedef {import("../item/tool/tool.js").ToolKind} ToolKind
- * @typedef {import("../item/tool/tool.js").Tool} Tool
- * @typedef {import("../../utils/random_generator.js").RandomGenerator} RandomGenerator
+ * @import {MaterialKind} from "../item/material/material.js"
+ * @import {MaterialItemStack} from "../item/material/material_item.js"
+ * @import {ToolKind} from "../item/tool/tool.js"
+ * @import {Tool} from "../item/tool/tool.js"
+ * @import {RandomGenerator} from "../../utils/random_generator.js"
  */
 
 /**

@@ -2,8 +2,9 @@
 
 // TODO:
 // /**
-//  * @typedef {import("../item/material/material.js").Gas} Gas
-//  * @typedef {import("../utils/core/composition.js").Composition<Gas>} GasComposition
+//  * @import {Gas} from "../item/material/material.js"
+//  * @import {Composition} from "../utils/core/composition.js"
+//  * @typedef {Composition<Gas>} GasComposition
 //  */
 // const __R = 8.314;
 

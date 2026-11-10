@@ -1,6 +1,8 @@
 // ui/core/store/store.js
 
-/** @typedef {import("./store.types.js").GameStore} GameStore */
+/**
+ * @import {GameStore} from "./store.types.js"
+ */
 import { assert } from "../../../utils/assert.js";
 
 /** @type {GameStore|undefined} */

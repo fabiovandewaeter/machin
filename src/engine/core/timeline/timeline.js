@@ -1,7 +1,7 @@
 // engine/core/timeline/timeline.js
 
 /**
- * @typedef {import("../world/world.types.js").World} World
+ * @import {World} from "../world/world.types.js"
  */
 import { enginesignal_emit } from "../signal/signal.js";
 import { timelinedispatcher_clear_handlers, timelinedispatcher_dispatch } from "./dispatcher.js";

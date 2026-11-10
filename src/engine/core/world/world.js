@@ -1,15 +1,15 @@
 // engine/core/world/world.js
 
 /**
- * @typedef {import("./world.types.js").World} World
- * @typedef {import("../ids.types.js").EntityID} EntityID
- * @typedef {import("../ids.types.js").RoomID} RoomID
- * @typedef {import("../../entity/entity.types.js").Entity} Entity
- * @typedef {import("../../item/tool/tool.js").Tool} Tool
- * @typedef {import("../../extraction/ore.js").__InternalOreID} __InternalOreID
- * @typedef {import("../../item/material/material_item.js").MaterialItemStack} MaterialItemStack
+ * @import {World} from "./world.types.js"
+ * @import {EntityID} from "../ids.types.js"
+ * @import {RoomID} from "../ids.types.js"
+ * @import {Entity} from "../../entity/entity.types.js"
+ * @import {Tool} from "../../item/tool/tool.js"
+ * @import {__InternalOreID} from "../../extraction/ore.js"
+ * @import {MaterialItemStack} from "../../item/material/material_item.js"
+ * @import {Res} from "../../../utils/result.js"
  */
-/** @template T, E @typedef {import("../../../utils/result.js").Res<T, E>} Res */
 import { assert } from "../../../utils/assert.js";
 import { randomgenerator_create } from "../../../utils/random_generator.js";
 import { repository_create, repository_get, repository_next_id } from "../../../utils/repository.js";

@@ -1,9 +1,9 @@
 // engine/core/world/world_init.js
 
 /**
- * @typedef {import("./world.types.js").World} World
- * @typedef {import("../../item/material/material.js").MaterialKind} MaterialKind
- * @typedef {import("../../item/quality.js").Quality} Quality
+ * @import {World} from "./world.types.js"
+ * @import {MaterialKind} from "../../item/material/material.js"
+ * @import {Quality} from "../../item/quality.js"
  */
 import { assert } from "../../../utils/assert.js";
 import { result_unwrap } from "../../../utils/result.js";

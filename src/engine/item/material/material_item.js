@@ -1,9 +1,8 @@
 // engine/item/material/material_item.js
 
 /**
- * @typedef {import("../quality.js").Quality} Quality
- * @typedef {import("./material.js").MaterialKind} MaterialKind
- * @typedef {import("../../utils/gauge.js").Gauge} Gauge
+ * @import {Quality} from "../quality.js"
+ * @import {MaterialKind} from "./material.js"
  */
 /** @import { EnumKey } from "../../../utils/enum.js" */
 import { enum_create } from "../../../utils/enum.js";

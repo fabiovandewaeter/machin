@@ -1,13 +1,13 @@
 // engine/map/room/room.types.js
 
 /**
- * @typedef {import("../../core/ids.types.js").EntityID} EntityID
- * @typedef {import("../../core/ids.types.js").RoomID} RoomID
- * @typedef {import("../atmosphere.js").Atmosphere} Atmosphere
- * @typedef {import("../../extraction/ore.js").Ore} Ore
+ * @import {EntityID} from "../../core/ids.types.js"
+ * @import {RoomID} from "../../core/ids.types.js"
+ * @import {Ore} from "../../extraction/ore.js"
  * @import {MachineRef} from "../../machine/machine.types.js"
+ * @import {EnumKey} from "../../../utils/enum.js"
+ * @import {Repo} from "../../../utils/repository.js"
  */
-/** @import { EnumKey } from "../../../utils/enum.js" */
 import { enum_create } from "../../../utils/enum.js";
 
 export const ROOM_KIND = enum_create(/**@type {const}*/([
@@ -29,7 +29,7 @@ export const ROOM_KIND = enum_create(/**@type {const}*/([
  * @prop {Ore[]} content
  * @prop {MachineRef[]} machines
  *
- * @typedef {import("../../../utils/repository.js").Repo<RoomID, Room>} RoomRepo
+ * @typedef {Repo<RoomID, Room>} RoomRepo
  */
 // TODO: @prop {Atmosphere} default_atmosphere pour pouvoir retourner à ça quand on unseal
 

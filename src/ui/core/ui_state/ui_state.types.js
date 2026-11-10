@@ -1,8 +1,8 @@
 // ui/core/ui_state/ui_state.types.js
 
 /**
- * @typedef {import("../../scene/scene.types.js").Scene} Scene
- * @typedef {import("../../../engine/core/ids.types.js").EntityID} EntityID
+ * @import {Scene} from "../../scene/scene.types.js"
+ * @import {EntityID} from "../../../engine/core/ids.types.js"
  */
 
 /**

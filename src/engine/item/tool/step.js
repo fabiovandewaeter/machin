@@ -1,8 +1,8 @@
 // engine/item/tool/step.js
 
 /**
- * @typedef {import("../material/material_item.js").MaterialItem} MaterialItem
- * @typedef {import("../material/material.js").MaterialKind} MaterialKind
+ * @import {MaterialItem} from "../material/material_item.js"
+ * @import {MaterialKind} from "../material/material.js"
  */
 import { assert } from "../../../utils/assert.js";
 import { MATERIAL } from "../material/material.js";

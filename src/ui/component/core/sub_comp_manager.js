@@ -1,6 +1,8 @@
 // ui/component/core/sub_comp_manager.js
 
-/** @typedef {import("./utils.js").DestroyFunction} DestroyFunction */
+/**
+ * @import {DestroyFunction} from "./utils.js"
+ */
 import { assert } from "../../../utils/assert.js";
 
 /**

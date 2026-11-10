@@ -1,7 +1,8 @@
 // engine/core/timeline/event.js
 
 /**
- * @typedef {import("../ids.types.js").TimelineEventID} TimelineEventID
+ * @import {TimelineEventID} from "../ids.types.js"
+ * @import {Repo} from "../../../utils/repository.js"
  */
 
 // craft_complete, building_complete, potion_effect ...
@@ -14,7 +15,7 @@
  * @prop {Object} payload
  * 
  * @typedef {'craft_complete'|'building_complete'|'potion_effect'} TimelineEventKind
- * @typedef {import("../../../utils/repository.js").Repo<TimelineEventID, TimelineEvent>} TimelineEventRepo
+ * @typedef {Repo<TimelineEventID, TimelineEvent>} TimelineEventRepo
  */
 
 export { };

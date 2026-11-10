@@ -1,8 +1,9 @@
 // engine/map/star_system.js
 
 /**
- * @typedef {import("../core/ids.types.js").CelestialBodyID} CelestialBodyID
- * @typedef {import("../core/ids.types.js").StarSystemID} StarSystemID
+ * @import {CelestialBodyID} from "../core/ids.types.js"
+ * @import {StarSystemID} from "../core/ids.types.js"
+ * @import {Repo} from "../../utils/repository.js"
  */
 import { repository_spawn_element } from "../../utils/repository.js";
 
@@ -13,7 +14,7 @@ import { repository_spawn_element } from "../../utils/repository.js";
  * @prop {string} name
  * @prop {CelestialBodyID[]} celestial_bodies
  * 
- * @typedef {import("../../utils/repository.js").Repo<StarSystemID, StarSystem>} StarSystemRepo
+ * @typedef {Repo<StarSystemID, StarSystem>} StarSystemRepo
  */
 
 /**

@@ -3,8 +3,8 @@
 import { signalbus_batch, signalbus_clear, signalbus_create, signalbus_emit, signalbus_on } from "../../../utils/signal_bus.js";
 
 /**
- * @typedef {import("./signal.types.js").EngineSignal} EngineSignal
- * @typedef {import("./signal.types.js").EngineSignalPayload} EngineSignalPayload
+ * @import {EngineSignal} from "./signal.types.js"
+ * @import {EngineSignalPayload} from "./signal.types.js"
  */
 
 /** @type {import("../../../utils/signal_bus.js").SignalBus<EngineSignalPayload>} */

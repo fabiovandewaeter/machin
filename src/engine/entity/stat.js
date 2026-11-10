@@ -3,7 +3,7 @@
 import { gauge_create } from "../utils/gauge.js";
 
 /**
- * @typedef {import("../utils/gauge.js").Gauge} Gauge
+ * @import {Gauge} from "../utils/gauge.js"
  */
 
 

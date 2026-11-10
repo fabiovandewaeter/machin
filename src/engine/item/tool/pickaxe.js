@@ -1,12 +1,10 @@
 // engine/item/tool/pickaxe.js
 
 /**
- * @typedef {import("../material/material_item.js").MaterialItem} MaterialItem
- * @typedef {import("../material/material_item.js").MaterialItemKind} MaterialItemKind
- * @typedef {import("../quality.js").Quality} Quality
- * @typedef {import("../../action/action.js").ActionKind} ActionKind
+ * @import {MaterialItem} from "../material/material_item.js"
+ * @import {ActionKind} from "../../action/action.js"
+ * @import {Res} from "../../../utils/result.js"
  */
-/** @template T, E @typedef {import("../../../utils/result.js").Res<T, E>} Res */
 import { ok, result_is_err } from "../../../utils/result.js";
 import { ACTION_KIND } from "../../action/action.js";
 import { compatibility_are_all_same_material } from "../compatibility.js";

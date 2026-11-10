@@ -1,6 +1,8 @@
 // utils/repository.js
 
-/** @template T, E @typedef {import("./result.js").Res<T, E>} Res */
+/**
+ * @import {Res} from "./result.js"
+ */
 import { ok, err } from "./result.js";
 import { undefined_unwrap } from "./undefined.js";
 

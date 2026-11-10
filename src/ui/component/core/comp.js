@@ -1,8 +1,8 @@
 // ui/component/core/comp.js
 
 /**
- * @typedef {import("./utils.js").DestroyFunction} DestroyFunction
- * @typedef {import("./sub_comp_manager.js").SubCompManager} SubCompManager
+ * @import {DestroyFunction} from "./utils.js"
+ * @import {SubCompManager} from "./sub_comp_manager.js"
  */
 import { assert } from "../../../utils/assert.js";
 import { enum_is_enum_key } from "../../../utils/enum.js";

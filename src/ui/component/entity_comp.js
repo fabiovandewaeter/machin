@@ -1,8 +1,8 @@
 // ui/component/entity_comp.js
 
 /**
- * @typedef {import("./core/utils.js").DestroyFunction} DestroyFunction
- * @typedef {import("../../engine/core/ids.types.js").EntityID} EntityID
+ * @import {DestroyFunction} from "./core/utils.js"
+ * @import {EntityID} from "../../engine/core/ids.types.js"
  */
 /** @import { EnumKey } from "../../utils/enum.js" */
 import { enginesignal_on } from "../../engine/core/signal/signal.js";

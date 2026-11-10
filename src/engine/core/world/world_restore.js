@@ -1,6 +1,8 @@
 // engine/core/world/world_restore.js
 
-/** @typedef {import("./world.types.js").World} World */
+/**
+ * @import {World} from "./world.types.js"
+ */
 import { assert } from "../../../utils/assert.js";
 import { randomgenerator_is_valid } from "../../../utils/random_generator.js";
 import { repository_get, repository_reindex } from "../../../utils/repository.js";

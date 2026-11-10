@@ -1,7 +1,7 @@
 // engine/map/connection.js
 
 /**
- * @typedef {import("./hazard.js").Hazard} Hazard
+ * @import {Hazard} from "./hazard.js"
  */
 
 /**

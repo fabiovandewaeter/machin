@@ -2,11 +2,11 @@ import { array_get } from "../../../utils/array.js";
 // engine/core/timeline/scheduler.js
 
 /**
- * @typedef {import("./heap.js").HeapEntry} HeapEntry
- * @typedef {import("./event.js").TimelineEventKind} TimelineEventKind
- * @typedef {import("./event.js").TimelineEvent} TimelineEvent
- * @typedef {import("../ids.types.js").TimelineEventID} TimelineEventID
- * @typedef {import("./event.js").TimelineEventRepo} TimelineEventRepo
+ * @import {HeapEntry} from "./heap.js"
+ * @import {TimelineEventKind} from "./event.js"
+ * @import {TimelineEvent} from "./event.js"
+ * @import {TimelineEventID} from "../ids.types.js"
+ * @import {TimelineEventRepo} from "./event.js"
  */
 import { repository_all, repository_create, repository_get, repository_remove_element, repository_spawn_element } from "../../../utils/repository.js";
 

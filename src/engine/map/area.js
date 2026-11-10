@@ -1,8 +1,9 @@
 // engine/map/area.js
 
 /**
- * @typedef {import("../core/ids.types.js").RoomID} RoomID
- * @typedef {import("../core/ids.types.js").AreaID} AreaID
+ * @import {RoomID} from "../core/ids.types.js"
+ * @import {AreaID} from "../core/ids.types.js"
+ * @import {Repo} from "../../utils/repository.js"
  */
 import { repository_spawn_element } from "../../utils/repository.js";
 
@@ -12,7 +13,7 @@ import { repository_spawn_element } from "../../utils/repository.js";
  * @prop {string} name
  * @prop {RoomID[]} rooms
  * 
- * @typedef {import("../../utils/repository.js").Repo<AreaID, Area>} AreaRepo
+ * @typedef {Repo<AreaID, Area>} AreaRepo
  */
 
 /**

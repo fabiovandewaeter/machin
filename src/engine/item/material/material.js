@@ -2,7 +2,7 @@ import { array_get } from "../../../utils/array.js";
 // engine/item/material/material.js
 
 /**
- * @typedef {import("./category.types.js").MaterialCategory} MaterialCategory
+ * @import {MaterialCategory} from "./category.types.js"
  */
 /** @import { EnumKey } from "../../../utils/enum.js" */
 import { assert } from "../../../utils/assert.js";

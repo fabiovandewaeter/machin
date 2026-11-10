@@ -1,6 +1,8 @@
 // ui/component/logs_comp.js
 
-/** @typedef {import("./core/utils.js").DestroyFunction} DestroyFunction */
+/**
+ * @import {DestroyFunction} from "./core/utils.js"
+ */
 import { assert } from "../../utils/assert.js";
 import { uisignal_on } from "../core/signal/signal.js";
 import { UI_SIGNAL } from "../core/signal/signal.types.js";

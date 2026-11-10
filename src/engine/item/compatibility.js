@@ -1,14 +1,14 @@
-import { array_get } from "../../utils/array.js";
 // engine/item/compatibility.js
 
 /**
- * @typedef {import("./material/material.js").MaterialKind} MaterialKind
- * @typedef {import("./material/material_item.js").MaterialItem} MaterialItem
- * @typedef {import("./material/material_item.js").MaterialItemKind} MaterialItemKind
+ * @import {MaterialKind} from "./material/material.js"
+ * @import {MaterialItem} from "./material/material_item.js"
+ * @import {MaterialItemKind} from "./material/material_item.js"
+ * @import {Res} from "../../utils/result.js"
  */
-/** @template T, E @typedef {import("../../utils/result.js").Res<T, E>} Res */
 import { assert } from "../../utils/assert.js";
 import { err, ok } from "../../utils/result.js";
+import { array_get } from "../../utils/array.js";
 
 /**
  * @param {MaterialItem[]} material_items 

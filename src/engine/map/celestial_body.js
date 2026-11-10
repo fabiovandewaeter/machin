@@ -1,9 +1,10 @@
 // engine/map/celestial_body.js
 
 /**
- * @typedef {import("../core/ids.types.js").RegionID} RegionID
- * @typedef {import("../core/ids.types.js").CelestialBodyID} CelestialBodyID
- * @typedef {import("./atmosphere.js").Atmosphere} Atmosphere
+ * @import {RegionID} from "../core/ids.types.js"
+ * @import {CelestialBodyID} from "../core/ids.types.js"
+ * @import {Atmosphere} from "./atmosphere.js"
+ * @import {Repo} from "../../utils/repository.js"
  */
 import { repository_spawn_element } from "../../utils/repository.js";
 
@@ -15,7 +16,7 @@ import { repository_spawn_element } from "../../utils/repository.js";
  * @prop {Atmosphere|undefined} atmosphere
  * @prop {RegionID[]} regions
  * 
- * @typedef {import("../../utils/repository.js").Repo<CelestialBodyID, CelestialBody>} CelestialBodyRepo
+ * @typedef {Repo<CelestialBodyID, CelestialBody>} CelestialBodyRepo
  */
 
 /**

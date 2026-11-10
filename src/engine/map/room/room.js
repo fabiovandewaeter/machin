@@ -1,21 +1,20 @@
-import { array_get } from "../../../utils/array.js";
 // engine/map/room/room.js
 
 /**
- * @typedef {import("../../core/ids.types.js").EntityID} EntityID
- * @typedef {import("../atmosphere.js").Atmosphere} Atmosphere
- * @typedef {import("./room.types.js").RoomKind} RoomKind
- * @typedef {import("./room.types.js").Room} Room
- * @typedef {import("./room.types.js").RoomRepo} RoomRepo
- * @typedef {import("../../core/ids.types.js").RoomID} RoomID
- * @typedef {import("./room.types.js").RoomExit} RoomExit
- * @typedef {import("../../extraction/ore.js").Ore} Ore
- * @typedef {import("../../extraction/ore.js").__InternalOreID} __InternalOreID
+ * @import {EntityID} from "../../core/ids.types.js"
+ * @import {RoomKind} from "./room.types.js"
+ * @import {Room} from "./room.types.js"
+ * @import {RoomRepo} from "./room.types.js"
+ * @import {RoomID} from "../../core/ids.types.js"
+ * @import {RoomExit} from "./room.types.js"
+ * @import {Ore} from "../../extraction/ore.js"
+ * @import {__InternalOreID} from "../../extraction/ore.js"
  */
 import { assert } from "../../../utils/assert.js";
 import { repository_get, repository_spawn_element } from "../../../utils/repository.js";
 import { undefined_unwrap } from "../../../utils/undefined.js";
 import { enginesignal_emit } from "../../core/signal/signal.js";
+import { array_get } from "../../../utils/array.js";
 
 /**
  * @param {RoomRepo} repo

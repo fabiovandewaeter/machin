@@ -1,12 +1,12 @@
 // engine/entity/entity.js
 
 /**
- * @typedef {import("../core/ids.types.js").RoomID} RoomID
- * @typedef {import("./entity.types.js").EntityRepo} EntityRepo
- * @typedef {import("./entity.types.js").Entity} Entity
- * @typedef {import("../core/ids.types.js").EntityID} EntityID
- * @typedef {import("../item/tool/tool.js").Tool} Tool
- * @typedef {import("../core/ids.types.js").InventoryID} InventoryID
+ * @import {RoomID} from "../core/ids.types.js"
+ * @import {EntityRepo} from "./entity.types.js"
+ * @import {Entity} from "./entity.types.js"
+ * @import {EntityID} from "../core/ids.types.js"
+ * @import {Tool} from "../item/tool/tool.js"
+ * @import {InventoryID} from "../core/ids.types.js"
  */
 import { repository_get, repository_spawn_element } from "../../utils/repository.js";
 import { undefined_unwrap } from "../../utils/undefined.js";

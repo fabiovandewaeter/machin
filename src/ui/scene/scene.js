@@ -1,6 +1,8 @@
 // ui/scene/scene.js
 
-/** @typedef {import("../component/core/utils.js").DestroyFunction} DestroyFunction */
+/**
+ * @import {DestroyFunction} from "../component/core/utils.js"
+ */
 import { utils_assert_unreachable } from "../../utils/utils.js";
 import { uisignal_on } from "../core/signal/signal.js";
 import { UI_SIGNAL } from "../core/signal/signal.types.js";

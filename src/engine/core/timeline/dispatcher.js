@@ -4,12 +4,12 @@ import { assert } from "../../../utils/assert.js";
 import { enginesignals_batch } from "../signal/signal.js";
 
 /**
- * @typedef {import("../world/world.types.js").World} World
+ * @import {World} from "../world/world.types.js"
  */
 
 /**
- * @typedef {import("./event.js").TimelineEvent} TimelineEvent
- * @typedef {import("./event.js").TimelineEventKind} TimelineEventKind
+ * @import {TimelineEvent} from "./event.js"
+ * @import {TimelineEventKind} from "./event.js"
  * 
  * @typedef {(world: World, event: TimelineEvent) => void} TimelineEventHandler
  */

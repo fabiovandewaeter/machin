@@ -1,10 +1,11 @@
 // engine/entity/entity.types.js
 
 /**
- * @typedef {import("../core/ids.types.js").RoomID} RoomID
- * @typedef {import("../core/ids.types.js").EntityID} EntityID
- * @typedef {import("../item/tool/tool.js").Tool} Tool
- * @typedef {import("../core/ids.types.js").InventoryID} InventoryID
+ * @import {RoomID} from "../core/ids.types.js"
+ * @import {EntityID} from "../core/ids.types.js"
+ * @import {Tool} from "../item/tool/tool.js"
+ * @import {InventoryID} from "../core/ids.types.js"
+ * @import {Repo} from "../../utils/repository.js"
  */
 
 /**
@@ -15,6 +16,6 @@
  * @prop {Tool|undefined} tool
  * @prop {InventoryID} inventory_id
  *
- * @typedef {import("../../utils/repository.js").Repo<EntityID, Entity>} EntityRepo
+ * @typedef {Repo<EntityID, Entity>} EntityRepo
  */
 // TODO: classe de départ donne boost de début mais on peut tout maxer ça va juste dépendre des combinaisons qu'on fait

@@ -1,6 +1,8 @@
 // ui/core/runtime.js
 
-/** @typedef {import("../component/core/utils.js").DestroyFunction} DestroyFunction */
+/**
+ * @import {DestroyFunction} from "../component/core/utils.js"
+ */
 import { enginesignals_clear_handlers } from "../../engine/core/signal/signal.js";
 import { assert } from "../../utils/assert.js";
 import { scene_mount } from "../scene/scene.js";

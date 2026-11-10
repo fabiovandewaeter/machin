@@ -5,8 +5,8 @@ import { BASE_COST } from "./durability.types.js";
 import { MATERIAL } from "./material.js";
 
 /**
- * @typedef {import("./material_item.js").MaterialItem} MaterialItem
- * @typedef {import("./material.js").MaterialKind} MaterialKind
+ * @import {MaterialItem} from "./material_item.js"
+ * @import {MaterialKind} from "./material.js"
  */
 
 /**

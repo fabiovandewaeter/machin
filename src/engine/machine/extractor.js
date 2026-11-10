@@ -7,6 +7,7 @@ import { repository_spawn_element } from "../../utils/repository.js";
  * @import {MaterialItemStack} from "../item/material/material_item.js"
  * @import {ExtractorID} from "../core/ids.types.js"
  * @import {RoomID} from "../core/ids.types.js"
+ * @import {Repo} from "../../utils/repository.js"
  */
 
 /**
@@ -16,7 +17,7 @@ import { repository_spawn_element } from "../../utils/repository.js";
  * @prop {MaterialItemStack[]} extracted
  * @prop {RoomID} room_id
  *
- * @typedef {import("../../utils/repository.js").Repo<ExtractorID, Extractor>} ExtractorRepo
+ * @typedef {Repo<ExtractorID, Extractor>} ExtractorRepo
  */
 
 /**

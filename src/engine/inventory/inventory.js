@@ -6,11 +6,11 @@ import { undefined_unwrap } from "../../utils/undefined.js";
 import { enginesignal_emit } from "../core/signal/signal.js";
 
 /**
- * @typedef {import("../item/item.types.js").Item} Item
- * @typedef {import("../core/ids.types.js").InventoryID} InventoryID
- * @typedef {import("./inventory.types.js").__InternalItemID} __InternalItemID
- * @typedef {import("./inventory.types.js").Inventory} Inventory
- * @typedef {import("./inventory.types.js").InventoryRepo} InventoryRepo
+ * @import {Item} from "../item/item.types.js"
+ * @import {InventoryID} from "../core/ids.types.js"
+ * @import {__InternalItemID} from "./inventory.types.js"
+ * @import {Inventory} from "./inventory.types.js"
+ * @import {InventoryRepo} from "./inventory.types.js"
  */
 
 /**

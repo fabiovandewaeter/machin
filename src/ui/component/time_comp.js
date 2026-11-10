@@ -2,8 +2,8 @@
 
 
 /**
- * @typedef {import("./core/utils.js").DestroyFunction} DestroyFunction
- * @typedef {import("../core/store/store.types.js").GameStore} GameStore
+ * @import {DestroyFunction} from "./core/utils.js"
+ * @import {GameStore} from "../core/store/store.types.js"
  */
 
 import { assert } from "../../utils/assert.js";

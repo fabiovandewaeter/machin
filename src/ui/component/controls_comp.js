@@ -1,7 +1,9 @@
 // ui/component/controls_comp.js
 
-/** @typedef {import("./core/utils.js").DestroyFunction} DestroyFunction */
-/** @import { EnumKey } from "../../utils/enum.js" */
+/**
+ * @import {DestroyFunction} from "./core/utils.js"
+ * @import { EnumKey } from "../../utils/enum.js"
+ */
 import { assert } from "../../utils/assert.js";
 import { SECONDS_PER_DAY, SECONDS_PER_HOUR, SECONDS_PER_MINUTE, SECONDS_PER_WEEK, SECONDS_PER_YEAR } from "../../utils/const.js";
 import { enum_create } from "../../utils/enum.js";

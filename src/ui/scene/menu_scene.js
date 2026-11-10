@@ -1,7 +1,9 @@
 // ui/scene/menu_scene.js
 
-/** @typedef {import("../component/core/utils.js").DestroyFunction} DestroyFunction */
-/** @import { EnumKey } from "../../utils/enum.js" */
+/**
+ * @import {DestroyFunction} from "../component/core/utils.js"
+ * @import { EnumKey } from "../../utils/enum.js"
+ */
 import { enum_create } from "../../utils/enum.js";
 import { utils_assert_unreachable } from "../../utils/utils.js";
 import { comp_create_comp, comp_delegate_click_with_enum } from "../component/core/comp.js";

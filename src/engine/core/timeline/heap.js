@@ -3,7 +3,7 @@
 import { array_get } from "../../../utils/array.js";
 
 /**
- * @typedef {import("../ids.types.js").TimelineEventID} TimelineEventID
+ * @import {TimelineEventID} from "../ids.types.js"
  */
 
 
