@@ -14,9 +14,9 @@ test("les handlers voient l'heure de leur événement et peuvent en planifier la
     const observed = [];
     timelinedispatcher_register("craft_complete", current_world => {
         observed.push(current_world.clock.sim_time);
-        timelinescheduler_schedule(current_world.timeline_scheduler, "potion_effect", current_world.clock.sim_time + 5, {});
+        timelinescheduler_schedule(current_world.timeline_scheduler, "craft_complete", current_world.clock.sim_time + 5, {});
     });
-    timelinedispatcher_register("potion_effect", current_world => observed.push(current_world.clock.sim_time));
+    timelinedispatcher_register("craft_complete", current_world => observed.push(current_world.clock.sim_time));
     timelinescheduler_schedule(world.timeline_scheduler, "craft_complete", 10, {});
     timeline_advance_to(world, 20);
     assert_equal(observed.join(","), "10,15");

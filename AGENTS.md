@@ -22,6 +22,6 @@ Environment
 - Never run install commands or modify dependencies or lockfiles. If something required is missing, say so briefly and stop that step.
 
 Communication
-- No summaries, reports, or lengthy explanations.
+- No summaries, reports, or lengthy explanations EXCEPT if the task is complex, then start with a detailed summary of the changed to be made to request validation.
 - Final response: ideally none; if a response is required, use at most one very short, blunt sentence.
 - Avoid unnecessary progress updates and token-heavy output. Do not sacrifice correctness to save tokens.
