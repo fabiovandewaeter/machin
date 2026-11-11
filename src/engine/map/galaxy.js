@@ -9,9 +9,11 @@
  * @import {RoomID} from "../core/ids.types.js"
  * @import {RoomRepo} from "./room/room.types.js"
  * @import {RandomGenerator} from "../../utils/random_generator.js"
+ * @import {__InternalNodeID} from "../core/ids.types.js"
  */
 import { assert } from "../../utils/assert.js";
 import { repository_create } from "../../utils/repository.js";
+import { liquidnode_create } from "../extraction/node.js";
 import { ore_generate } from "../extraction/ore.js";
 import { enginesignals_batch } from "../core/signal/signal.js";
 
@@ -61,11 +63,16 @@ export function galaxy_init(galaxy, random_generator) {
         // TODO: enlever ça faire une système plus propre
         assert(default_room.id == GALAXY_DEFAULT_ROOM_ID,
             `default_room_id different from DEFAULT_ROOM_ID: ${default_room.id} ${GALAXY_DEFAULT_ROOM_ID}`);
+        const seconde_room_ores = ore_generate(random_generator, 5);
         const seconde_room = room_spawn(galaxy.room_repo, {
             kind: "FOREST",
             name: "seconde_room",
             layer: 0,
-            content: ore_generate(random_generator, 5),
+            content: [...seconde_room_ores, liquidnode_create({
+                internal_id: /** @type {__InternalNodeID} */ (seconde_room_ores.length),
+                resource: "WATER",
+                amount: 20,
+            })],
         });
         room_add_exit(galaxy.room_repo, default_room.id, "sortie foret", {
             target_id: seconde_room.id

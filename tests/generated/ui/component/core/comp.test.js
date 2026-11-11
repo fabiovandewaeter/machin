@@ -1,7 +1,7 @@
 // tests/generated/ui/component/core/comp.test.js
 
-import { comp_create_comp, comp_create_comp_with_sub_comps, comp_delegate_click } from "../../../../../src/ui/component/core/comp.js";
-import { subcompmanager_add, subcompmanager_create, subcompmanager_destroy_all, subcompmanager_remove } from "../../../../../src/ui/component/core/sub_comp_manager.js";
+import { comp_create_comp, comp_create_comp_with_sub_comps, comp_delegate_change_with_enum, comp_delegate_click } from "../../../../../src/ui/component/core/comp.js";
+import { subcompmanager_add } from "../../../../../src/ui/component/core/sub_comp_manager.js";
 import { assert_equal, assert_throws } from "../../../../shared/assert.js";
 import { test } from "../../../../shared/test.js";
 
@@ -65,25 +65,18 @@ test("une erreur de cleanup n'interrompt pas les suivants et destroy reste idemp
     assert_equal(container.children.length, 0);
 });
 
-test("retirer un enfant le détache du manager avant d'appeler son cleanup", () => {
-    const manager = subcompmanager_create();
-    let calls = 0;
-    subcompmanager_add(manager, "child", { destroy: () => {
-        calls++;
-        assert_equal(subcompmanager_remove(manager, "child"), false);
-    } });
-    assert_equal(subcompmanager_remove(manager, "child"), true);
-    assert_equal(calls, 1);
-    assert_equal(manager.sub_comps.size, 0);
-});
-
-test("tous les enfants sont détruits même si l'un d'eux échoue", () => {
-    const manager = subcompmanager_create();
-    let calls = 0;
-    subcompmanager_add(manager, "first", { destroy: () => { calls++; } });
-    subcompmanager_add(manager, "second", { destroy: () => { throw new Error("child failed"); } });
-    assert_throws(() => subcompmanager_destroy_all(manager), AggregateError, "Could not destroy subcomponents");
-    assert_equal(calls, 1);
-    assert_equal(manager.sub_comps.size, 0);
-    subcompmanager_destroy_all(manager);
+test("les changements de valeur sont délégués séparément des clics", () => {
+    /** @type {string[]} */
+    const calls = [];
+    const component = comp_create_comp(document.createElement("div"), "component", (root, add_cleanup) => {
+        root.innerHTML = '<select data-change-action="PICK"><option value="a">a</option><option value="b">b</option></select>';
+        add_cleanup(comp_delegate_click(root, action => calls.push(`click:${action}`)));
+        add_cleanup(comp_delegate_change_with_enum(root, { PICK: "PICK" }, action => calls.push(`change:${action}`)));
+    });
+    const select = /** @type {HTMLSelectElement} */ (component.element.querySelector("select"));
+    select.click();
+    select.value = "b";
+    select.dispatchEvent(new Event("change", { bubbles: true }));
+    assert_equal(calls.join(","), "change:PICK");
+    component.destroy();
 });

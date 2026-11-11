@@ -3,3 +3,65 @@
 * {
     font-family: Consolas, monospace;
 }
+
+.factory-graph {
+    overflow-x: auto;
+}
+
+.factory-graph svg {
+    background: #fafafa;
+    border: 1px solid #ccc;
+}
+
+.factory-graph text {
+    font-size: 11px;
+}
+
+.factory-graph .subtitle {
+    fill: #555;
+}
+
+.factory-graph rect {
+    fill: #fff;
+    stroke: #333;
+}
+
+.factory-graph .detail {
+    fill: #1d5f2b;
+}
+
+.factory-graph .leaf rect {
+    stroke-width: 3;
+}
+
+.factory-graph .resource-node rect {
+    fill: #f1ead9;
+}
+
+.factory-graph line {
+    stroke: #333;
+    stroke-width: 2;
+}
+
+.factory-graph .edge-label {
+    paint-order: stroke;
+    stroke: #fafafa;
+    stroke-width: 3px;
+}
+
+.factory-graph line.node-link {
+    stroke: #999;
+    stroke-dasharray: 4 3;
+}
+
+.factory-graph line.BELT {
+    stroke: #8a6d3b;
+}
+
+.factory-graph line.PIPE {
+    stroke: #2a6fb0;
+}
+
+.factory-graph line.TRUCK {
+    stroke: #3b8a4a;
+}

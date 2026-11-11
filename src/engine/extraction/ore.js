@@ -12,15 +12,13 @@ import { materialitem_create, materialitem_create_stack } from "../item/material
  * @import {ToolKind} from "../item/tool/tool.js"
  * @import {Tool} from "../item/tool/tool.js"
  * @import {RandomGenerator} from "../../utils/random_generator.js"
- */
-
-/**
- * @typedef {number & {readonly __brand:"__InternalOreID"}} __InternalOreID
+ * @import {__InternalNodeID} from "../core/ids.types.js"
  */
 
 /**
  * @typedef {Object} Ore
- * @prop {__InternalOreID} internal_id
+ * @prop {"ORE"} kind
+ * @prop {__InternalNodeID} internal_id
  * @prop {MaterialItemStack[]} composition
  * @prop {number} required_mining_level
  * @prop {ToolKind} tool_kind
@@ -28,7 +26,7 @@ import { materialitem_create, materialitem_create_stack } from "../item/material
 
 /**
  * @param {Object} options
- * @param {__InternalOreID} options.internal_id
+ * @param {__InternalNodeID} options.internal_id
  * @param {MaterialItemStack[]} options.composition
  * @returns {Ore}
  */
@@ -44,6 +42,7 @@ export function ore_create({ internal_id, composition }) {
     }
 
     return {
+        kind: "ORE",
         internal_id,
         composition,
         required_mining_level: max_mining_level,
@@ -82,7 +81,7 @@ export function ore_generate(random_generator, amount) {
         });
         const stack = materialitem_create_stack(mi, random_amount);
         ores.push(ore_create({
-            internal_id: /**@type {__InternalOreID} */(i),
+            internal_id: /**@type {__InternalNodeID} */(i),
             composition: [stack],
         }));
     }

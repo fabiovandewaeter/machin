@@ -12,7 +12,9 @@
  * 
  * @typedef {number & {readonly __brand:"InventoryID"}} InventoryID
  *
- * @typedef {number & {readonly __brand:"ExtractorID"}} ExtractorID
+ * @typedef {number & {readonly __brand:"__InternalNodeID"}} __InternalNodeID
+ * @typedef {number & {readonly __brand:"MachineID"}} MachineID
+ * @typedef {number & {readonly __brand:"FlowConnectionID"}} FlowConnectionID
  */
 
 export { };

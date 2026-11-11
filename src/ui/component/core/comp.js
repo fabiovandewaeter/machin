@@ -71,19 +71,44 @@ export function comp_create_comp_with_sub_comps(container, name, setup) {
 
 /**
  * @param {HTMLElement} root
+ * @param {"click" | "change"} event_name
+ * @param {"data-action" | "data-change-action"} attribute
+ * @param {(action: string, event: Event, target: HTMLElement) => void} handler
+ * @returns {DestroyFunction}
+ */
+function __comp_delegate(root, event_name, attribute, handler) {
+    const on_event = (/** @type {Event} */ event) => {
+        if (!(event.target instanceof Element) || event.target.closest("[data-component]") !== root) return;
+        const target = event.target.closest(`[${attribute}]`);
+        if (!(target instanceof HTMLElement) || !root.contains(target)) return;
+        const action = target.getAttribute(attribute);
+        if (action) handler(action, event, target);
+    };
+    root.addEventListener(event_name, on_event);
+    return () => root.removeEventListener(event_name, on_event);
+}
+
+/**
+ * @param {HTMLElement} root
  * @param {(action: string, event: Event, target: HTMLElement) => void} handler
  * @returns {DestroyFunction}
  */
 export function comp_delegate_click(root, handler) {
-    const on_click = (/** @type {Event} */ event) => {
-        if (!(event.target instanceof Element) || event.target.closest("[data-component]") !== root) return;
-        const target = event.target.closest("[data-action]");
-        if (!(target instanceof HTMLElement) || !root.contains(target)) return;
-        const action = target.dataset.action;
-        if (action) handler(action, event, target);
-    };
-    root.addEventListener("click", on_click);
-    return () => root.removeEventListener("click", on_click);
+    return __comp_delegate(root, "click", "data-action", handler);
+}
+
+/**
+ * @template {Record<string, string>} T
+ * @param {HTMLElement} root
+ * @param {T} action_enum
+ * @param {(action: keyof T & string, event: Event, target: HTMLElement) => void} handler
+ * @returns {DestroyFunction}
+ */
+export function comp_delegate_change_with_enum(root, action_enum, handler) {
+    return __comp_delegate(root, "change", "data-change-action", (action, event, target) => {
+        assert(enum_is_enum_key(action_enum, action), `Invalid action: ${action}`);
+        handler(action, event, target);
+    });
 }
 
 /**

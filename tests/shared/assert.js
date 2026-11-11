@@ -35,3 +35,13 @@ export function assert_throws(operation, error_class, message_part) {
     }
     throw new Error(`Expected ${error_class.name} to be thrown`);
 }
+
+/**
+ * @param {unknown} value
+ * @param {() => void} operation
+ */
+export function assert_unchanged(value, operation) {
+    const before = JSON.stringify(value);
+    operation();
+    assert_equal(JSON.stringify(value), before, "Value was mutated");
+}

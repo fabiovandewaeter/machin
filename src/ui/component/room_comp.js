@@ -5,6 +5,7 @@
  * @import {RoomID} from "../../engine/core/ids.types.js"
  * @import {EntityID} from "../../engine/core/ids.types.js"
  * @import {Entity} from "../../engine/entity/entity.types.js"
+ * @import {ResourceNode} from "../../engine/extraction/node.types.js"
  */
 /** @import { EnumKey } from "../../utils/enum.js" */
 import { enginesignal_on } from "../../engine/core/signal/signal.js";
@@ -74,14 +75,33 @@ function __roomcomp_update(element) {
         button.textContent = visible_entity.name;
         return button;
     }));
-    content.replaceChildren(...room.content.map(ore => {
+    content.replaceChildren(...room.content.map(node => {
         const button = document.createElement("button");
         button.dataset.action = __ACTIONS.EXTRACT;
-        button.dataset.internalId = String(ore.internal_id);
-        button.textContent = String(ore.required_mining_level);
-        button.disabled = !mining_can_mine(ore, entity.tool);
+        button.dataset.internalId = String(node.internal_id);
+        __roomcomp_update_node_button(button, node, entity);
         return button;
     }));
+}
+
+/**
+ * @param {HTMLButtonElement} button
+ * @param {ResourceNode} node
+ * @param {Entity} entity
+ */
+function __roomcomp_update_node_button(button, node, entity) {
+    switch (node.kind) {
+        case "ORE":
+            button.textContent = String(node.required_mining_level);
+            button.disabled = !mining_can_mine(node, entity.tool);
+            break;
+        case "LIQUID":
+            button.textContent = `${node.resource} ${node.amount}`;
+            button.disabled = true;
+            break;
+        default:
+            utils_assert_unreachable(node);
+    }
 }
 
 /**

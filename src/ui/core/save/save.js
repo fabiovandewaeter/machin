@@ -7,7 +7,7 @@
 import { world_restore } from "../../../engine/core/world/world_restore.js";
 import { SCENES } from "../../scene/scene.types.js";
 
-const __SAVE_VERSION = 1;
+const __SAVE_VERSION = 2;
 
 /**
  * @param {GameStore} store

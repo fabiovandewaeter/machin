@@ -2,6 +2,9 @@
 - ajouter recréation des connexions des machines dans world_restore
 
 # 2
+- Ajouter le système de graphe orienté sans cycles pour créer l'usine
+- Il faut travailler uniquement avec des entiers donc les débits seront surement en grammes ou millilitres pour avoir des gros nombres et ne pas avoir de floats
+- En débits une machine prend soit 100% de ce qu'elle prendre, sinon max(besoin, disponnible), et si au moins une de ses entrées n'est pas satisfaite à 100% on brise sa consommation sur les autres entrées et sa production proportionellement (il faut garder des entiers donc voir comment faire)
   Stockage
 
   Types

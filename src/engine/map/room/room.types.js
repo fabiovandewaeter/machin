@@ -2,9 +2,8 @@
 
 /**
  * @import {EntityID} from "../../core/ids.types.js"
- * @import {RoomID} from "../../core/ids.types.js"
- * @import {Ore} from "../../extraction/ore.js"
- * @import {MachineRef} from "../../machine/machine.types.js"
+ * @import {MachineID, RoomID} from "../../core/ids.types.js"
+ * @import {ResourceNode} from "../../extraction/node.types.js"
  * @import {EnumKey} from "../../../utils/enum.js"
  * @import {Repo} from "../../../utils/repository.js"
  */
@@ -26,8 +25,8 @@ export const ROOM_KIND = enum_create(/**@type {const}*/([
  * @prop {number} layer
  * @prop {Record<string, RoomExit>} exits // "north", "portal"
  * @prop {EntityID[]} entities
- * @prop {Ore[]} content
- * @prop {MachineRef[]} machines
+ * @prop {ResourceNode[]} content
+ * @prop {MachineID[]} machines
  *
  * @typedef {Repo<RoomID, Room>} RoomRepo
  */

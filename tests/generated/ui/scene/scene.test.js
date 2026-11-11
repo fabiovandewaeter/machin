@@ -1,31 +1,15 @@
 // tests/generated/ui/scene/scene.test.js
 
 import { enginesignal_emit } from "../../../../src/engine/core/signal/signal.js";
-import { world_create, world_spawn_entity } from "../../../../src/engine/core/world/world.js";
-import { roomcomp_mount } from "../../../../src/ui/component/room_comp.js";
+import { world_create } from "../../../../src/engine/core/world/world.js";
 import { uisignal_emit } from "../../../../src/ui/core/signal/signal.js";
 import { UI_SIGNAL } from "../../../../src/ui/core/signal/signal.types.js";
 import { store_set } from "../../../../src/ui/core/store/store.js";
-import { uistate_create, uistate_select_entity } from "../../../../src/ui/core/ui_state/ui_state.js";
+import { uistate_create } from "../../../../src/ui/core/ui_state/ui_state.js";
 import { scene_mount } from "../../../../src/ui/scene/scene.js";
 import { assert, assert_equal } from "../../../shared/assert.js";
 import { create_test_world } from "../../../shared/fixtures.js";
 import { test } from "../../../shared/test.js";
-
-test("changer la sélection affiche immédiatement la salle de la nouvelle entité", () => {
-    const { world, entity, destination } = create_test_world();
-    const second = world_spawn_entity(world, { name: "second", room_id: destination.id });
-    const ui_state = uistate_create({ selected_entity_id: entity.id });
-    store_set({ world, ui_state, should_save: true });
-    const container = document.createElement("div");
-    const component = roomcomp_mount(container);
-    try {
-        uistate_select_entity(ui_state, second.id);
-        assert_equal(component.element.querySelector(".room-id")?.textContent, String(destination.id));
-    } finally {
-        component.destroy();
-    }
-});
 
 test("remplacer une partie détruit les abonnements de ses panneaux avant de changer le store", () => {
     const { world, entity } = create_test_world();

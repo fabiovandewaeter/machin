@@ -1,5 +1,6 @@
 // engine/item/material/durability.js
 
+import { array_get } from "../../../utils/array.js";
 import { assert } from "../../../utils/assert.js";
 import { BASE_COST } from "./durability.types.js";
 import { MATERIAL } from "./material.js";
@@ -22,6 +23,6 @@ export function durability_decrease_durability(material_items, target) {
         return BASE_COST / (diff + 1);
     });
     material_items.forEach((material_item, index) => {
-        material_item.durability = Math.max(0, material_item.durability - costs[index]);
+        material_item.durability = Math.max(0, material_item.durability - array_get(costs, index));
     });
 }
